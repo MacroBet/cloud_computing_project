@@ -28,7 +28,7 @@ public class BloomFilter {
       while (itr.hasMoreTokens()) {
         String ratingRaw= itr.nextToken().toString();
         int rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
-        word.set(rating);
+        word.set(""+rating);
         context.write(word, one);
       }
     }
