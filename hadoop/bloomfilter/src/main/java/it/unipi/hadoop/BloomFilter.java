@@ -26,8 +26,9 @@ public class BloomFilter {
                     ) throws IOException, InterruptedException {
       StringTokenizer itr = new StringTokenizer(value.toString(),"\n");
       while (itr.hasMoreTokens()) {
-        word.set(itr.nextToken());
-        System.out.println(word);
+        String ratingRaw= itr.nextToken().toString();
+        int rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
+        word.set(rating);
         context.write(word, one);
       }
     }
