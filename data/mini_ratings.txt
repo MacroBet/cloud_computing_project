@@ -1,4 +1,3 @@
-tconst	averageRating	numVotes
 tt0000001	5.7	1882
 tt0000002	5.9	250
 tt0000003	6.5	1661
