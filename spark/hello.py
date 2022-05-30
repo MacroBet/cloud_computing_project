@@ -47,8 +47,12 @@ if __name__ == "__main__":
     bloomFilters = [BloomFilter(N[i],p,"Rate "+ str(i+1)) for i in range(len(N))]
     print("HO creato i miei bei bloom filters")
     insert_ratings_in_bloom_filters(sys.argv[1],bloomFilters) 
+
+    print("funziona? "+ str(bloomFilters[1].check("tt0000001")))
+    print("funziona? "+ str(bloomFilters[2].check("tt0000001")))
+    print("funziona? "+ str(bloomFilters[3].check("tt0000001")))
     print("funziona? "+ str(bloomFilters[4].check("tt0000001")))
     print("funziona? "+ str(bloomFilters[5].check("tt0000001")))
     print("funziona? "+ str(bloomFilters[6].check("tt0000001")))
-
+    print("funziona? "+ str(bloomFilters[7].check("tt0000001")))
     
