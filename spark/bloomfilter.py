@@ -55,6 +55,7 @@ class BloomFilter(object):
 
 	def set_bit_array(self, bit_array):
 		self.bit_array = bit_array
+		return self
 
 	@classmethod
 	def get_size(self, n, p):
