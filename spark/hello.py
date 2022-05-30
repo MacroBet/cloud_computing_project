@@ -84,7 +84,7 @@ if __name__ == "__main__":
         
 
     # (1, 0101010101),(2,100101100101), ... 
-    bloomFilter5 = results.find(lambda x: x[0] == 5)
+    bloomFilter5 = filter(lambda x: x[0] == 5, results)
     print("funziona? "+ str( check_item_in_bloom_filter(HASH_COUNTS[5], SIZES[5], bloomFilter5[1], "tt0000001")))
     
 
