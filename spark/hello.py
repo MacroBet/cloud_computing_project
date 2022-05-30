@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     output= words.collect()
     for (word) in output:
-        print("%i" % (word))
+        print("%s" % (word))
 
     # ones =  words.map(lambda x: (x, 1))
     # counts = ones.reduceByKey(add)
