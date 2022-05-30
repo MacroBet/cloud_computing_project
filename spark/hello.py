@@ -21,7 +21,7 @@ def count_ratings_occurences(file_name):
 
 def insert_ratings_in_bloom_filters(file_name,bloomFilters):
     lines = sc.textFile(file_name)
-    ratings = lines.flatMap(lambda x:( x.split('\t')[0],round(float(x.split('\t')[1]))))
+    ratings = lines.map(lambda x:( x.split('\t')[0],round(float(x.split('\t')[1]))))
     output = ratings.map(lambda rating: bloomFilters[rating[1]-1].add(rating[0]))
     return output.collect()
     
