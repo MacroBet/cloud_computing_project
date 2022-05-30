@@ -16,7 +16,11 @@ if __name__ == "__main__":
 # 
 # 
 
-    ratings= lines.map(lambda x: (x.split('\t')[0],round(float(x.split('\t')[1]))))
+
+    ratings= []
+    for line in lines:
+        ratings.append([line.split('\t')[0],round(float(line.split('\t')[1]))])
+    
     print("Output:")
     print(ratings[0])
     
