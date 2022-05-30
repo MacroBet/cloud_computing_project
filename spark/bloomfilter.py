@@ -39,9 +39,10 @@ class BloomFilter(object):
 
 			# set the bit True in bit_array
 			self.bit_array[digest] = True
+			print(self.bit_array)
 
 	def check(self, item):
-		print(self.name,item, self.bit_array)
+		print(self.name,item)
 		for i in range(self.hash_count):
 			digest = mmh3.hash(item, i) % self.size
 			if self.bit_array[digest] == False:
