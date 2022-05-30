@@ -17,7 +17,8 @@ if __name__ == "__main__":
 # 
 
     ratings= lines.map(lambda x: (x.split('\t')[0],round(float(x.split('\t')[1]))))
-    print(ratings)
+    print("Output:")
+    print(ratings[0])
     
     # ratings = lines.flatMap(lambda x: [x.split('\t')[0],round(float(x.split('\t')[1]))])
     # words = lines.flatMap(lambda x: x.split(' '))
