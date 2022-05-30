@@ -15,8 +15,9 @@ from bitarray import bitarray
 
 # TODO handle items_count=0
 class BloomFilter(object):
-	def __init__(self, items_count, fp_prob):
+	def __init__(self, items_count, fp_prob, name):
 		self.fp_prob = fp_prob
+		self.name = name
 		self.size = self.get_size(items_count, fp_prob)
 		self.hash_count = self.get_hash_count(self.size, items_count)
 
@@ -28,6 +29,7 @@ class BloomFilter(object):
 
 	def add(self, item):
 		digests = []
+		print(self.name,item)
 		for i in range(self.hash_count):
 			# create digest for given item.
 			# i work as seed to mmh3.hash() function
@@ -39,6 +41,7 @@ class BloomFilter(object):
 			self.bit_array[digest] = True
 
 	def check(self, item):
+		print(self.name,item)
 		for i in range(self.hash_count):
 			digest = mmh3.hash(item, i) % self.size
 			if self.bit_array[digest] == False:

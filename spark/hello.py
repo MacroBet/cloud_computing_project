@@ -21,7 +21,7 @@ def count_ratings_occurences(file_name):
 
 def insert_ratings_in_bloom_filters(file_name,bloomFilters):
     lines = sc.textFile(file_name)
-    ratings = lines.map(lambda x:( x.split('\t')[0],round(float(x.split('\t')[1]))))
+    ratings = lines.map(lambda x: ( x.split('\t')[0],round(float(x.split('\t')[1]))))
     output = ratings.map(lambda rating: bloomFilters[rating[1]-1].add(rating[0]))
     return output.collect()
     
@@ -42,10 +42,10 @@ if __name__ == "__main__":
         print("%s: %i" % (word, count))
 
     total_elements= sum(N)
-    bloomFilters = [BloomFilter(N[i],p) for i in range(len(N))]
+    bloomFilters = [BloomFilter(N[i],p,"Rate "+ str(i)) for i in range(len(N))]
     print("HO creato i miei bei bloom filters")
     output = insert_ratings_in_bloom_filters(sys.argv[1],bloomFilters) 
-
+    print(output
     print("funziona? "+ str(bloomFilters[5].check("tt0000001")))
 
     
