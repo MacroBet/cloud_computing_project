@@ -21,10 +21,7 @@ def count_ratings_occurences(file_name):
 
 def insert_ratings_in_bloom_filters(file_name, bloomFilters):
     lines = sc.textFile(file_name)
-    print("ciaoooooo")
     ratings = lines.map(lambda x: ( x.split('\t')[0],round(float(x.split('\t')[1]))))
-    # ratings.map(lambda rating: bloomFilters[rating[1]-1].add(rating[0]))
-
     output = ratings.map(lambda rating: (rating[1]-1,bloomFilters[rating[1]-1].add(rating[0]))).reduceByKey(lambda bit_arr, acc: bit_arr | acc).collect()
     return output
     
@@ -53,11 +50,5 @@ if __name__ == "__main__":
         bloomFilters[result[0]].set_bit_array(result[1])
         
 
-    print("funziona? "+ str(bloomFilters[1].check("tt0000001")))
-    print("funziona? "+ str(bloomFilters[2].check("tt0000001")))
-    print("funziona? "+ str(bloomFilters[3].check("tt0000001")))
-    print("funziona? "+ str(bloomFilters[4].check("tt0000001")))
     print("funziona? "+ str(bloomFilters[5].check("tt0000001")))
-    print("funziona? "+ str(bloomFilters[6].check("tt0000001")))
-    print("funziona? "+ str(bloomFilters[7].check("tt0000001")))
     

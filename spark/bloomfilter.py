@@ -29,25 +29,19 @@ class BloomFilter(object):
 
 	def add(self, item):
 		digests = []
-		print(self.name,item)
 		for i in range(self.hash_count):
 			# create digest for given item.
 			# i work as seed to mmh3.hash() function
 			# With different seed, digest created is different
 			digest = mmh3.hash(item, i) % self.size
 			digests.append(digest)
-			print("DIGEST ADD",item,digest)
-			# set the bit True in bit_array
 			self.bit_array[digest] = True
 		return self.bit_array
 
 	def check(self, item):
-		print(self.name,item,self.bit_array)
 		for i in range(self.hash_count):
 			digest = mmh3.hash(item, i) % self.size
-			print("DIGEST CHECK",item,digest)
 			if self.bit_array[digest] == False:
-
 				# if any of bit is False then,its not present
 				# in filter
 				# else there is probability that it exist
