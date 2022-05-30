@@ -24,8 +24,10 @@ def insert_ratings_in_bloom_filters(file_name, bloomFilters):
     print("ciaoooooo")
     ratings = lines.map(lambda x: ( x.split('\t')[0],round(float(x.split('\t')[1]))))
     # ratings.map(lambda rating: bloomFilters[rating[1]-1].add(rating[0]))
-    ratings.map(lambda rating: bloomFilters[rating[1]-1].add(rating[0]))
-    bloomFilters[5].check("tt0000001")
+
+    result = ratings.map(lambda rating: bloomFilters[rating[1]-1].add(rating[0]))
+    output = result.collect()
+    return output
     
     
 if __name__ == "__main__":
@@ -47,8 +49,8 @@ if __name__ == "__main__":
     total_elements= sum(N)
     bloomFilters = [BloomFilter(N[i],p,"Rate "+ str(i+1)) for i in range(len(N))]
     print("HO creato i miei bei bloom filters")
-    insert_ratings_in_bloom_filters(sys.argv[1],bloomFilters) 
-
+    output = insert_ratings_in_bloom_filters(sys.argv[1],bloomFilters) 
+    print(output)
     print("funziona? "+ str(bloomFilters[1].check("tt0000001")))
     print("funziona? "+ str(bloomFilters[2].check("tt0000001")))
     print("funziona? "+ str(bloomFilters[3].check("tt0000001")))
