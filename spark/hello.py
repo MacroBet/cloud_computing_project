@@ -12,7 +12,7 @@ if __name__ == "__main__":
     sc = SparkContext(master, "WordCount")
 
     lines = sc.textFile(sys.argv[1])
-    words = lines.flatMap(lambda x: round(x.split('\t')[1]))
+    words = lines.flatMap(lambda x: round(float(x.split('\t')[1])))
     ones =  words.map(lambda x: (x, 1))
     counts = ones.reduceByKey(add)
 
