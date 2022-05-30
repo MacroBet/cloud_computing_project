@@ -25,8 +25,7 @@ def insert_ratings_in_bloom_filters(file_name, bloomFilters):
     ratings = lines.map(lambda x: ( x.split('\t')[0],round(float(x.split('\t')[1]))))
     # ratings.map(lambda rating: bloomFilters[rating[1]-1].add(rating[0]))
 
-    result = ratings.map(lambda rating: bloomFilters[rating[1]-1].add(rating[0]))
-    output = result.collect()
+    output = ratings.map(lambda rating: (rating[1]-1,bloomFilters[rating[1]-1].add(rating[0]))).reduceByKey(lambda bit_arr, acc: bit_arr | acc).collect()
     return output
     
     

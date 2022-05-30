@@ -39,7 +39,7 @@ class BloomFilter(object):
 
 			# set the bit True in bit_array
 			self.bit_array[digest] = True
-			return (self.name,self.bit_array)
+			return self.bit_array
 
 	def check(self, item):
 		print(self.name,item,self.bit_array)
