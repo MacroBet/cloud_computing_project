@@ -18,17 +18,20 @@ if __name__ == "__main__":
 
     ratings= lines.map(lambda x: (x.split('\t')[0],round(float(x.split('\t')[1]))))
     print(ratings)
-    pass
+    
     # ratings = lines.flatMap(lambda x: [x.split('\t')[0],round(float(x.split('\t')[1]))])
     # words = lines.flatMap(lambda x: x.split(' '))
-    ratingToCount= ratings.flatMap(lambda x: x[1])
 
-    ones =  ratingToCount.map(lambda x: (x, 1))
-    counts = ones.reduceByKey(add)
 
-    if len(sys.argv) == 3:
-        counts.repartition(1).saveAsTextFile(sys.argv[2])
-    else:
-        output = counts.collect()
-        for (word, count) in output:
-            print("%s: %i" % (word, count))
+
+    # ratingToCount= ratings.flatMap(lambda x: x[1])
+
+    # ones =  ratingToCount.map(lambda x: (x, 1))
+    # counts = ones.reduceByKey(add)
+
+    # if len(sys.argv) == 3:
+    #     counts.repartition(1).saveAsTextFile(sys.argv[2])
+    # else:
+    #     output = counts.collect()
+    #     for (word, count) in output:
+    #         print("%s: %i" % (word, count))
