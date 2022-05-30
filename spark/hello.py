@@ -1,6 +1,5 @@
 import sys
 from operator import add
-import math
 from pyspark import SparkContext
 
 if __name__ == "__main__":
@@ -12,7 +11,7 @@ if __name__ == "__main__":
     sc = SparkContext(master, "WordCount")
 
     lines = sc.textFile(sys.argv[1])
-    ratings = lines.flatMap(lambda x: [x.split('\t')[0],math.round(x.split('\t')[1])])
+    ratings = lines.flatMap(lambda x: [x.split('\t')[0],round(x.split('\t')[1])])
 
     # words = lines.flatMap(lambda x: x.split(' '))
     ones =  ratings.map(lambda x: (x[1], 1))
