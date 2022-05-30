@@ -20,7 +20,7 @@ class BloomFilter(object):
 		self.name = name
 		self.size = self.get_size(items_count, fp_prob)
 		self.hash_count = self.get_hash_count(self.size, items_count)
-
+		print("Creating bloom filter with size: {0} and hash count: {1}".format(self.size, self.hash_count))
 		# Bit array of given size
 		self.bit_array = bitarray(self.size)
 
