@@ -13,7 +13,7 @@ import math
 import mmh3
 from bitarray import bitarray
 
-
+# TODO handle items_count=0
 class BloomFilter(object):
 	def __init__(self, items_count, fp_prob):
 		self.fp_prob = fp_prob

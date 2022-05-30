@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
     rating_count= count_ratings_occurences(sys.argv[1])
     #   1,2,3,4,5,6,7,8,9,10
-    N= [0,0,0,0,0,0,0,0,0,0]
+    N= [1,1,1,1,1,1,1,1,1,1]
 
     for (word, count) in rating_count:
         N[int(word)-1]=count
