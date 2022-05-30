@@ -13,12 +13,17 @@ if __name__ == "__main__":
 
     lines = sc.textFile(sys.argv[1])
     words = lines.flatMap(lambda x: round(float(x.split('\t')[1])))
-    ones =  words.map(lambda x: (x, 1))
-    counts = ones.reduceByKey(add)
 
-    if len(sys.argv) == 3:
-        counts.repartition(1).saveAsTextFile(sys.argv[2])
-    else:
-        output = counts.collect()
-        for (word, count) in output:
-            print("%s: %i" % (word, count))
+    output= words.collect()
+    for (word) in output:
+        print("%i" % (word))
+
+    # ones =  words.map(lambda x: (x, 1))
+    # counts = ones.reduceByKey(add)
+
+    # if len(sys.argv) == 3:
+    #     counts.repartition(1).saveAsTextFile(sys.argv[2])
+    # else:
+    #     output = counts.collect()
+    #     for (word, count) in output:
+    #         print("%s: %i" % (word, count))
