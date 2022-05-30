@@ -48,8 +48,10 @@ if __name__ == "__main__":
     total_elements= sum(N)
     bloomFilters = [BloomFilter(N[i],p,"Rate "+ str(i+1)) for i in range(len(N))]
     print("HO creato i miei bei bloom filters")
-    output = insert_ratings_in_bloom_filters(sys.argv[1],bloomFilters) 
-    print(output)
+    results = insert_ratings_in_bloom_filters(sys.argv[1],bloomFilters) 
+    for result in results:
+        bloomFilters[result[0]].set_bit_array(result[1])
+
     print("funziona? "+ str(bloomFilters[1].check("tt0000001")))
     print("funziona? "+ str(bloomFilters[2].check("tt0000001")))
     print("funziona? "+ str(bloomFilters[3].check("tt0000001")))

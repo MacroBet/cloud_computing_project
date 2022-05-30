@@ -53,6 +53,9 @@ class BloomFilter(object):
 				return False
 		return True
 
+	def set_bit_array(self, bit_array):
+		self.bit_array = bit_array
+
 	@classmethod
 	def get_size(self, n, p):
 		m = -(n * math.log(p))/(math.log(2)**2)
