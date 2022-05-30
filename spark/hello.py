@@ -24,7 +24,8 @@ def insert_ratings_in_bloom_filters(file_name, bloomFilters):
     print("ciaoooooo")
     ratings = lines.map(lambda x: ( x.split('\t')[0],round(float(x.split('\t')[1]))))
     # ratings.map(lambda rating: bloomFilters[rating[1]-1].add(rating[0]))
-    ratings.foreach(lambda rating: bloomFilters[rating[1]-1].add(rating[0]))
+    ratings.map(lambda rating: bloomFilters[rating[1]-1].add(rating[0]))
+    bloomFilters[5].check("tt0000001")
     
     
 if __name__ == "__main__":
