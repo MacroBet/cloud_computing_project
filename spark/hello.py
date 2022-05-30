@@ -26,7 +26,6 @@ def insert_ratings_in_bloom_filters(file_name, bloomFilters):
     output = ratings.collect()
 
     for (word, count) in output:
-        N[int(word)-1]= count
         print("%s: %i" % (word, count))
 
     ratings.map(lambda rating: bloomFilters[rating[1]-1].add(rating[0]))
