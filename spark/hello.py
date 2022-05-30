@@ -50,7 +50,7 @@ if __name__ == "__main__":
     print("HO creato i miei bei bloom filters")
     results = insert_ratings_in_bloom_filters(sys.argv[1],bloomFilters) 
     for result in results:
-        print("ddd",bloomFilters[result[0]].set_bit_array(result[1]).check("tt0000001"))
+        bloomFilters[result[0]].set_bit_array(result[1])
         
 
     print("funziona? "+ str(bloomFilters[1].check("tt0000001")))

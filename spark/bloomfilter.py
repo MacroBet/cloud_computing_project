@@ -36,7 +36,7 @@ class BloomFilter(object):
 			# With different seed, digest created is different
 			digest = mmh3.hash(item, i) % self.size
 			digests.append(digest)
-
+			print("DIGEST ADD",item,digest)
 			# set the bit True in bit_array
 			self.bit_array[digest] = True
 			return self.bit_array
@@ -45,6 +45,7 @@ class BloomFilter(object):
 		print(self.name,item,self.bit_array)
 		for i in range(self.hash_count):
 			digest = mmh3.hash(item, i) % self.size
+			print("DIGEST CHECK",item,digest)
 			if self.bit_array[digest] == False:
 
 				# if any of bit is False then,its not present
