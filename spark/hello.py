@@ -10,7 +10,7 @@ p = 0.1 #false positive probability
 
 def count_ratings_occurences(file_name):
     lines = sc.textFile(file_name)
-    words = lines.flatMap(lambda x: str(round(float(x.split('\t')[1]))))
+    words = lines.flatMap(lambda x: str(round(0.0001+float(x.split('\t')[1]))))
     ones =  words.map(lambda x: (x, 1))
     counts = ones.reduceByKey(add)
 
@@ -54,14 +54,14 @@ def get_hash_count(size, n):
 
 def insert_ratings_in_bloom_filters(file_name, N, SIZES, HASH_COUNTS):
     lines = sc.textFile(file_name)
-    ratings = lines.map(lambda x: ( x.split('\t')[0],round(float(x.split('\t')[1]))))
+    ratings = lines.map(lambda x: ( x.split('\t')[0],round(0.0001+float(x.split('\t')[1]))))
     output = ratings.map(lambda rating: (rating[1],add_item_to_bloom_filter(HASH_COUNTS[rating[1]],SIZES[rating[1]],rating[0]))).reduceByKey(lambda bit_arr, acc: bit_arr | acc).collect()
     return output
     
 def calculate_false_positive_rate(file_name, hash_count, size, bit_array, rate ):
     lines = sc.textFile(file_name)
     # (id1,3),(id2,4)...
-    ratings = lines.map(lambda x: ( x.split('\t')[0],round(float(x.split('\t')[1]))))
+    ratings = lines.map(lambda x: ( x.split('\t')[0],round(0.0001+float(x.split('\t')[1]))))
     filtered_ratings = ratings.filter(lambda rating: rating[1] != rate)
     partial_out = filtered_ratings.collect()
     print(partial_out)
