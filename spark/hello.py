@@ -96,11 +96,9 @@ if __name__ == "__main__":
     #bloomFilters = [BloomFilter(N[i],p,"Rate "+ str(i+1)) for i in range(len(N))]
     bloomFilterRDD = insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS) 
     print("BLOOM FILTERS")
-    bloomFilters= bloomFilterRDD.collect()
+    print(bloomFilterRDD.collect())
 
-    ratingsRDD = sc.parallelize([0,1,2,3,4,5,6,7,8,9,10])
-
-    false_positive_rates = ratingsRDD.map(lambda rating: calculate_false_positive_rate(lines, HASH_COUNTS[rating], SIZES[rating], list( filter(lambda x: x[0] == rating, bloomFilters))[0][1], rating))
+    false_positive_rates = bloomFilterRDD.map(lambda bloomFilter: calculate_false_positive_rate(lines, HASH_COUNTS[bloomFilter[0]], SIZES[bloomFilter[0]], bloomFilter[1], bloomFilter[0]))
     output = false_positive_rates.collect()#flatMap(lambda x: x).reduceByKey(add).collect()
     print(output)
     # (1, 0101010101),(2,100101100101), ... 
