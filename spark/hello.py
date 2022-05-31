@@ -25,9 +25,7 @@ def add_item_to_bloom_filter(hash_count,size,item):
     bit_array = bitarray(size)
     bit_array.setall(0)
     for i in range(hash_count):
-        # create digest for given item.
-        # i work as seed to mmh3.hash() function
-        # With different seed, digest created is different
+        # create digest for given item. I work as seed to mmh3.hash() function with different seed, digest created is different
         digest = mmh3.hash(item, i) % size
         digests.append(digest)
         bit_array[digest] = True
@@ -106,12 +104,15 @@ if __name__ == "__main__":
     #bloomFilters = [BloomFilter(N[i],p,"Rate "+ str(i+1)) for i in range(len(N))]
     bloomFilters = insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS).collect()
     result=[]
-    false_positive_rates = calculate_false_positive_rate(lines, bloomFilters, HASH_COUNTS, SIZES)
+    false_positive_count = calculate_false_positive_rate(lines, bloomFilters, HASH_COUNTS, SIZES)
    
     print("FALSE POSITIVE RATES")
-    print(false_positive_rates)
+    print(false_positive_count)
     # 10 => reduce =>10000
-    
+    false_positive_rates=[]
+    for rate in false_positive_count:
+        false_positive_rates.append(rate[1]/N[rate[0]])
+    print(false_positive_rates)
 
     # (1, 0101010101),(2,100101100101), ... 
     # bloomFilter6 = list( filter(lambda x: x[0] == 6, results))[0]
