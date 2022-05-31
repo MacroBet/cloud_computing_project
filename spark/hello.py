@@ -56,13 +56,23 @@ def insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS):
     output = ratings.map(lambda rating: (rating[1],add_item_to_bloom_filter(HASH_COUNTS[rating[1]],SIZES[rating[1]],rating[0]))).reduceByKey(lambda bit_arr, acc: bit_arr | acc)
     return output
     
-def calculate_false_positive_rate(lines, hash_count, size, bit_array, rate ):
+def check_item_in_bloom_filters(item, bloomFilters, HASH_COUNTS, SIZES):
+    false_positive = []
+    item_rating = item[1]
+    item_id = item[0]
+    for bloom_filter in bloomFilters:
+        rating = bloom_filter[0]
+        bit_array = bloom_filter[1]
+        if(rating!=item_rating and check_item_in_bloom_filter(HASH_COUNTS[i], SIZES[i], bit_array, item_id)):
+            false_positive.append((rating,1))
+    return false_positive
+
+def calculate_false_positive_rate(lines, bloomFilters, HASH_COUNTS, SIZES ):
 
     # (id1,3),(id2,4)...
     print("Calculating false positive rate")
     ratings = lines.map(lambda x: ( x.split('\t')[0],round(0.0001+float(x.split('\t')[1]))))
-    filtered_ratings = ratings.filter(lambda rating: rating[1] != rate)
-    false_positives = filtered_ratings.map(lambda rating: (check_item_in_bloom_filter(hash_count, size, bit_array, rating[0]),1))
+    false_positives = ratings.map(lambda rating: check_item_in_bloom_filters(rating, bloomFilters, HASH_COUNTS, SIZES))
     # (true,1),(false,1),(false,1),..
     counts = false_positives.reduceByKey(add)
     # return counts #RDD [(false,1),(true,20)]
@@ -96,13 +106,10 @@ if __name__ == "__main__":
     #bloomFilters = [BloomFilter(N[i],p,"Rate "+ str(i+1)) for i in range(len(N))]
     bloomFilters = insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS).collect()
     result=[]
-    for bloomFilter in bloomFilters:
-        false_positive_rates = calculate_false_positive_rate(lines, HASH_COUNTS[bloomFilter[0]], SIZES[bloomFilter[0]], bloomFilter[1], bloomFilter[0])
-        #output = false_positive_rates.flatMap(lambda x: x).collect()#.reduceByKey(add).collect()
-        result.append(false_positive_rates)
-
+    false_positive_rates = calculate_false_positive_rate(lines, bloomFilters, HASH_COUNTS, SIZES)
+   
     print("FALSE POSITIVE RATES")
-    print(result)
+    print(false_positive_rates)
     # 10 => reduce =>10000
     
 
