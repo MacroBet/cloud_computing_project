@@ -5,7 +5,7 @@ import math
 import mmh3
 from bitarray import bitarray
 from pyspark import SparkContext
-p = 0.5 #false positive probability
+p = 0.001 #false positive probability
 
 
 def count_ratings_occurences(lines):
