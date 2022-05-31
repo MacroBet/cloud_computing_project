@@ -98,7 +98,7 @@ if __name__ == "__main__":
     bloomFilterRDD = insert_ratings_in_bloom_filters(sys.argv[1], SIZES, HASH_COUNTS) 
     print("BLOOM FILTERS")
     print(bloomFilterRDD.collect())
-    false_positive_rate = bloomFilterRDD.map(lambda bloomFilter: calculate_false_positive_rate(sys.argv[1], HASH_COUNTS[bloomFilter[0]], SIZES[bloomFilter[0]], bloomFilter[1], bloomFilter[0]))
+    false_positive_rate = bloomFilterRDD.map(lambda bloomFilter: calculate_false_positive_rate(sys.argv[1], HASH_COUNTS[0], SIZES[0], bloomFilter, bloomFilter))
     print(false_positive_rate.collect())
     # (1, 0101010101),(2,100101100101), ... 
     # bloomFilter6 = list( filter(lambda x: x[0] == 6, results))[0]
