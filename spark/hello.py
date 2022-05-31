@@ -101,6 +101,7 @@ if __name__ == "__main__":
 
     # (1, 0101010101),(2,100101100101), ... 
     bloomFilter6 = list( filter(lambda x: x[0] == 6, results))[0]
+    print(bloomFilter6)
     print("funziona? "+ str( check_item_in_bloom_filter(HASH_COUNTS[6], SIZES[6], bloomFilter6[1], "sasso")))
     
     output = calculate_false_positive_rate(sys.argv[1], HASH_COUNTS[6], SIZES[6], bloomFilter6[1], 6)
