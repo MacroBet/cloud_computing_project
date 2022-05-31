@@ -82,8 +82,9 @@ if __name__ == "__main__":
 
     master = "local"
     sc = SparkContext(master, "WordCount")
+    FILE_NAME = sys.argv[1]
 
-    rating_count= count_ratings_occurences(sys.argv[1])
+    rating_count= count_ratings_occurences(FILE_NAME)
     #   0,1,2,3,4,5,6,7,8,9,10
     N = [1,1,1,1,1,1,1,1,1,1,1]
 
@@ -95,11 +96,11 @@ if __name__ == "__main__":
     HASH_COUNTS = [get_hash_count(size, n) for size, n in zip(SIZES, N)]
     total_elements= sum(N)
     #bloomFilters = [BloomFilter(N[i],p,"Rate "+ str(i+1)) for i in range(len(N))]
-    bloomFilterRDD = insert_ratings_in_bloom_filters(sys.argv[1], SIZES, HASH_COUNTS) 
+    bloomFilterRDD = insert_ratings_in_bloom_filters(FILE_NAME, SIZES, HASH_COUNTS) 
     print("BLOOM FILTERS")
     print(bloomFilterRDD.collect())
 
-    false_positive_rate = bloomFilterRDD.map(lambda bloomFilter: calculate_false_positive_rate(sys.argv[1], "HASH_COUNTS[6]", "SIZES[6]", "bloomFilter", "bloomFilter"))
+    false_positive_rate = bloomFilterRDD.map(lambda bloomFilter: calculate_false_positive_rate(FILE_NAME, "HASH_COUNTS[6]", "SIZES[6]", "bloomFilter", "bloomFilter"))
     print(false_positive_rate.collect())
     # (1, 0101010101),(2,100101100101), ... 
     # bloomFilter6 = list( filter(lambda x: x[0] == 6, results))[0]
