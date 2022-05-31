@@ -7,6 +7,26 @@ from bitarray import bitarray
 from pyspark import SparkContext
 p = 0.01 #false positive probability
 
+# 6: 12
+# 7: 5
+# 5: 11 
+# 4: 3
+# 1: 2
+# 2: 1
+# 3: 1
+# 8: 1
+# 9: 1
+
+# 6: 12
+# 7: 5
+# 5: 10 -> ok
+# 1: 3 -> ko doveva mettere 10 
+# 4: 3
+# 2: 1
+# 3: 1
+# 8: 1
+# 9: 1
+
 def count_ratings_occurences(lines):
     counts = lines.flatMap(lambda x: str(round(0.0001+float(x.split('\t')[1])))).filter(lambda x: x!="0" ).map(lambda x: (x, 1)).reduceByKey(add)
     return counts.collect()
