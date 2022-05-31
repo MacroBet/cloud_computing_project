@@ -56,7 +56,7 @@ def get_hash_count(size, n):
 def insert_ratings_in_bloom_filters(file_name, SIZES, HASH_COUNTS):
     lines = sc.textFile(file_name)
     ratings = lines.map(lambda x: ( x.split('\t')[0],round(0.0001+float(x.split('\t')[1]))))
-    output = ratings.map(lambda rating: (rating[1],add_item_to_bloom_filter(HASH_COUNTS[rating[1]],SIZES[rating[1]],rating[0]))).reduceByKey(lambda bit_arr, acc: bit_arr | acc).collect()
+    output = ratings.map(lambda rating: (rating[1],add_item_to_bloom_filter(HASH_COUNTS[rating[1]],SIZES[rating[1]],rating[0]))).reduceByKey(lambda bit_arr, acc: bit_arr | acc)
     return output
     
 def calculate_false_positive_rate(file_name, hash_count, size, bit_array, rate ):
@@ -93,9 +93,9 @@ if __name__ == "__main__":
     HASH_COUNTS = [get_hash_count(size, n) for size, n in zip(SIZES, N)]
     total_elements= sum(N)
     #bloomFilters = [BloomFilter(N[i],p,"Rate "+ str(i+1)) for i in range(len(N))]
-    results = insert_ratings_in_bloom_filters(sys.argv[1], SIZES, HASH_COUNTS) 
-    print(results)
-    bloomFilterRDD = sc.parallelize(results)
+    bloomFilterRDD = insert_ratings_in_bloom_filters(sys.argv[1], SIZES, HASH_COUNTS) 
+    print("BLOOM FILTERS")
+    print(bloomFilterRDD.collect())
     false_positive_rate = bloomFilterRDD.map(lambda bloomFilter: calculate_false_positive_rate(sys.argv[1], HASH_COUNTS[bloomFilter[0]], SIZES[bloomFilter[0]], bloomFilter[1], bloomFilter[0])).collect()
     print(false_positive_rate)
     # (1, 0101010101),(2,100101100101), ... 
