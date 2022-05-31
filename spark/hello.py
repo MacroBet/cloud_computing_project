@@ -116,7 +116,7 @@ if __name__ == "__main__":
         fp = rate[1]
         tot_fp += fp
         n = N[rating]
-        false_positive_rates.append({'rating':rating,'false_positive_rate':fp/n, 'total_elements':n})
+        false_positive_rates.append({'rating':rating,'false_positive_rate':fp/n, 'total_elements':n, 'false_positives':fp})
     print(false_positive_rates)
     print("TOTAL FALSE POSITIVE RATE: %f" % (tot_fp/total_elements))
 
