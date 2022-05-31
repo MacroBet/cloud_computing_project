@@ -64,8 +64,6 @@ def calculate_false_positive_rate(file_name, hash_count, size, bit_array, rate )
     # (id1,3),(id2,4)...
     ratings = lines.map(lambda x: ( x.split('\t')[0],round(0.0001+float(x.split('\t')[1]))))
     filtered_ratings = ratings.filter(lambda rating: rating[1] != rate)
-    partial_out = filtered_ratings.collect()
-    print(partial_out)
     false_positives = filtered_ratings.map(lambda rating: (check_item_in_bloom_filter(hash_count, size, bit_array, rating[0]),1))
     # (true,1),(false,1),(false,1),..
     counts = false_positives.reduceByKey(add)
@@ -95,15 +93,12 @@ if __name__ == "__main__":
     HASH_COUNTS = [get_hash_count(size, n) for size, n in zip(SIZES, N)]
     total_elements= sum(N)
     #bloomFilters = [BloomFilter(N[i],p,"Rate "+ str(i+1)) for i in range(len(N))]
-    print("HO creato i miei bei bloom filters")
-    print(SIZES, HASH_COUNTS)
     results = insert_ratings_in_bloom_filters(sys.argv[1], SIZES, HASH_COUNTS) 
         
-    print(results)
+
     # (1, 0101010101),(2,100101100101), ... 
     bloomFilter6 = list( filter(lambda x: x[0] == 6, results))[0]
-    print(bloomFilter6)
-    print("funziona? "+ str( check_item_in_bloom_filter(HASH_COUNTS[6], SIZES[6], bloomFilter6[1], "sasso")))
+    
     
     output = calculate_false_positive_rate(sys.argv[1], HASH_COUNTS[6], SIZES[6], bloomFilter6[1], 6)
     print(output)
