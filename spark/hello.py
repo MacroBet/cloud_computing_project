@@ -52,7 +52,7 @@ def get_hash_count(size, n):
     k = (size/n) * math.log(2)
     return int(k)
 
-def insert_ratings_in_bloom_filters(file_name, N, SIZES, HASH_COUNTS):
+def insert_ratings_in_bloom_filters(file_name, SIZES, HASH_COUNTS):
     lines = sc.textFile(file_name)
     ratings = lines.map(lambda x: ( x.split('\t')[0],round(0.0001+float(x.split('\t')[1]))))
     output = ratings.map(lambda rating: (rating[1],add_item_to_bloom_filter(HASH_COUNTS[rating[1]],SIZES[rating[1]],rating[0]))).reduceByKey(lambda bit_arr, acc: bit_arr | acc).collect()
@@ -95,12 +95,12 @@ if __name__ == "__main__":
     total_elements= sum(N)
     #bloomFilters = [BloomFilter(N[i],p,"Rate "+ str(i+1)) for i in range(len(N))]
     print("HO creato i miei bei bloom filters")
-    results = insert_ratings_in_bloom_filters(sys.argv[1], N, SIZES, HASH_COUNTS) 
+    results = insert_ratings_in_bloom_filters(sys.argv[1], SIZES, HASH_COUNTS) 
         
 
     # (1, 0101010101),(2,100101100101), ... 
     bloomFilter6 = list( filter(lambda x: x[0] == 6, results))[0]
-    print("funziona? "+ str( check_item_in_bloom_filter(HASH_COUNTS[6], SIZES[6], bloomFilter6[1], "tt0000001")))
+    print("funziona? "+ str( check_item_in_bloom_filter(HASH_COUNTS[6], SIZES[6], bloomFilter6[1], "sasso")))
     
     output = calculate_false_positive_rate(sys.argv[1], HASH_COUNTS[6], SIZES[6], bloomFilter6[1], 6)
     print(output)
