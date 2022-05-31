@@ -95,8 +95,6 @@ if __name__ == "__main__":
     total_elements= sum(N)
     #bloomFilters = [BloomFilter(N[i],p,"Rate "+ str(i+1)) for i in range(len(N))]
     bloomFilters = insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS).collect()
-    print("BLOOM FILTERS")
-    print(bloomFilters)
     result=[]
     for bloomFilter in bloomFilters:
         false_positive_rates = calculate_false_positive_rate(lines, HASH_COUNTS[bloomFilter[0]], SIZES[bloomFilter[0]], bloomFilter[1], bloomFilter[0])
