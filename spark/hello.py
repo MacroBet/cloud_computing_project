@@ -99,7 +99,7 @@ if __name__ == "__main__":
     print(bloomFilterRDD.collect())
 
     false_positive_rate = bloomFilterRDD.map(lambda bloomFilter: calculate_false_positive_rate(FILE_NAME, HASH_COUNTS[bloomFilter[0]], SIZES[bloomFilter[0]], bloomFilter[1], bloomFilter[0]))
-    print(false_positive_rate.collect())
+    print(false_positive_rate)
     # (1, 0101010101),(2,100101100101), ... 
     # bloomFilter6 = list( filter(lambda x: x[0] == 6, results))[0]
     
