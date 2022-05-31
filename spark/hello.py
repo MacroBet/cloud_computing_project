@@ -58,6 +58,7 @@ def insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS):
     return output
     
 def calculate_false_positive_rate(lines, hash_count, size, bit_array, rate ):
+    return bit_array
     # (id1,3),(id2,4)...
     print("Calculating false positive rate")
     ratings = lines.map(lambda x: ( x.split('\t')[0],round(0.0001+float(x.split('\t')[1]))))
@@ -99,7 +100,7 @@ if __name__ == "__main__":
     print(bloomFilterRDD.collect())
 
     false_positive_rates = bloomFilterRDD.map(lambda bloomFilter: calculate_false_positive_rate(lines, HASH_COUNTS[bloomFilter[0]], SIZES[bloomFilter[0]], bloomFilter[1], bloomFilter[0]))
-    output = false_positive_rates.collect()#flatMap(lambda x: x).reduceByKey(add).collect()
+    output = false_positive_rates.flatMap(lambda x: x).collect()#.reduceByKey(add).collect()
     print(output)
     # (1, 0101010101),(2,100101100101), ... 
     # bloomFilter6 = list( filter(lambda x: x[0] == 6, results))[0]
