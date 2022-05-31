@@ -8,7 +8,7 @@ from pyspark import SparkContext
 p = 0.01 #false positive probability
 
 def count_ratings_occurences(lines):
-    counts = lines.flatMap(lambda x: str(round(0.0001+float(x.split('\t')[1])))).filter(lambda x: x>0 ).map(lambda x: (x, 1)).reduceByKey(add)
+    counts = lines.flatMap(lambda x: str(round(0.0001+float(x.split('\t')[1])))).filter(lambda x: x!="0" ).map(lambda x: (x, 1)).reduceByKey(add)
     return counts.collect()
 
 # create digest for given item. I work as seed to mmh3.hash() function with different seed, digest created is different
