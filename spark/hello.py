@@ -63,7 +63,8 @@ def calculate_false_positive_rate(file_name, hash_count, size, bit_array, rate )
     # (id1,3),(id2,4)...
     ratings = lines.map(lambda x: ( x.split('\t')[0],round(float(x.split('\t')[1]))))
     filtered_ratings = ratings.filter(lambda rating: rating[1] != rate)
-
+    partial_out = filtered_ratings.collect()
+    print(partial_out)
     false_positives = filtered_ratings.map(lambda rating: (check_item_in_bloom_filter(hash_count, size, bit_array, rating[0]),1))
     # (true,1),(false,1),(false,1),..
     counts = false_positives.reduceByKey(add)
