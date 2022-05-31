@@ -86,13 +86,13 @@ if __name__ == "__main__":
     rating_count= count_ratings_occurences(sys.argv[1])
     #   0,1,2,3,4,5,6,7,8,9,10
     N = [1,1,1,1,1,1,1,1,1,1,1]
-    SIZES = [get_size(n, p) for n in N]
-    HASH_COUNTS = [get_hash_count(size, n) for size, n in zip(SIZES, N)]
 
     for (word, count) in rating_count:
         N[int(word)]= count
         print("%s: %i" % (word, count))
 
+    SIZES = [get_size(n, p) for n in N]
+    HASH_COUNTS = [get_hash_count(size, n) for size, n in zip(SIZES, N)]
     total_elements= sum(N)
     #bloomFilters = [BloomFilter(N[i],p,"Rate "+ str(i+1)) for i in range(len(N))]
     print("HO creato i miei bei bloom filters")
