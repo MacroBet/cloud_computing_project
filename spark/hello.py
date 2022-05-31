@@ -36,7 +36,6 @@ def add_item_to_bloom_filter(hash_count,size,item):
 def check_item_in_bloom_filter(hash_count, size, bit_array, item):
     for i in range(hash_count):
         digest = mmh3.hash(item, i) % size
-        print(bit_array,digest)
         if bit_array[digest] == False:
             # if any of bit is False then,its not present
             # in filter
@@ -98,12 +97,14 @@ if __name__ == "__main__":
     bloomFilters = insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS).collect()
     print("BLOOM FILTERS")
     print(bloomFilters)
-    
+    result=[]
     for bloomFilter in bloomFilters:
         false_positive_rates = calculate_false_positive_rate(lines, HASH_COUNTS[bloomFilter[0]], SIZES[bloomFilter[0]], bloomFilter[1], bloomFilter[0])
         #output = false_positive_rates.flatMap(lambda x: x).collect()#.reduceByKey(add).collect()
-        print(bloomFilter[0],false_positive_rates)
+        result.append(false_positive_rates)
 
+    print("FALSE POSITIVE RATES")
+    print(result)
     # 10 => reduce =>10000
     
 
