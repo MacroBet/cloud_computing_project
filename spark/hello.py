@@ -99,7 +99,9 @@ if __name__ == "__main__":
     print("BLOOM FILTERS")
     print(bloomFilterRDD.collect())
 
-    false_positive_rates = bloomFilterRDD.map(lambda bloomFilter: calculate_false_positive_rate(lines, HASH_COUNTS[bloomFilter[0]], SIZES[bloomFilter[0]], bloomFilter[1], bloomFilter[0]))
+
+
+    false_positive_rates = bloomFilterRDD.map(lambda bloomFilter: calculate_false_positive_rate(lines, "HASH_COUNTS[bloomFilter[0]]", "SIZES[bloomFilter[0]]", "bloomFilter[1]", "bloomFilter[0]"))
     output = false_positive_rates.flatMap(lambda x: x).collect()#.reduceByKey(add).collect()
     print(output)
     # (1, 0101010101),(2,100101100101), ... 
