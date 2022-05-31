@@ -96,6 +96,7 @@ if __name__ == "__main__":
     total_elements= sum(N)
     #bloomFilters = [BloomFilter(N[i],p,"Rate "+ str(i+1)) for i in range(len(N))]
     print("HO creato i miei bei bloom filters")
+    print(SIZES, HASH_COUNTS)
     results = insert_ratings_in_bloom_filters(sys.argv[1], SIZES, HASH_COUNTS) 
         
     print(results)
