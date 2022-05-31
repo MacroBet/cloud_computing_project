@@ -8,8 +8,7 @@ from pyspark import SparkContext
 p = 0.01 #false positive probability
 
 
-def count_ratings_occurences(file_name):
-    lines = sc.textFile(file_name)
+def count_ratings_occurences(lines):
     words = lines.flatMap(lambda x: str(round(0.0001+float(x.split('\t')[1]))))
     ones =  words.map(lambda x: (x, 1))
     counts = ones.reduceByKey(add)
@@ -53,8 +52,7 @@ def get_hash_count(size, n):
     k = (size/n) * math.log(2)
     return int(k)
 
-def insert_ratings_in_bloom_filters(file_name, SIZES, HASH_COUNTS):
-    lines = sc.textFile(file_name)
+def insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS):
     ratings = lines.map(lambda x: ( x.split('\t')[0],round(0.0001+float(x.split('\t')[1]))))
     output = ratings.map(lambda rating: (rating[1],add_item_to_bloom_filter(HASH_COUNTS[rating[1]],SIZES[rating[1]],rating[0]))).reduceByKey(lambda bit_arr, acc: bit_arr | acc)
     return output
@@ -80,9 +78,9 @@ if __name__ == "__main__":
 
     master = "local"
     sc = SparkContext(master, "WordCount")
-    FILE_NAME = sys.argv[1]
+    lines = sc.textFile(sys.argv[1])
 
-    rating_count= count_ratings_occurences(FILE_NAME)
+    rating_count= count_ratings_occurences(lines)
     #   0,1,2,3,4,5,6,7,8,9,10
     N = [1,1,1,1,1,1,1,1,1,1,1]
 
@@ -94,11 +92,11 @@ if __name__ == "__main__":
     HASH_COUNTS = [get_hash_count(size, n) for size, n in zip(SIZES, N)]
     total_elements= sum(N)
     #bloomFilters = [BloomFilter(N[i],p,"Rate "+ str(i+1)) for i in range(len(N))]
-    bloomFilterRDD = insert_ratings_in_bloom_filters(FILE_NAME, SIZES, HASH_COUNTS) 
+    bloomFilterRDD = insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS) 
     print("BLOOM FILTERS")
     print(bloomFilterRDD.collect())
 
-    lines = sc.textFile(FILE_NAME)
+    lines = sc.textFile(lines)
 
     false_positive_rates = bloomFilterRDD.map(lambda bloomFilter: calculate_false_positive_rate(lines, HASH_COUNTS[bloomFilter[0]], SIZES[bloomFilter[0]], bloomFilter[1], bloomFilter[0]))
     output = false_positive_rates.flatMap(lambda x: x).reduceByKey(add).collect()
