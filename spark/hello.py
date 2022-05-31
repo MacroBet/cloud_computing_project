@@ -37,6 +37,7 @@ def add_item_to_bloom_filter(hash_count,size,item):
 def check_item_in_bloom_filter(hash_count, size, bit_array, item):
     for i in range(hash_count):
         digest = mmh3.hash(item, i) % size
+        print(bit_array,digest)
         if bit_array[digest] == False:
             # if any of bit is False then,its not present
             # in filter
