@@ -72,7 +72,7 @@ def calculate_false_positive_rate(lines, bloomFilters, HASH_COUNTS, SIZES ):
     # (id1,3),(id2,4)...
     print("Calculating false positive rate")
     ratings = lines.map(lambda x: ( x.split('\t')[0],round(0.0001+float(x.split('\t')[1]))))
-    false_positives = ratings.map(lambda rating: check_item_in_bloom_filters(rating, bloomFilters, HASH_COUNTS, SIZES))
+    false_positives = ratings.map(lambda rating: check_item_in_bloom_filters(rating, bloomFilters, HASH_COUNTS, SIZES)).flatMap(lambda x: x)
     # (true,1),(false,1),(false,1),..
     counts = false_positives.reduceByKey(add)
     # return counts #RDD [(false,1),(true,20)]
