@@ -58,7 +58,21 @@ def insert_ratings_in_bloom_filters(file_name, N, SIZES, HASH_COUNTS):
     output = ratings.map(lambda rating: (rating[1]-1,add_item_to_bloom_filter(HASH_COUNTS[rating[1]-1],SIZES[rating[1]-1],rating[0]))).reduceByKey(lambda bit_arr, acc: bit_arr | acc).collect()
     return output
     
-    
+def calculate_false_positive_rate(file_name, hash_count, size, bit_array, rate ):
+    lines = sc.textFile(file_name)
+    # (id1,3),(id2,4)...
+    ratings = lines.map(lambda x: ( x.split('\t')[0],round(float(x.split('\t')[1]))))
+    filtered_ratings = ratings.filter(lambda rating: rating[1] != rate)
+
+    false_positives = filtered_ratings.map(lambda rating: (check_item_in_bloom_filter(hash_count, size, bit_array, rating[0]),1))
+    # (true,1),(false,1),(false,1),..
+    counts = false_positives.reduceByKey(add)
+    if len(sys.argv) == 3:
+        counts.repartition(1).saveAsTextFile(sys.argv[2])
+    else:
+        output = counts.collect()
+        return output
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: wordcount <input file> [<output file>]", file=sys.stderr)
@@ -87,4 +101,5 @@ if __name__ == "__main__":
     bloomFilter5 = list( filter(lambda x: x[0] == 5, results))[0]
     print("funziona? "+ str( check_item_in_bloom_filter(HASH_COUNTS[5], SIZES[5], bloomFilter5[1], "tt0000001")))
     
-
+    output = calculate_false_positive_rate(sys.argv[1], HASH_COUNTS[5], SIZES[5], bloomFilter5[1], 5)
+    print(output)
