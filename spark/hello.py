@@ -110,9 +110,16 @@ if __name__ == "__main__":
     print(false_positive_count)
     # 10 => reduce =>10000
     false_positive_rates=[]
+    tot_fp = 0 
     for rate in false_positive_count:
-        false_positive_rates.append(rate[1]/N[rate[0]])
+        rating = rate[0]
+        fp = rate[1]
+        tot_fp += fp
+        n = N[rating]
+        false_positive_rates.append({'rating':rating,'false_positive_rate':fp/n, 'total_elements':n})
     print(false_positive_rates)
+    print("TOTAL FALSE POSITIVE RATE: %f" % (tot_fp/total_elements))
+
 
     # (1, 0101010101),(2,100101100101), ... 
     # bloomFilter6 = list( filter(lambda x: x[0] == 6, results))[0]
