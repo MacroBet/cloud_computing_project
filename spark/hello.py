@@ -98,7 +98,7 @@ if __name__ == "__main__":
     print("HO creato i miei bei bloom filters")
     results = insert_ratings_in_bloom_filters(sys.argv[1], SIZES, HASH_COUNTS) 
         
-
+    print(results)
     # (1, 0101010101),(2,100101100101), ... 
     bloomFilter6 = list( filter(lambda x: x[0] == 6, results))[0]
     print(bloomFilter6)
