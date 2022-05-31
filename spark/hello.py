@@ -94,11 +94,13 @@ if __name__ == "__main__":
     total_elements= sum(N)
     #bloomFilters = [BloomFilter(N[i],p,"Rate "+ str(i+1)) for i in range(len(N))]
     results = insert_ratings_in_bloom_filters(sys.argv[1], SIZES, HASH_COUNTS) 
-        
-
+    
+    bloomFilterRDD = sc.parallelize(list(results))
+    false_positive_rate = bloomFilterRDD.map(lambda bloomFilter: calculate_false_positive_rate(sys.argv[1], HASH_COUNTS[bloomFilter[0]], SIZES[bloomFilter[0]], bloomFilter[1], bloomFilter[0])).collect()
+    print(false_positive_rate)
     # (1, 0101010101),(2,100101100101), ... 
-    bloomFilter6 = list( filter(lambda x: x[0] == 6, results))[0]
+    # bloomFilter6 = list( filter(lambda x: x[0] == 6, results))[0]
     
     
-    output = calculate_false_positive_rate(sys.argv[1], HASH_COUNTS[6], SIZES[6], bloomFilter6[1], 6)
-    print(output)
+    # output = calculate_false_positive_rate(sys.argv[1], HASH_COUNTS[6], SIZES[6], bloomFilter6[1], 6)
+    # print(output)
