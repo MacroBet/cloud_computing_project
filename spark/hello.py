@@ -55,7 +55,7 @@ def get_hash_count(size, n):
 def insert_ratings_in_bloom_filters(file_name, N, SIZES, HASH_COUNTS):
     lines = sc.textFile(file_name)
     ratings = lines.map(lambda x: ( x.split('\t')[0],round(float(x.split('\t')[1]))))
-    output = ratings.map(lambda rating: (rating[1]-1,add_item_to_bloom_filter(HASH_COUNTS[rating[1]-1],SIZES[rating[1]-1],rating[0]))).reduceByKey(lambda bit_arr, acc: bit_arr | acc).collect()
+    output = ratings.map(lambda rating: (rating[1],add_item_to_bloom_filter(HASH_COUNTS[rating[1]],SIZES[rating[1]],rating[0]))).reduceByKey(lambda bit_arr, acc: bit_arr | acc).collect()
     return output
     
 def calculate_false_positive_rate(file_name, hash_count, size, bit_array, rate ):
@@ -83,13 +83,13 @@ if __name__ == "__main__":
     sc = SparkContext(master, "WordCount")
 
     rating_count= count_ratings_occurences(sys.argv[1])
-    #   1,2,3,4,5,6,7,8,9,10
-    N = [1,1,1,1,1,1,1,1,1,1]
+    #   0,1,2,3,4,5,6,7,8,9,10
+    N = [1,1,1,1,1,1,1,1,1,1,1]
     SIZES = [get_size(n, p) for n in N]
     HASH_COUNTS = [get_hash_count(size, n) for size, n in zip(SIZES, N)]
 
     for (word, count) in rating_count:
-        N[int(word)-1]= count
+        N[int(word)]= count
         print("%s: %i" % (word, count))
 
     total_elements= sum(N)
@@ -99,8 +99,8 @@ if __name__ == "__main__":
         
 
     # (1, 0101010101),(2,100101100101), ... 
-    bloomFilter5 = list( filter(lambda x: x[0] == 5, results))[0]
-    print("funziona? "+ str( check_item_in_bloom_filter(HASH_COUNTS[5], SIZES[5], bloomFilter5[1], "tt0000001")))
+    bloomFilter6 = list( filter(lambda x: x[0] == 6, results))[0]
+    print("funziona? "+ str( check_item_in_bloom_filter(HASH_COUNTS[6], SIZES[6], bloomFilter6[1], "tt0000001")))
     
-    output = calculate_false_positive_rate(sys.argv[1], HASH_COUNTS[5], SIZES[5], bloomFilter5[1], 5)
+    output = calculate_false_positive_rate(sys.argv[1], HASH_COUNTS[6], SIZES[6], bloomFilter6[1], 6)
     print(output)
