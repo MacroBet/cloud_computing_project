@@ -63,7 +63,7 @@ def check_item_in_bloom_filters(item, bloomFilters, HASH_COUNTS, SIZES):
     for bloom_filter in bloomFilters:
         rating = bloom_filter[0]
         bit_array = bloom_filter[1]
-        if(rating!=item_rating and check_item_in_bloom_filter(HASH_COUNTS[i], SIZES[i], bit_array, item_id)):
+        if(rating!=item_rating and check_item_in_bloom_filter(HASH_COUNTS[rating], SIZES[rating], bit_array, item_id)):
             false_positive.append((rating,1))
     return false_positive
 
