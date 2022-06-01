@@ -7,26 +7,6 @@ from bitarray import bitarray
 from pyspark import SparkContext
 p = 0.01 #false positive probability
 
-# 6: 12
-# 7: 5
-# 5: 11 
-# 4: 3
-# 1: 2
-# 2: 1
-# 3: 1
-# 8: 1
-# 9: 1
-
-# 6: 12
-# 7: 5
-# 5: 10 -> ok
-# 1: 3 -> ko doveva mettere 10 
-# 4: 3
-# 2: 1
-# 3: 1
-# 8: 1
-# 9: 1
-
 def count_ratings_occurences(lines):
     counts = lines.map(lambda x: (str(round(0.0001+float(x.split('\t')[1]))),1)).filter(lambda x: x[0]!="0" ).reduceByKey(add)
     return counts.collect()
@@ -112,6 +92,6 @@ if __name__ == "__main__":
         fp = rate[1]
         tot_fp += fp
         n = N[rating]
-        false_positive_rates.append({'rating':rating,'false_positive_rate':fp/n, 'total_elements':n, 'false_positives':fp})
+        false_positive_rates.append({'rating':rating,'false_positive_rate':fp/(total_elements-n), 'total_elements':n, 'false_positives':fp})
     print(false_positive_rates)
     print("TOTAL FALSE POSITIVE RATE: %f" % (tot_fp/total_elements))
