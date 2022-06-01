@@ -34,7 +34,7 @@ def get_size(n, p):
     return int(-(n * math.log(p))/(math.log(2)**2))
 
 def get_hash_count(size, n):
-    return int( (size/n) * math.log(2))
+    return int((size/n) * math.log(2))
 
 rating_extractor= lambda x: ( x.split('\t')[0],round(0.0001+float(x.split('\t')[1])))
     
@@ -43,7 +43,7 @@ def insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS):
     ratings = lines.map(rating_extractor)
     output = ratings.map(lambda rating: (rating[1],add_item_to_bloom_filter(HASH_COUNTS[rating[1]],SIZES[rating[1]],rating[0]))).reduceByKey(lambda bit_arr, acc: bit_arr | acc)
     return output.collect()
-    
+ 
 def check_item_in_bloom_filters(item, bloomFilters, HASH_COUNTS, SIZES):
     false_positive = []
     for bloom_filter in bloomFilters:
