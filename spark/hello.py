@@ -68,6 +68,8 @@ if __name__ == "__main__":
     sc = SparkContext(master, "WordCount")
     lines = sc.textFile(sys.argv[1])
     if (sys.argv[2]!=None): p = sys.argv[2] 
+
+    print("False positive probability: ",p)
     
 
     rating_count= count_ratings_occurences(lines)
