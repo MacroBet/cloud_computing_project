@@ -75,7 +75,7 @@ def check_item_in_bloom_filters(item, bloomFilters, HASH_COUNTS, SIZES):
 
 def calculate_false_positive_rate(lines, bloomFilters, HASH_COUNTS, SIZES ):
     ratings = lines.map(rating_extractor)
-    false_positives = ratings.map(lambda rating: check_item_in_bloom_filters(rating, bloomFilters, HASH_COUNTS, SIZES)).flatMap(lambda x: x)
+    false_positives = ratings.flatMap(lambda rating: check_item_in_bloom_filters(rating, bloomFilters, HASH_COUNTS, SIZES))
     counts = false_positives.reduceByKey(add)
     return counts.collect()
 
