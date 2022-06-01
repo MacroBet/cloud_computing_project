@@ -67,7 +67,7 @@ if __name__ == "__main__":
     master = "local"
     sc = SparkContext(master, "WordCount")
     lines = sc.textFile(sys.argv[1])
-    if (sys.argv[2]!=None): p = sys.argv[2] 
+    if (sys.argv[2]!=None): p = float(sys.argv[2])
 
     print("False positive probability: ",p)
     
