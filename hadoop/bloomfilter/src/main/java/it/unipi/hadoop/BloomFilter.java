@@ -72,6 +72,8 @@ public class BloomFilter {
     Job job1 = Job.getInstance(conf1, "tokenizer of data");
     job1.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job1, new Path(args[0]));
+    job1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 10000);
+    
     job1.setJarByClass(BloomFilter.class);
     job1.setMapperClass(TokenizerMapper.class);
     job1.setCombinerClass(IntSumReducer.class);
