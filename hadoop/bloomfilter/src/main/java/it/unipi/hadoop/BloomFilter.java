@@ -71,9 +71,9 @@ public class BloomFilter {
     }
     Job job1 = Job.getInstance(conf1, "tokenizer of data");
     // job1.setInputFormatClass(FileInputFormat.class);
-    // job1.setInputFormatClass(NLineInputFormat.class);
-    // NLineInputFormat.addInputPath(job1, new Path(args[0]));
-    // job1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 600000);
+    job1.setInputFormatClass(NLineInputFormat.class);
+    NLineInputFormat.addInputPath(job1, new Path(args[0]));
+    job1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 600000);
 
     job1.setJarByClass(BloomFilter.class);
     job1.setMapperClass(TokenizerMapper.class);
@@ -83,9 +83,9 @@ public class BloomFilter {
     job1.setOutputKeyClass(Text.class);
     job1.setOutputValueClass(IntWritable.class);
     
-    for (int i = 0; i < otherArgs.length - 1; ++i) {
-      FileInputFormat.addInputPath(job1, new Path(otherArgs[i]));
-    }
+    // for (int i = 0; i < otherArgs.length - 1; ++i) {
+    //   FileInputFormat.addInputPath(job1, new Path(otherArgs[i]));
+    // }
 
     FileOutputFormat.setOutputPath(job1,
         new Path(otherArgs[otherArgs.length - 1]));
