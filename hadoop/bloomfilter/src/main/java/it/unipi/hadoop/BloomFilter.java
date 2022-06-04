@@ -70,7 +70,7 @@ public class BloomFilter {
       System.exit(2);
     }
     Job job1 = Job.getInstance(conf1, "tokenizer of data");
-    job1.setInputFormatClass(FileInputFormat.class);
+    // job1.setInputFormatClass(FileInputFormat.class);
     // job1.setInputFormatClass(NLineInputFormat.class);
     // NLineInputFormat.addInputPath(job1, new Path(args[0]));
     // job1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 600000);
@@ -83,6 +83,10 @@ public class BloomFilter {
     job1.setOutputKeyClass(Text.class);
     job1.setOutputValueClass(IntWritable.class);
     
+    for (int i = 0; i < otherArgs.length - 1; ++i) {
+      FileInputFormat.addInputPath(job1, new Path(otherArgs[i]));
+    }
+
     FileOutputFormat.setOutputPath(job1,
         new Path(otherArgs[otherArgs.length - 1]));
     System.exit(job1.waitForCompletion(true) == true ? 1 : 0);
