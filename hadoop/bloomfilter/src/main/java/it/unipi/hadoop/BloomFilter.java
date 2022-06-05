@@ -89,7 +89,52 @@ public class BloomFilter {
 
     FileOutputFormat.setOutputPath(job1,
         new Path(otherArgs[otherArgs.length - 1]));
-    System.exit(job1.waitForCompletion(true) == true ? 1 : 0);
+    Boolean countSuccess = job1.waitForCompletion(true)
+    if(!countSuccess) {
+      System.exit(0);
+    }
+    
+
+    try {
+      Configuration conf = new Configuration();
+      FileSystem fs = FileSystem.get(conf);
+      // Hadoop DFS Path - Input file
+      Path inFile = new Path(otherArgs[otherArgs.length - 1]);
+        
+      // Check if input is valid
+      if (!fs.exists(inFile)) {
+        System.out.println("Input file not found");
+        throw new IOException("Input file not found");
+      }
+			
+      // open and read from file
+      FSDataInputStream in = fs.open(inFile);
+      // system.out as output stream to display 
+      //file content on terminal 
+      OutputStream out = System.out;
+      byte buffer[] = new byte[256];
+      try {
+        int bytesRead = 0;
+        while ((bytesRead = in.read(buffer)) > 0) {
+          out.write(buffer, 0, bytesRead);
+        }
+      } catch (IOException e) {
+        System.out.println("Error while copying file");
+      } finally {
+         // Closing streams
+        in.close();
+        
+        out.close();
+      }      
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }		 
+  
+    System.exit(0);
+    
+
+
 
     // Configuration conf2 = new Configuration();
     // Job job2 = Job.getInstance(conf2, "bloom filter creator");
