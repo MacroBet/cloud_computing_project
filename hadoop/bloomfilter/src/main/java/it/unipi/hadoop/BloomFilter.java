@@ -89,7 +89,7 @@ public class BloomFilter {
 
     FileOutputFormat.setOutputPath(job1,
         new Path(otherArgs[otherArgs.length - 1]));
-    Boolean countSuccess = job1.waitForCompletion(true)
+    Boolean countSuccess = job1.waitForCompletion(true);
     if(!countSuccess) {
       System.exit(0);
     }
