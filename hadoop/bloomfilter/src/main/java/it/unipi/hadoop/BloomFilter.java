@@ -63,7 +63,7 @@ public class BloomFilter {
       //   // ADD TO BLOOM FILTER 
       // }
       result.set(sum);
-      context.write(key, result);
+      context.write(key, result); // change result with bloom filter
     }
   }
 
