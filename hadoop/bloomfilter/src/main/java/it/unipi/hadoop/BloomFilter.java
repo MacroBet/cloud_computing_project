@@ -2,7 +2,7 @@ package it.unipi.hadoop;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
-
+import java.util.ArrayList;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -31,8 +31,6 @@ public class BloomFilter {
 
   public static class RatingMapper
       extends Mapper<Object, Text, Text, Text> {
-
-    private final static Text one = new IntWritable(1);
     private Text word = new Text();
 
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
@@ -55,7 +53,7 @@ public class BloomFilter {
         Context context) throws IOException, InterruptedException {
       int sum = 0;
       ArrayList<String> ratings = new ArrayList<String>();
-      for (IntWritable val : values) {
+      for (Text val : values) {
         sum += 1;
         ratings.add(val.get());
       }
