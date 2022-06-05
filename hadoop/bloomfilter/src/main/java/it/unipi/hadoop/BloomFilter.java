@@ -51,7 +51,7 @@ public class BloomFilter {
       extends Reducer<Text, Text, Text, IntWritable> {
     private IntWritable result = new IntWritable();
 
-    public void reduce(Text key, Iterable<IntWritable> values,
+    public void reduce(Text key, Iterable<Text> values,
         Context context) throws IOException, InterruptedException {
       int sum = 0;
       ArrayList<String> ratings = new ArrayList<String>();
