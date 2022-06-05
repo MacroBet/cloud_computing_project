@@ -56,7 +56,7 @@ public class BloomFilter {
       int sum = 0;
       ArrayList<String> ratings = new ArrayList<String>();
       for (IntWritable val : values) {
-        sum += 1
+        sum += 1;
         ratings.add(val.get());
       }
       // TODO calculate sizes given sum
