@@ -1,3 +1,4 @@
+git pull
 hadoop fs -rm -r output
 mvn clean package
 cd target
