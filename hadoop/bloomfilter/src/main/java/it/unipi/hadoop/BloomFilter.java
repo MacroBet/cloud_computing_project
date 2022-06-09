@@ -128,7 +128,7 @@ public void map(Object key, Text value, Context context) throws IOException, Int
 
     job1.setJarByClass(BloomFilter.class);
     job1.setMapperClass(RatingMapper.class);
-    job1.setCombinerClass(CreateBloomFilterReducer.class);
+    // job1.setCombinerClass(CreateBloomFilterReducer.class);
     job1.setReducerClass(CreateBloomFilterReducer.class);
     job1.setMapOutputKeyClass(Text.class);
     job1.setMapOutputValueClass(IntWritable.class); // set output values for mapper
