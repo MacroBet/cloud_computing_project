@@ -2,6 +2,9 @@ package it.unipi.hadoop;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
+import java.nio.ByteBuffer;
+import java.util.BitSet;
+import org.apache.commons.codec.digest.MurmurHash3;
 import java.util.ArrayList;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -18,17 +21,10 @@ import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import java.io.IOException;
 import java.io.OutputStream;
+import it.unipi.hadoop.BloomFilterCreator;
+
 
 public class BloomFilter {
-
-  public int get_size(int n, float p) {
-    return (int) (-(n * Math.log(p)) / Math.pow((Math.log(2)), 2));
-  }
-
-  public int get_hash_count(int size, int n) {
-    return (int) ((size / n) * Math.log(2));
-  }
-
   public static class RatingMapper
       extends Mapper<Object, Text, Text, Text> {
     private Text word = new Text();
@@ -46,8 +42,8 @@ public class BloomFilter {
   }
 
   public static class CreateBloomFilterReducer
-      extends Reducer<Text, Text, Text, IntWritable> {
-    private IntWritable result = new IntWritable();
+      extends Reducer<Text, Text, Text, Text> {
+    private Text result = new Text();
 
     public void reduce(Text key, Iterable<Text> values,
         Context context) throws IOException, InterruptedException {
@@ -57,20 +53,15 @@ public class BloomFilter {
         sum += 1;
         ratings.add(val.toString());
       }
-      // TODO calculate sizes given sum
-      // for (String rating : ratings) {
-      //   // result.set(rating);
-      //   // ADD TO BLOOM FILTER 
-      // }
-      result.set(sum);
-      context.write(key, result); // change result with bloom filter
+      BloomFilterCreator bloomFilter= new BloomFilterCreator(sum);
+      for (String rating : ratings) {
+        bloomFilter.add(rating);
+      }
+      
+      result.set(bloomFilter.toString());
+      context.write(key, result); 
     }
   }
-
-  // public BitArray insert_ratings_in_bloom_filters(Iterable<String> lines, Iterable<Integer> SIZES,
-  //     Iterable<Integer> HASH_COUNTS) {
-  //   // return BitArray;
-  // }
 
   public static void main(String[] args) throws Exception {
     Configuration conf1 = new Configuration();
@@ -91,7 +82,7 @@ public class BloomFilter {
     job1.setReducerClass(CreateBloomFilterReducer.class);
     // job1.setMapOutputKeyClass(theClass); // set output values for mapper
     job1.setOutputKeyClass(Text.class);
-    job1.setOutputValueClass(IntWritable.class);
+    job1.setOutputValueClass(Text.class);
     
     // for (int i = 0; i < otherArgs.length - 1; ++i) {
     //   FileInputFormat.addInputPath(job1, new Path(otherArgs[i]));
