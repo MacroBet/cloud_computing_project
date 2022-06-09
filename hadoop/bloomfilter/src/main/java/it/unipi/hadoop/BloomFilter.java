@@ -25,8 +25,10 @@ import it.unipi.hadoop.BloomFilterCreator;
 
 public class BloomFilter {
   public static class RatingMapper
-      extends Mapper<Object, Text, Text, Text> {
+      extends Mapper<Object, Text, Text, IntWritable> {
     private Text word = new Text();
+
+    private final static IntWritable one = new IntWritable(1);
 
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
       StringTokenizer itr = new StringTokenizer(value.toString(), "\n");
@@ -35,22 +37,23 @@ public class BloomFilter {
         int rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
         Text movieId = new Text(ratingRaw.split("\t")[0]);
         word.set("" + rating);
-        context.write(word, movieId);
+        // context.write(word, movieId);
+        context.write(word, one);
       }
     }
   }
 
   public static class CreateBloomFilterReducer
-      extends Reducer<Text, Text, Text, Text> {
-    private Text result = new Text();
+      extends Reducer<Text, IntWritable, Text, IntWritable> {
+    private IntWritable result = new IntWritable();
 
-    public void reduce(Text key, Iterable<Text> values,
+    public void reduce(Text key, Iterable<IntWritable> values,
         Context context) throws IOException, InterruptedException {
       int sum = 0;
-      ArrayList<String> ratings = new ArrayList<String>();
-      for (Text val : values) {
-        sum += 1;
-        ratings.add(val.toString());
+      // ArrayList<String> ratings = new ArrayList<String>();
+      for (IntWritable val : values) {
+        sum += val.get();
+        // ratings.add(val.toString());
       }
       // BloomFilterCreator bloomFilter= new BloomFilterCreator(sum);
       // for (String rating : ratings) {
@@ -59,7 +62,7 @@ public class BloomFilter {
       
       // result.set(bloomFilter.toString());
       // context.write(key, result); 
-      result.set("" + sum);
+      result.set(sum);
       context.write(key, result); 
     }
   }
@@ -83,7 +86,7 @@ public class BloomFilter {
     job1.setReducerClass(CreateBloomFilterReducer.class);
     // job1.setMapOutputKeyClass(theClass); // set output values for mapper
     job1.setOutputKeyClass(Text.class);
-    job1.setOutputValueClass(Text.class);
+    job1.setOutputValueClass(IntWritable.class);
     
     // for (int i = 0; i < otherArgs.length - 1; ++i) {
     //   FileInputFormat.addInputPath(job1, new Path(otherArgs[i]));
