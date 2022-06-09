@@ -52,7 +52,7 @@ public class BloomFilter {
       int sum = 0;
       // ArrayList<String> ratings = new ArrayList<String>();
       for (IntWritable val : values) {
-        sum += val.get();
+        sum += 1;
         // ratings.add(val.toString());
       }
       // BloomFilterCreator bloomFilter= new BloomFilterCreator(sum);
