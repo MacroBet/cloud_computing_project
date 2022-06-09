@@ -74,7 +74,7 @@ public class BloomFilter {
       int k = get_hash_count(m, sum);
       Text res = new Text(Integer.toString(m) + " " + Integer.toString(k));
       result.set(res);
-      context.write(key, res); // output (ratings m k )
+      context.write(key, result); // output (ratings m k )
     }
   }
 /* 
