@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.StringTokenizer;
 import java.nio.ByteBuffer;
 import java.util.BitSet;
-import org.apache.commons.codec.digest.MurmurHash3;
 import java.util.ArrayList;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -53,12 +52,14 @@ public class BloomFilter {
         sum += 1;
         ratings.add(val.toString());
       }
-      BloomFilterCreator bloomFilter= new BloomFilterCreator(sum);
-      for (String rating : ratings) {
-        bloomFilter.add(rating);
-      }
+      // BloomFilterCreator bloomFilter= new BloomFilterCreator(sum);
+      // for (String rating : ratings) {
+      //   bloomFilter.add(rating);
+      // }
       
-      result.set(bloomFilter.toString());
+      // result.set(bloomFilter.toString());
+      // context.write(key, result); 
+      result.set("" + sum);
       context.write(key, result); 
     }
   }
