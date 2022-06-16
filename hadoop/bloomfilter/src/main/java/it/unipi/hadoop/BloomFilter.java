@@ -25,6 +25,7 @@ import java.io.OutputStream;
 import it.unipi.hadoop.BloomFilterCreator;
 import java.io.InputStreamReader;
 import java.io.FileInputStream;
+import org.apache.commons.codec.digest.MurmurHash3;
 
 
 public class BloomFilter {
@@ -67,7 +68,7 @@ public class BloomFilter {
       int sum = 0;
       // ArrayList<String> ratings = new ArrayList<String>();
       for (IntWritable val : values) {
-        sum += 1;//val.get();
+        sum += val.get();
         // ratings.add(val.toString());
       }
       int m = get_size(sum, p_rate);
@@ -77,34 +78,42 @@ public class BloomFilter {
       context.write(key, result); // output (ratings m k )
     }
   }
-/* 
+ 
   public static class BloomFilterMapper
   extends Mapper<Object, Text, Text, Text> {
 private Text word = new Text();
-private HashMap<String, ArrayList<Integer>> bloomFilter_param = new HashMap<String, ArrayList<Integer>>();
+private HashMap<Integer, ArrayList<Integer>> bloomFilter_param = new HashMap<Integer, ArrayList<Integer>>();
 
 public void setup(Context context) throws IOException, InterruptedException
 {
-  try{
-    Path pt=new Path("hdfs:/path/to/file");//Location of file in HDFS
-    FileSystem fs = FileSystem.get(new Configuration());
-    BufferedReader br=new BufferedReader(new InputStreamReader(fs.open(pt)));
-    String line;
-    ArrayList<Integer> parameters = new ArrayList<>();
-    line=br.readLine();
-    while (line != null){
-        String[] currencies = line.split(" ");
-        parameters.add(Integer.parseInt(currencies[1]), Integer.parseInt(currencies[2]));
-        bloomFilter_param.put(currencies[0], parameters);
-        System.out.println(line);
-        line=br.readLine();
+   try {
+        Path pt = new Path("hdfs://hadoop-namenode:9820/user/hadoop/output/part-r-00000");// Location of file in HDFS
+        FileSystem fs = FileSystem.get(new Configuration());
+        BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(pt)));
+        String line;
 
-    }
-}catch(Exception e) {e.getStackTrace();}{
+        
+        line = br.readLine();
+        
+        //rating  m k
+        while (line != null) {
+          ArrayList<Integer> parameters = new ArrayList<Integer>();
+          String[] currencies = line.split("\t");
+          parameters.add(Integer.parseInt(currencies[1]));
+          parameters.add(Integer.parseInt(currencies[2]));
+
+          bloomFilter_param.put(Integer.parseInt(currencies[0]), parameters);
+
+
+          line = br.readLine();
+        }
+
+      } catch (Exception e) {
+        e.getStackTrace();
+      }
 }
-}
 
-
+/* 
 public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
  
     context.write(word, bloomFilter);
@@ -128,10 +137,12 @@ public void map(Object key, Text value, Context context) throws IOException, Int
 
     job1.setJarByClass(BloomFilter.class);
     job1.setMapperClass(RatingMapper.class);
-    // job1.setCombinerClass(CreateBloomFilterReducer.class);
+    //job1.setCombinerClass(CreateBloomFilterReducer.class);
     job1.setReducerClass(CreateBloomFilterReducer.class);
+
     job1.setMapOutputKeyClass(Text.class);
     job1.setMapOutputValueClass(IntWritable.class); // set output values for mapper
+    
     job1.setOutputKeyClass(Text.class);
     job1.setOutputValueClass(Text.class);
     
@@ -194,5 +205,6 @@ public void map(Object key, Text value, Context context) throws IOException, Int
     // Configuration conf3 = new Configuration();
     // Job job3 = Job.getInstance(conf3, "testing bloom filter");
     
+  }
   }
 }
