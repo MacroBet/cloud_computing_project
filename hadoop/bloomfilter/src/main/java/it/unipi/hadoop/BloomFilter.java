@@ -23,104 +23,15 @@ import org.apache.hadoop.fs.FileSystem;
 import java.io.IOException;
 import java.io.OutputStream;
 import it.unipi.hadoop.BloomFilterCreator;
+import it.unipi.hadoop.Job1.*;
+
 import java.io.InputStreamReader;
 import java.io.FileInputStream;
 import org.apache.commons.codec.digest.MurmurHash3;
+import it.unipi.hadoop.*;
 
 
 public class BloomFilter {
-
-  private static final float p_rate = (float) 0.01;
-
-  public static int get_size(int n, float p) {
-    return (int) (-(n * Math.log(p)) / Math.pow((Math.log(2)), 2));
-  }
-
-  public static int get_hash_count(int size, int n) {
-    return (int) ((size / n) * Math.log(2));
-  }
-
-  public static class RatingMapper
-      extends Mapper<Object, Text, Text, IntWritable> {
-    private Text word = new Text();
-
-    private final static IntWritable one = new IntWritable(1);
-
-    public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-      StringTokenizer itr = new StringTokenizer(value.toString(), "\n");
-      while (itr.hasMoreTokens()) {
-        String ratingRaw = itr.nextToken().toString();
-        int rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
-        Text movieId = new Text(ratingRaw.split("\t")[0]);
-        word.set("" + rating);
-        // context.write(word, movieId);
-        context.write(word, one);
-      }
-    }
-  }
-
-  public static class CreateBloomFilterReducer
-      extends Reducer<Text, IntWritable, Text, Text> {
-    private Text result = new Text();
-
-    public void reduce(Text key, Iterable<IntWritable> values,
-        Context context) throws IOException, InterruptedException {
-      int sum = 0;
-      // ArrayList<String> ratings = new ArrayList<String>();
-      for (IntWritable val : values) {
-        sum += val.get();
-        // ratings.add(val.toString());
-      }
-      int m = get_size(sum, p_rate);
-      int k = get_hash_count(m, sum);
-      String res = new String(Integer.toString(m) + " " + Integer.toString(k));
-      result.set(res);
-      context.write(key, result); // output (ratings m k )
-    }
-  }
- 
-  public static class BloomFilterMapper
-  extends Mapper<Object, Text, Text, Text> {
-private Text word = new Text();
-private HashMap<Integer, ArrayList<Integer>> bloomFilter_param = new HashMap<Integer, ArrayList<Integer>>();
-
-public void setup(Context context) throws IOException, InterruptedException
-{
-   try {
-        Path pt = new Path("hdfs://hadoop-namenode:9820/user/hadoop/output/part-r-00000");// Location of file in HDFS
-        FileSystem fs = FileSystem.get(new Configuration());
-        BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(pt)));
-        String line;
-
-        
-        line = br.readLine();
-        
-        //rating  m k
-        while (line != null) {
-          ArrayList<Integer> parameters = new ArrayList<Integer>();
-          String[] currencies = line.split("\t");
-          parameters.add(Integer.parseInt(currencies[1]));
-          parameters.add(Integer.parseInt(currencies[2]));
-
-          bloomFilter_param.put(Integer.parseInt(currencies[0]), parameters);
-
-
-          line = br.readLine();
-        }
-
-      } catch (Exception e) {
-        e.getStackTrace();
-      }
-}
-
-/* 
-public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
- 
-    context.write(word, bloomFilter);
-  }
-}
-} */
-
 
   public static void main(String[] args) throws Exception {
     Configuration conf1 = new Configuration();
@@ -138,7 +49,7 @@ public void map(Object key, Text value, Context context) throws IOException, Int
     job1.setJarByClass(BloomFilter.class);
     job1.setMapperClass(RatingMapper.class);
     //job1.setCombinerClass(CreateBloomFilterReducer.class);
-    job1.setReducerClass(CreateBloomFilterReducer.class);
+    job1.setReducerClass(CreateParametersReducer.class);
 
     job1.setMapOutputKeyClass(Text.class);
     job1.setMapOutputValueClass(IntWritable.class); // set output values for mapper
@@ -157,42 +68,6 @@ public void map(Object key, Text value, Context context) throws IOException, Int
       System.exit(0);
     }
     
-
-    // try {
-    //   Configuration conf = new Configuration();
-    //   FileSystem fs = FileSystem.get(conf);
-    //   // Hadoop DFS Path - Input file
-    //   Path inFile = new Path(otherArgs[otherArgs.length - 1]);
-        
-    //   // Check if input is valid
-    //   if (!fs.exists(inFile)) {
-    //     System.out.println("Input file not found");
-    //     throw new IOException("Input file not found");
-    //   }
-			
-    //   // open and read from file
-    //   FSDataInputStream in = fs.open(inFile);
-    //   // system.out as output stream to display 
-    //   //file content on terminal 
-    //   OutputStream out = System.out;
-    //   byte buffer[] = new byte[256];
-    //   try {
-    //     int bytesRead = 0;
-    //     while ((bytesRead = in.read(buffer)) > 0) {
-    //       out.write(buffer, 0, bytesRead);
-    //     }
-    //   } catch (IOException e) {
-    //     System.out.println("Error while copying file");
-    //   } finally {
-    //      // Closing streams
-    //     in.close();
-        
-    //     out.close();
-    //   }      
-    // } catch (IOException e) {
-    //   // TODO Auto-generated catch block
-    //   e.printStackTrace();
-    // }		 
   
     System.exit(0);
     
@@ -207,4 +82,4 @@ public void map(Object key, Text value, Context context) throws IOException, Int
     
   }
   }
-}
+
