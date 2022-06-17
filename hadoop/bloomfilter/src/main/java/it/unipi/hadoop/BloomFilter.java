@@ -60,6 +60,7 @@ public class BloomFilter implements Writable{
     bytes.readFields(dataInput);
     size.readFields(dataInput);
     hashCount.readFields(dataInput);
+    this.bitset= BitSet.valueOf(bytes.getBytes());
   }
 
 
