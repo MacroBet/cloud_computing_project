@@ -3,7 +3,6 @@ package it.unipi.hadoop.Job2;
 import java.io.IOException;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
-import com.google.common.collect.Iterables;
 import it.unipi.hadoop.*;
 
 public class BloomFiltersReducer extends Reducer<Text, BloomFilter, Text, BloomFilter> {
@@ -17,7 +16,6 @@ public class BloomFiltersReducer extends Reducer<Text, BloomFilter, Text, BloomF
            if(i==0){
             temp_BloomFilter = new BloomFilter(bloomFilter.get_size(), bloomFilter.get_hash_count());
            }
-           if(temp_BloomFilter!=null)
             temp_BloomFilter.or(bloomFilter);
            i++;
         }

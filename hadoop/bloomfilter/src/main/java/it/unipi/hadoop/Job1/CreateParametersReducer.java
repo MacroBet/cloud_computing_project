@@ -21,7 +21,7 @@ public class CreateParametersReducer extends Reducer<Text, IntWritable, Text, Te
       int m = BloomFilterUtility.get_size(sum, p_rate);
       int k = BloomFilterUtility.get_hash_count(m, sum);
 
-      String res = new String(Integer.toString(m) + " " + Integer.toString(k));
+      String res = new String(Integer.toString(m) + "\t" + Integer.toString(k));
       result.set(res);
       context.write(key, result); // output (ratings m k )
     }
