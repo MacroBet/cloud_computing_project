@@ -23,7 +23,11 @@ public class BloomFilter implements Writable{
   }
 
   
-  BloomFilter() { }
+  BloomFilter() {
+    bytes = new BytesWritable();
+    size = new VIntWritable();
+    hashCount = new VIntWritable();
+  }
 
   BloomFilter(int n) {
     int size = get_size(n, (float) 0.01);
