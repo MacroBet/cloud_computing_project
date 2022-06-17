@@ -22,6 +22,9 @@ public class BloomFilter implements Writable{
     return (int) ((size / n) * Math.log(2));
   }
 
+  
+  BloomFilter() { }
+
   BloomFilter(int n) {
     int size = get_size(n, (float) 0.01);
     int hashCount= get_hash_count(size, n);
