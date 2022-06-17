@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
-import java.util.BitSet;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
@@ -27,7 +25,6 @@ public class BloomFiltersMapper extends Mapper<Object, Text, Text, BloomFilter> 
             BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(pt)));
             String line;
 
-            
             line = br.readLine();
             
             //rating  m k
@@ -47,6 +44,7 @@ public class BloomFiltersMapper extends Mapper<Object, Text, Text, BloomFilter> 
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 
       StringTokenizer itr = new StringTokenizer(value.toString(), "\n");
+      
       while (itr.hasMoreTokens()) {
         String ratingRaw = itr.nextToken().toString();
         Integer rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
