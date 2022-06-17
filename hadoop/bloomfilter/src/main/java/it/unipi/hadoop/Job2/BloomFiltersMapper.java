@@ -49,7 +49,7 @@ public class BloomFiltersMapper extends Mapper<Object, Text, Text, BloomFilter> 
         String ratingRaw = itr.nextToken().toString();
         Integer rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
         String movieId = ratingRaw.split("\t")[0];
-        BloomFilter bloomFilter = new BloomFilter(19,6);//bloomFilter_param.get(rating).get(0), bloomFilter_param.get(rating).get(1));
+        BloomFilter bloomFilter = new BloomFilter(bloomFilter_param.get(rating).get(0), bloomFilter_param.get(rating).get(1));
         bloomFilter.add(movieId);
 
         word.set("" + rating);
