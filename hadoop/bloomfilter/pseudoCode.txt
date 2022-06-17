@@ -62,3 +62,21 @@ class Reducer
             tempBloom = tempBloom || elm
         
         Emit(rating, tempBloom)
+
+
+
+
+JOB 3
+    class Mapper
+                                key       0  1
+    HashMap<> parameters      //ratings->[m][k]
+    
+    method SetUp(context)
+       
+        rf = readFromFile("hdfs://hadoop-namenode:9820/user/hadoop/output/part-r-00000")
+
+        foreach line in rf
+            value = get(line[rating])
+            m = get(line[m])
+            k = get(line[k])
+            parameters.add(value, (m,k))

@@ -1,12 +1,18 @@
 package it.unipi.hadoop;
-
+import org.apache.hadoop.io.BytesWritable;
+import org.apache.hadoop.io.VIntWritable;
 import java.util.BitSet;
 import org.apache.commons.codec.digest.MurmurHash3;
+import org.apache.hadoop.io.Writable;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
-public class BloomFilter {
-  private int size;
-  private int hashCount;
-  private BitSet bitSet;
+public class BloomFilter implements Writable{
+  private VIntWritable size;
+  private VIntWritable hashCount;
+  private BytesWritable bytes;
+  private BitSet bitset;
 
   private int get_size(int n, float p) {
     return (int) (-(n * Math.log(p)) / Math.pow((Math.log(2)), 2));
@@ -17,25 +23,48 @@ public class BloomFilter {
   }
 
   BloomFilter(int n) {
-    this.size = get_size(n, (float) 0.01);
-    this.hashCount = get_hash_count(this.size, n);
-    this.bitSet = new BitSet(this.size);
+    int size = get_size(n, (float) 0.01);
+    int hashCount= get_hash_count(size, n);
+    this.size = new VIntWritable(size);
+    this.hashCount = new VIntWritable(hashCount);
+    this.bitset = new BitSet(size);
+    this.bytes = new BytesWritable(bitset.toByteArray());
   }
 
-  BloomFilter(int size, int hashCount, String bitSet) {
-    this.size = size;
-    this.hashCount = hashCount;
-    // short a = Short.parseShort(bitSet, 2);
-    // ByteBuffer bytes = ByteBuffer.allocate((int) Math.round(size / 8 +
-    // 0.5)).putShort(a);
-    // byte[] array = bytes.array();
-    this.bitSet = fromString(bitSet);
+  // BloomFilter(int size, int hashCount, String bitSet) {
+  //   this.size = size;
+  //   this.hashCount = hashCount;
+  //   // short a = Short.parseShort(bitSet, 2);
+  //   // ByteBuffer bytes = ByteBuffer.allocate((int) Math.round(size / 8 +
+  //   // 0.5)).putShort(a);
+  //   // byte[] array = bytes.array();
+  //   this.bitSet = fromString(bitSet);
+  // }
+
+  @Override
+  public void write(DataOutput dataOutput) throws IOException {
+    bytes.write(dataOutput);
+    size.write(dataOutput);
+    hashCount.write(dataOutput);
   }
+
+  @Override
+  public void readFields(DataInput dataInput) throws IOException {
+    bytes.readFields(dataInput);
+    size.readFields(dataInput);
+    hashCount.readFields(dataInput);
+  }
+
 
   public BloomFilter(int size, int hashCount) {
-    this.size = size;
-    this.hashCount = hashCount;
+    this.size = new VIntWritable(size);
+    this.hashCount = new VIntWritable(hashCount);
+    this.bitset = new BitSet(size);
+    this.bytes = new BytesWritable(bitset.toByteArray());
+  }
 
+  public void or(BloomFilter bloomFilter){
+    this.bitset.or(bloomFilter.get_bitset());
   }
 
   private long getUnsignedInt(int x) {
@@ -43,23 +72,28 @@ public class BloomFilter {
   }
 
   public void add(String s) {
-    for (int i = 0; i < this.hashCount; i++) {
+    int hashCount= this.hashCount.get();
+    int size = this.size.get();
+    for (int i = 0; i < hashCount; i++) {
 
       String id = s.replace("t", "0");
-      int digest = (int) (getUnsignedInt(MurmurHash3.hash32(Long.valueOf(id).longValue(), i)) % this.size);
+      int digest = (int) (getUnsignedInt(MurmurHash3.hash32(Long.valueOf(id).longValue(), i)) % size);
       // if (digest < 0) {
       // digest += this.size;
       // }
-      this.bitSet.set(digest);
+      this.bitset.set(digest);
     }
   }
 
   public boolean check(String s) {
-    for (int i = 0; i < this.hashCount; i++) {
+    int hashCount= this.hashCount.get();
+    BitSet bitset = BitSet.valueOf(this.bytes.getBytes());
+    int size = this.size.get();
+    for (int i = 0; i < hashCount; i++) {
       String id = s.replace("t", "0");
-      int digest = (int) (getUnsignedInt(MurmurHash3.hash32(Long.valueOf(id).longValue(), i)) % this.size);
+      int digest = (int) (getUnsignedInt(MurmurHash3.hash32(Long.valueOf(id).longValue(), i)) % size);
       // System.out.println("DIGEST PRESENTE: " + digest);
-      if (!this.bitSet.get(digest)) {
+      if (!bitset.get(digest)) {
         // System.out.println("DIGEST ASSENTE: " + digest);
         return false;
       }
@@ -67,44 +101,38 @@ public class BloomFilter {
     return true;
   }
 
-  @Override
-  public String toString() {
-    return this.size + "\t" + this.hashCount + "\t" + toString(this.bitSet);
+  // @Override
+  // public String toString() {
+  //   return this.size + "\t" + this.hashCount + "\t" + toString(this.bitSet);
 
-  }
+  // }
 
-  private static BitSet fromString(final String str_bitset) {
-    BitSet bitSet = new BitSet(str_bitset.length());
-    // System.out.println(str_bitset);
+  // private static BitSet fromString(final String str_bitset) {
+  //   BitSet bitSet = new BitSet(str_bitset.length());
+  //   // System.out.println(str_bitset);
 
-    for (int i = 0; i < str_bitset.toCharArray().length; i++) {
-      bitSet.set(str_bitset.toCharArray().length - 1 - i, ((str_bitset.charAt(i)) == '1' ? true : false));
-    }
-    return bitSet;
-  }
+  //   for (int i = 0; i < str_bitset.toCharArray().length; i++) {
+  //     bitSet.set(str_bitset.toCharArray().length - 1 - i, ((str_bitset.charAt(i)) == '1' ? true : false));
+  //   }
+  //   return bitSet;
+  // }
 
-  private static String toString(BitSet bs) {
-    String strlong = "";
+  // private static String toString(BitSet bs) {
+  //   String strlong = "";
 
-    for (int i = 0; i < bs.toLongArray().length; i++) {
-      int n_fill = 64 - Long.toString(bs.toLongArray()[bs.toLongArray().length - 1 - i], 2).length();
-      String fill_bits = new String(new char[n_fill]).replace('\0', '0');
-      strlong = strlong + fill_bits + Long.toString(bs.toLongArray()[bs.toLongArray().length - 1 - i], 2);
-    }
-    System.out.println("STRINGA BIT LUNGA = " + strlong.length());
-    return strlong;
-  }
+  //   for (int i = 0; i < bs.toLongArray().length; i++) {
+  //     int n_fill = 64 - Long.toString(bs.toLongArray()[bs.toLongArray().length - 1 - i], 2).length();
+  //     String fill_bits = new String(new char[n_fill]).replace('\0', '0');
+  //     strlong = strlong + fill_bits + Long.toString(bs.toLongArray()[bs.toLongArray().length - 1 - i], 2);
+  //   }
+  //   System.out.println("STRINGA BIT LUNGA = " + strlong.length());
+  //   return strlong;
+  // }
 
-  public int get_hash_count() {return this.hashCount;}
+  public int get_hash_count() {return this.hashCount.get();}
 
-  public int get_size() {return this.size;}
+  public int get_size() {return this.size.get();}
 
-  public BitSet get_bitSet() {return this.bitSet;}
-
-  public void set_hash_count(int hashCount) {this.hashCount = hashCount;}
-
-  public void set_size(int size) {this.size = size;}
-
-  public void set_BitSet(BitSet bitSet) {this.bitSet = bitSet;}
+  public BitSet get_bitset() {return this.bitset;}
 
 }

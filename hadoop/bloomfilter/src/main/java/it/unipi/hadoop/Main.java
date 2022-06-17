@@ -65,7 +65,7 @@ public class Main {
     job2.setMapOutputValueClass(BloomFilter.class); // set output values for mapper
     
     job2.setOutputKeyClass(Text.class);
-    job2.setOutputValueClass(Text.class);
+    job2.setOutputValueClass(BloomFilter.class);
 
     FileOutputFormat.setOutputPath(job2, new Path(otherArgs[otherArgs.length - 1] + "_2"));
     Boolean countSuccess1 = job2.waitForCompletion(true);
