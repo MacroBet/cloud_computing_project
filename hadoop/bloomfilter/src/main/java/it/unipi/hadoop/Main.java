@@ -47,7 +47,7 @@ public class Main {
     }
     
   
-    System.exit(0);
+    //System.exit(0);
     
 
     Configuration conf2 = new Configuration();
@@ -73,7 +73,7 @@ public class Main {
       System.exit(0);
     }
 
-
+    System.exit(0);
 
     //Configuration conf3 = new Configuration();
     //Job job3 = Job.getInstance(conf3, "testing bloom filter");
