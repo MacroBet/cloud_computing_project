@@ -2,7 +2,7 @@ package it.unipi.hadoop;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.VIntWritable;
 import java.util.BitSet;
-import org.apache.commons.codec.digest.MurmurHash3;
+import org.apache.hadoop.util.hash.MurmurHash;
 import org.apache.hadoop.io.Writable;
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -77,7 +77,7 @@ public class BloomFilter implements Writable{
     for (int i = 0; i < hashCount; i++) {
 
       String id = s.replace("t", "0");
-      int digest = (int) (getUnsignedInt(MurmurHash3.hash32(Long.valueOf(id).longValue(), i)) % size);
+      int digest = (int) (getUnsignedInt(MurmurHash.getInstance().hash(id.getBytes(), i)) % size);
       // if (digest < 0) {
       // digest += this.size;
       // }
@@ -91,7 +91,7 @@ public class BloomFilter implements Writable{
     int size = this.size.get();
     for (int i = 0; i < hashCount; i++) {
       String id = s.replace("t", "0");
-      int digest = (int) (getUnsignedInt(MurmurHash3.hash32(Long.valueOf(id).longValue(), i)) % size);
+      int digest = (int) (getUnsignedInt(MurmurHash.getInstance().hash(id.getBytes(), i)) % size);
       // System.out.println("DIGEST PRESENTE: " + digest);
       if (!bitset.get(digest)) {
         // System.out.println("DIGEST ASSENTE: " + digest);
