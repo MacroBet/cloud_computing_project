@@ -10,8 +10,9 @@ public class BloomFiltersReducer extends Reducer<Text, BloomFilter, Text, BloomF
 
     public void reduce(Text key, Iterable<BloomFilter> values, Context context) throws IOException, InterruptedException {
             
-       BloomFilter temp_BloomFilter = new BloomFilter(Iterables.get(values, 0).get_size(), 
-                                                               Iterables.get(values, 0).get_hash_count());
+       BloomFilter temp_BloomFilter = new BloomFilter(19,6);
+         // Iterables.get(values, 0).get_size(), 
+         //                                                       Iterables.get(values, 0).get_hash_count());
         for (BloomFilter bloomFilter : values) {
            temp_BloomFilter.or(bloomFilter);
         }
