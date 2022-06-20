@@ -10,6 +10,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.MapFile;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.SequenceFile.Reader;
+import org.apache.hadoop.mapred.SequenceFileOutputFormat;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.lib.input.NLineInputFormat;
 import org.apache.hadoop.mapreduce.Job;
@@ -64,6 +65,7 @@ public class Main {
     Job job2 = Job.getInstance(conf2, "test");
     job2.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job2, new Path(args[0]));
+    job2.setOutputKeyClass(SequenceFileOutputFormat.class);
     job2.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 600000);
 
     job2.setJarByClass(Main.class);
@@ -76,7 +78,7 @@ public class Main {
     
     job2.setOutputKeyClass(Text.class);
     job2.setOutputValueClass(BloomFilter.class);
-
+    
     FileOutputFormat.setOutputPath(job2, new Path(otherArgs[otherArgs.length - 1] + "_2"));
     Boolean countSuccess2 = job2.waitForCompletion(true);
     if(!countSuccess2) {
