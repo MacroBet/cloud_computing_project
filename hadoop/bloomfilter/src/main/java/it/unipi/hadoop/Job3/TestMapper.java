@@ -10,10 +10,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.SequenceFile.Reader;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.mapreduce.Mapper;
-
-import com.squareup.okhttp.internal.io.FileSystem;
 
 import it.unipi.hadoop.BloomFilter;
 
@@ -52,13 +49,14 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
           String movieId = ratingRaw.split("\t")[0];
 
           for (int i = 0; i < bloomFilter_param.size(); i++) {
+
+            context.write(new Text(" " + rating),new IntWritable(bloomFilter_param.get(i).get_size()));
             if(i != (rating-1) && bloomFilter_param.get(i).check(movieId))  
               
               falsePositive++;
             
           }
-         
-          context.write(new Text("sum"),new IntWritable(falsePositive/9));   //rating  bloomfilter
+            //rating  bloomfilter
         }
   
       }
