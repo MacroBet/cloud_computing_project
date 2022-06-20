@@ -77,7 +77,7 @@ public class Main {
     if(!countSuccess2) {
       System.exit(0);
     }
-    System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    
     ArrayList<BloomFilter> bloomFilter_param = new ArrayList<BloomFilter> ();
 
     try {
@@ -86,10 +86,11 @@ public class Main {
 
       boolean hasNext;
       do {
-
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         Text key = new Text();
         BloomFilter bf = new BloomFilter();
         hasNext = reader.next(key, bf);
+        System.out.println(hasNext);
         System.out.println(bf.get_size());
         bloomFilter_param.add(bf);
 
