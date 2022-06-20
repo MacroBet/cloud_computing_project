@@ -23,7 +23,7 @@ public class BloomFilter implements Writable{
   }
 
   
-  BloomFilter() {
+  public BloomFilter() {
     bytes = new BytesWritable();
     size = new VIntWritable();
     hashCount = new VIntWritable();
@@ -36,6 +36,15 @@ public class BloomFilter implements Writable{
     this.hashCount = new VIntWritable(hashCount);
     this.bitset = new BitSet(size);
     this.bytes = new BytesWritable(bitset.toByteArray());
+  }
+
+  public BloomFilter(BloomFilter b) {
+
+    this.size = new VIntWritable(b.get_size());
+    this.hashCount = new VIntWritable(b.get_hash_count());
+    this.bitset = b.get_bitset();
+    this.bytes = b.bytes;
+    
   }
 
   // BloomFilter(int size, int hashCount, String bitSet) {

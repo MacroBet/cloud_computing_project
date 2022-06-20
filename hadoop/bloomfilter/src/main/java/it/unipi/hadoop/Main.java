@@ -51,7 +51,7 @@ public class Main {
     
 
     Configuration conf2 = new Configuration();
-    Job job2 = Job.getInstance(conf2, "bloom filter creator");
+    Job job2 = Job.getInstance(conf2, "test");
     job2.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job2, new Path(args[0]));
     job2.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 600000);
@@ -62,10 +62,10 @@ public class Main {
     job2.setReducerClass(BloomFiltersReducer.class);
 
     job2.setMapOutputKeyClass(Text.class);
-    job2.setMapOutputValueClass(BloomFilter.class); // set output values for mapper
+    job2.setMapOutputValueClass(IntWritable.class); // set output values for mapper
     
     job2.setOutputKeyClass(Text.class);
-    job2.setOutputValueClass(BloomFilter.class);
+    job2.setOutputValueClass(Text.class);
 
     FileOutputFormat.setOutputPath(job2, new Path(otherArgs[otherArgs.length - 1] + "_2"));
     Boolean countSuccess1 = job2.waitForCompletion(true);
@@ -75,8 +75,31 @@ public class Main {
 
     System.exit(0);
 
-    //Configuration conf3 = new Configuration();
-    //Job job3 = Job.getInstance(conf3, "testing bloom filter");
+    Configuration conf3 = new Configuration();
+    Job job3 = Job.getInstance(conf3, "bloom filter creator");
+    job3.setInputFormatClass(NLineInputFormat.class);
+    NLineInputFormat.addInputPath(job3, new Path(args[0]));
+    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 600000);
+
+    job3.setJarByClass(Main.class);
+    job3.setMapperClass(BloomFiltersMapper.class);
+    //job3.setCombinerClass(CreateBloomFilterReducer.class);
+    job3.setReducerClass(BloomFiltersReducer.class);
+
+    job3.setMapOutputKeyClass(Text.class);
+    job3.setMapOutputValueClass(BloomFilter.class); // set output values for mapper
+    
+    job3.setOutputKeyClass(Text.class);
+    job3.setOutputValueClass(BloomFilter.class);
+
+    FileOutputFormat.setOutputPath(job3, new Path(otherArgs[otherArgs.length - 1] + "_3"));
+    Boolean countSuccess2 = job3.waitForCompletion(true);
+    if(!countSuccess1) {
+      System.exit(0);
+    }
+
+    System.exit(0);
+
     
   }
 }
