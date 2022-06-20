@@ -101,7 +101,7 @@ public class Main {
           BloomFilter bf = new BloomFilter();
           hasNext = reader.next(key, bf);
          
-          System.out.println(bf.get_bitset());
+          System.out.println(bf.get_bitset().toString());
           bloomFilter_param.add(bf);
 
       } while(hasNext);
