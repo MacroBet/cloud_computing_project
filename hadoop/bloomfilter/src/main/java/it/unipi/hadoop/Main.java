@@ -1,8 +1,11 @@
 package it.unipi.hadoop;
 
+import java.util.ArrayList;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.lib.input.NLineInputFormat;
 import org.apache.hadoop.mapreduce.Job;
@@ -75,6 +78,26 @@ public class Main {
       System.exit(0);
     }
 
+    ArrayList<BloomFilter> bloomFilter_param = new ArrayList<BloomFilter> ();
+
+    try {
+      Path pt = new Path("hdfs://hadoop-namenode:9820/user/hadoop/output_2/part-r-00000");// Location of file in HDFS
+      SequenceFile.Reader reader = new SequenceFile.Reader(new Configuration(), SequenceFile.Reader.file(pt));
+
+      boolean hasNext;
+      do {
+
+        Text key = new Text();
+        BloomFilter bf = new BloomFilter();
+        hasNext = reader.next(key, bf);
+        System.out.println(bf.get_size());
+        bloomFilter_param.add(bf);
+
+      } while(hasNext);
+
+  } catch (Exception e) { e.getStackTrace(); }
+
+    /* 
     Configuration conf3 = new Configuration();
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
@@ -97,7 +120,7 @@ public class Main {
     if(!countSuccess3) {
       System.exit(0);
     }
-
+    */
     System.exit(0);
 
     
