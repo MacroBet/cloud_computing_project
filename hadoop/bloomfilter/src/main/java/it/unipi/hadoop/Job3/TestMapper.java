@@ -50,13 +50,13 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
 
           for (int i = 0; i < bloomFilter_param.size(); i++) {
 
-            context.write(new Text(" " + rating),new IntWritable(bloomFilter_param.get(i).get_size()));
-            if(i != (rating-1) && bloomFilter_param.get(i).check(movieId))  
+            
+            if( bloomFilter_param.get(i).check(movieId))  
               
               falsePositive++;
             
           }
-            //rating  bloomfilter
+          context.write(new Text("sum"),new IntWritable(falsePositive/10));//rating  bloomfilter
         }
   
       }
