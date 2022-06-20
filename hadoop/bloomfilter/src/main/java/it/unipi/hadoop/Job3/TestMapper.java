@@ -12,7 +12,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import it.unipi.hadoop.BloomFilter;
 
-public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
+public class TestMapper  extends Mapper<Object, Text, Text, BloomFilter> {
     private Text word = new Text();
     private ArrayList<BloomFilter> bloomFilter_param = new ArrayList<BloomFilter> ();
 
