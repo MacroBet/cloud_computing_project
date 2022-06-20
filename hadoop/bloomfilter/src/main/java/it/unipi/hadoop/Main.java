@@ -88,26 +88,6 @@ public class Main {
       System.exit(0);
     }
     
-    ArrayList<BloomFilter> bloomFilter_param = new ArrayList<BloomFilter> ();
-
-    try {
-      
-      Path pt = new Path("hdfs://hadoop-namenode:9820/user/hadoop/output_2/part-r-00000");// Location of file in HDFS
-      SequenceFile.Reader reader = new SequenceFile.Reader(new Configuration(), Reader.file(pt));
-      boolean hasNext;
-      do {
-          System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-          Text key = new Text();
-          BloomFilter bf = new BloomFilter();
-          hasNext = reader.next(key, bf);
-         
-          System.out.println(bf.get_size() + "-----" + bf.get_hash_count() + "-----" + bf.gBytesWritable().toString());
-          bloomFilter_param.add(bf);
-
-      } while(hasNext);
-  } catch (Exception e) { e.printStackTrace(); }
-
-    /* 
     Configuration conf3 = new Configuration();
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
@@ -130,7 +110,7 @@ public class Main {
     if(!countSuccess3) {
       System.exit(0);
     }
-    */
+    
     System.exit(0);
 
     

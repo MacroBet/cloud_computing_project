@@ -26,7 +26,6 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
       try {
             Path pt = new Path("hdfs://hadoop-namenode:9820/user/hadoop/output_2/part-r-00000");// Location of file in HDFS
             SequenceFile.Reader reader = new SequenceFile.Reader(new Configuration(), Reader.file(pt));
-            
             boolean hasNext;
             do {
 
@@ -39,6 +38,7 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
 
         } catch (Exception e) { e.getStackTrace(); }
     }
+ 
 
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 
@@ -55,12 +55,10 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
             if(i != (rating-1) && bloomFilter_param.get(i).check(movieId))  
               
               falsePositive++;
-                
-                
-              context.write(new Text(""+ rating), new IntWritable(bloomFilter_param.get(i).get_size()));
+            
           }
          
-          //falsePositive/9));   //rating  bloomfilter
+          context.write(new Text(""+ rating),new IntWritable(falsePositive/9));   //rating  bloomfilter
         }
   
       }
