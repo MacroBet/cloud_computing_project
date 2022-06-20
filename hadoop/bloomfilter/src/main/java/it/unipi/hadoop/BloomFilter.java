@@ -152,4 +152,6 @@ public class BloomFilter implements Writable{
 
   public BitSet get_bitset() {return this.bitset;}
 
+  public BytesWritable gBytesWritable() {return this.bytes;}
+
 }
