@@ -82,6 +82,7 @@ public class BloomFilter implements Writable {
 
   public void or(BloomFilter bloomFilter) {
     this.bitset.or(bloomFilter.get_bitset());
+    this.bytes = new BytesWritable(bitset.toByteArray());
   }
 
   private long getUnsignedInt(int x) {
