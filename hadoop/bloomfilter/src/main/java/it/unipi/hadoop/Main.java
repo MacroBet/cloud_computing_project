@@ -11,6 +11,8 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import it.unipi.hadoop.Job1.*;
 import it.unipi.hadoop.Job2.BloomFiltersMapper;
 import it.unipi.hadoop.Job2.BloomFiltersReducer;
+import it.unipi.hadoop.Job3.TestMapper;
+import it.unipi.hadoop.Job3.TestReducer;
 
 
 
@@ -82,9 +84,9 @@ public class Main {
     job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 600000);
 
     job3.setJarByClass(Main.class);
-    job3.setMapperClass(BloomFiltersMapper.class);
+    job3.setMapperClass(TestMapper.class);
     //job3.setCombinerClass(CreateBloomFilterReducer.class);
-    job3.setReducerClass(BloomFiltersReducer.class);
+    job3.setReducerClass(TestReducer.class);
 
     job3.setMapOutputKeyClass(Text.class);
     job3.setMapOutputValueClass(BloomFilter.class); // set output values for mapper
