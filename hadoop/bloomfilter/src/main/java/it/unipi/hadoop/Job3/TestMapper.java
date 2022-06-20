@@ -44,7 +44,7 @@ public class TestMapper  extends Mapper<Object, Text, Text, DoubleWritable> {
         Double falsePositive;
          
         while (itr.hasMoreTokens()) {
-          falsePositive = 0;
+          falsePositive = 0.0;
           String ratingRaw = itr.nextToken().toString();
           Integer rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
           String movieId = ratingRaw.split("\t")[0];
