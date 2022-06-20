@@ -20,7 +20,7 @@ public class TestReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
             //context.write(key, val);  
           }
             
-          context.write(key, new IntWritable(sum/n));  
+          context.write(key, new IntWritable(sum));  
       }
 
 

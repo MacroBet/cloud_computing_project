@@ -56,7 +56,7 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
               falsePositive++;
             
           }
-          context.write(new Text("sum"),new IntWritable(falsePositive/10));//rating  bloomfilter
+          context.write(new Text("sum"),new IntWritable(falsePositive));//rating  bloomfilter
         }
   
       }
