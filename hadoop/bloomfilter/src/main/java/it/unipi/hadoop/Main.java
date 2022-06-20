@@ -77,7 +77,7 @@ public class Main {
     if(!countSuccess2) {
       System.exit(0);
     }
-
+    System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
     ArrayList<BloomFilter> bloomFilter_param = new ArrayList<BloomFilter> ();
 
     try {
