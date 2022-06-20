@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.MapFile;
 import org.apache.hadoop.io.SequenceFile.Reader;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.lib.input.NLineInputFormat;
@@ -84,19 +85,20 @@ public class Main {
 
     try {
       Path pt = new Path("hdfs://hadoop-namenode:9820/user/hadoop/output_2/part-r-00000");// Location of file in HDFS
-      Reader reader = new Reader(new Configuration(), Reader.file(pt));
-     
-      boolean hasNext;
-      do {
-        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        Text key = new Text();
-        BloomFilter bf = new BloomFilter();
-        hasNext = reader.next(key, bf);
-        System.out.println(hasNext);
-        System.out.println(bf.get_size());
-        bloomFilter_param.add(bf);
+      try (//Reader reader = new Reader(new Configuration(), Reader.file(pt));
+      MapFile.Reader dfMapReader = new MapFile.Reader(pt, conf2)) {
+        boolean hasNext;
+        do {
+          System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+          Text key = new Text();
+          BloomFilter bf = new BloomFilter();
+          hasNext = dfMapReader.next(key, bf);
+          System.out.println(hasNext);
+          System.out.println(bf.get_size());
+          bloomFilter_param.add(bf);
 
-      } while(hasNext);
+        } while(hasNext);
+      }
 
   } catch (Exception e) { e.printStackTrace(); }
 
