@@ -100,8 +100,8 @@ public class Main {
           Text key = new Text();
           BloomFilter bf = new BloomFilter();
           hasNext = reader.next(key, bf);
-          System.out.println(hasNext);
-          System.out.println(bf.get_size());
+         
+          System.out.println(bf.get_bitset());
           bloomFilter_param.add(bf);
 
       } while(hasNext);
