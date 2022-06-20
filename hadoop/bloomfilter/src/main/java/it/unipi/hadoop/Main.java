@@ -62,10 +62,10 @@ public class Main {
     job2.setReducerClass(BloomFiltersReducer.class);
 
     job2.setMapOutputKeyClass(Text.class);
-    job2.setMapOutputValueClass(IntWritable.class); // set output values for mapper
+    job2.setMapOutputValueClass(BloomFilter.class); // set output values for mapper
     
     job2.setOutputKeyClass(Text.class);
-    job2.setOutputValueClass(Text.class);
+    job2.setOutputValueClass(BloomFilter.class);
 
     FileOutputFormat.setOutputPath(job2, new Path(otherArgs[otherArgs.length - 1] + "_2"));
     Boolean countSuccess1 = job2.waitForCompletion(true);
@@ -90,7 +90,7 @@ public class Main {
     job3.setMapOutputValueClass(BloomFilter.class); // set output values for mapper
     
     job3.setOutputKeyClass(Text.class);
-    job3.setOutputValueClass(BloomFilter.class);
+    job3.setOutputValueClass(IntWritable.class);
 
     FileOutputFormat.setOutputPath(job3, new Path(otherArgs[otherArgs.length - 1] + "_3"));
     Boolean countSuccess2 = job3.waitForCompletion(true);
