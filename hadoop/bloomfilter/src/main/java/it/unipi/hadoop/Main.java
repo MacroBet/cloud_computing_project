@@ -1,5 +1,7 @@
 package it.unipi.hadoop;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -15,6 +17,7 @@ import it.unipi.hadoop.Job2.BloomFiltersMapper;
 import it.unipi.hadoop.Job2.BloomFiltersReducer;
 import it.unipi.hadoop.Job3.TestMapper;
 import it.unipi.hadoop.Job3.TestReducer;
+import org.apache.hadoop.fs.FileSystem;
 
 
 
@@ -82,6 +85,7 @@ public class Main {
     try {
       Path pt = new Path("hdfs://hadoop-namenode:9820/user/hadoop/output_2/part-r-00000");// Location of file in HDFS
       Reader reader = new Reader(new Configuration(), Reader.file(pt));
+     
       boolean hasNext;
       do {
         System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
