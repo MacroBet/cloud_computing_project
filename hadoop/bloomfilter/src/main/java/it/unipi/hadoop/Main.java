@@ -96,7 +96,7 @@ public class Main {
 
       } while(hasNext);
 
-  } catch (Exception e) { e.getStackTrace(); }
+  } catch (Exception e) { e.printStackTrace(); }
 
     /* 
     Configuration conf3 = new Configuration();
