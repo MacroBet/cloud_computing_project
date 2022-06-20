@@ -10,11 +10,11 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.MapFile;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.SequenceFile.Reader;
-import org.apache.hadoop.mapred.SequenceFileOutputFormat;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.lib.input.NLineInputFormat;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import it.unipi.hadoop.Job1.*;
 import it.unipi.hadoop.Job2.BloomFiltersMapper;
@@ -65,9 +65,11 @@ public class Main {
     Job job2 = Job.getInstance(conf2, "test");
     job2.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job2, new Path(args[0]));
-    job2.setOutputKeyClass(SequenceFileOutputFormat.class);
+    
     job2.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 600000);
-
+    //FileOutputFormat.setOutputPath(job2,new Path(otherArgs[otherArgs.length - 1] + "_2"));
+    
+    
     job2.setJarByClass(Main.class);
     job2.setMapperClass(BloomFiltersMapper.class);
     //job2.setCombinerClass(CreateBloomFilterReducer.class);
@@ -80,6 +82,7 @@ public class Main {
     job2.setOutputValueClass(BloomFilter.class);
     
     FileOutputFormat.setOutputPath(job2, new Path(otherArgs[otherArgs.length - 1] + "_2"));
+    job2.setOutputFormatClass(SequenceFileOutputFormat.class);
     Boolean countSuccess2 = job2.waitForCompletion(true);
     if(!countSuccess2) {
       System.exit(0);
@@ -88,16 +91,11 @@ public class Main {
     ArrayList<BloomFilter> bloomFilter_param = new ArrayList<BloomFilter> ();
 
     try {
-      System.out.println("Readeing Sequence File");
-      Configuration conf = new Configuration();
-      FileSystem fs = FileSystem.get(conf);
-      Path pt = new Path("hdfs://hadoop-namenode:9820/user/hadoop/output_2/part-r-00000");// Location of file in HDFS
-      SequenceFile.Reader reader = null; 
-      try{  
-      reader = new SequenceFile.Reader(conf, Reader.file(pt)); 
       
-        boolean hasNext;
-        do {
+      Path pt = new Path("hdfs://hadoop-namenode:9820/user/hadoop/output_2/part-r-00000");// Location of file in HDFS
+      SequenceFile.Reader reader = new SequenceFile.Reader(new Configuration(), Reader.file(pt));
+      boolean hasNext;
+      do {
           System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
           Text key = new Text();
           BloomFilter bf = new BloomFilter();
@@ -106,13 +104,7 @@ public class Main {
           System.out.println(bf.get_size());
           bloomFilter_param.add(bf);
 
-        } while(hasNext);
-      }
-        finally {
-          IOUtils.closeStream(reader);
-      }
-
-
+      } while(hasNext);
   } catch (Exception e) { e.printStackTrace(); }
 
     /* 
