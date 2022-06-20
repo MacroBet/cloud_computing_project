@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.DoubleWritable;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.SequenceFile.Reader;
 import org.apache.hadoop.io.Text;
@@ -46,7 +45,6 @@ public class TestMapper  extends Mapper<Object, Text, Text, DoubleWritable> {
         while (itr.hasMoreTokens()) {
           falsePositive = 0.0;
           String ratingRaw = itr.nextToken().toString();
-          Integer rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
           String movieId = ratingRaw.split("\t")[0];
 
           for (int i = 0; i < bloomFilter_param.size(); i++) {
