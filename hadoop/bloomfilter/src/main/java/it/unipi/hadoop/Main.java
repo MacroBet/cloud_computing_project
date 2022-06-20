@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.MapFile;
@@ -100,10 +101,10 @@ public class Main {
     job3.setReducerClass(TestReducer.class);
 
     job3.setMapOutputKeyClass(Text.class);
-    job3.setMapOutputValueClass(IntWritable.class); // set output values for mapper
+    job3.setMapOutputValueClass(DoubleWritable.class); // set output values for mapper
     
     job3.setOutputKeyClass(Text.class);
-    job3.setOutputValueClass(IntWritable.class);
+    job3.setOutputValueClass(DoubleWritable.class);
 
     FileOutputFormat.setOutputPath(job3, new Path(otherArgs[otherArgs.length - 1] + "_3"));
     Boolean countSuccess3 = job3.waitForCompletion(true);

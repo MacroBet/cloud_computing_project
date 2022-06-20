@@ -6,6 +6,7 @@ import java.util.StringTokenizer;
 import java.util.ArrayList;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.SequenceFile.Reader;
@@ -14,7 +15,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 import it.unipi.hadoop.BloomFilter;
 
-public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
+public class TestMapper  extends Mapper<Object, Text, Text, DoubleWritable> {
     private Text word = new Text();
     private ArrayList<BloomFilter> bloomFilter_param = new ArrayList<BloomFilter> ();
 
@@ -40,7 +41,7 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 
         StringTokenizer itr = new StringTokenizer(value.toString(), "\n");
-        int falsePositive;
+        Double falsePositive;
          
         while (itr.hasMoreTokens()) {
           falsePositive = 0;
@@ -56,7 +57,7 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
               falsePositive++;
             
           }
-          context.write(new Text("sum"),new IntWritable(falsePositive));//rating  bloomfilter
+          context.write(new Text("sum"),new DoubleWritable(falsePositive/10));//rating  bloomfilter
         }
   
       }
