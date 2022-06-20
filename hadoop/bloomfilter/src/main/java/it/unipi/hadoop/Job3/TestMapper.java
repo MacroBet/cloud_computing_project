@@ -49,11 +49,13 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
           for (int i = 0; i < bloomFilter_param.size(); i++) {
             if(i != (rating-1) && bloomFilter_param.get(i).check(movieId))  
               
-              falsePositive++;   
-                       
+              falsePositive++;
+                
+                
+              context.write(new Text(""+ rating), new IntWritable(bloomFilter_param.get(i).get_size()));
           }
          
-          context.write(new Text("sum"), new IntWritable(falsePositive/9));   //rating  bloomfilter
+          //falsePositive/9));   //rating  bloomfilter
         }
   
       }

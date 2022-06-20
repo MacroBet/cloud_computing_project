@@ -17,10 +17,11 @@ public class TestReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
         for (IntWritable val : values) {
             sum += val.get();
             n++;
+            context.write(key, val);
+
            
           }
-
-        context.write(key, new IntWritable(sum/n));
+            
     
       }
 
