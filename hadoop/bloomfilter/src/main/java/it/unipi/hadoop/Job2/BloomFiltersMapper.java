@@ -49,8 +49,7 @@ public class BloomFiltersMapper extends Mapper<Object, Text, Text, BloomFilter> 
         String movieId = ratingRaw.split("\t")[0];
 
         if(combiner.containsKey(rating)) { 
-          bloomFilter_param.get(rating).add(movieId); 
-          combiner.get(rating).or(bloomFilter_param.get(rating));
+          combiner.get(rating).add(movieId); 
           combiner.put(rating, combiner.get(rating));       
         }
         else {
