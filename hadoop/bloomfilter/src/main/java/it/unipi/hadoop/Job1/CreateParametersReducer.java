@@ -10,6 +10,7 @@ public class CreateParametersReducer extends Reducer<Text, IntWritable, Text, Te
     
     private static final float p_rate = (float) 0.001;
     private Text result = new Text();
+    private String res = new String();
 
     public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
       int sum = 0;
@@ -21,7 +22,7 @@ public class CreateParametersReducer extends Reducer<Text, IntWritable, Text, Te
       int m = BloomFilterUtility.get_size(sum, p_rate);
       int k = BloomFilterUtility.get_hash_count(m, sum);
 
-      String res = new String(Integer.toString(m) + "\t" + Integer.toString(k) + "\t" + Integer.toString(sum));
+      res = (Integer.toString(m) + "\t" + Integer.toString(k) + "\t" + Integer.toString(sum));
       result.set(res);
       context.write(key, result); // output (ratings m k )
     }
