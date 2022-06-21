@@ -5,11 +5,13 @@ import org.apache.hadoop.io.VIntWritable;
 import java.util.BitSet;
 import org.apache.hadoop.util.hash.MurmurHash;
 import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.io.WritableComparable;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class BloomFilter implements Writable {
+public class BloomFilter implements Writable, WritableComparable<BloomFilter> {
   private VIntWritable size;
   private VIntWritable hashCount;
   private BytesWritable bytes;
@@ -119,5 +121,20 @@ public class BloomFilter implements Writable {
   public void set_hash_count(VIntWritable k) { this.hashCount = k; }
 
   public void set_size(VIntWritable m) { this.hashCount = m; }
+
+  @Override
+  public int compareTo(BloomFilter o) {
+    int i = size.compareTo(o.size);
+    if (i != 0) return i;
+
+    i = hashCount.compareTo(o.hashCount);
+    if (i != 0) return i;
+
+    i = bytes.compareTo(o.bytes);
+    if (i != 0) return i;
+
+    return 0;
+  
+  }
 
 }
