@@ -28,6 +28,7 @@ public class Main {
       System.err.println("Usage: bloom filter <in> [<in>...] <out>");
       System.exit(2);
     }
+    /* 
     Job job1 = Job.getInstance(conf1, "tokenizer of data");
     job1.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job1, new Path(args[0]));
@@ -76,8 +77,10 @@ public class Main {
     if(!countSuccess2) {
       System.exit(0);
     }
-    
-
+    hadoop fs -rm -r output
+hadoop fs -rm -r output_2
+hadoop fs -rm -r output_3
+    */
     Configuration conf3 = new Configuration();
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
