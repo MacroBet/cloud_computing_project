@@ -24,7 +24,7 @@ import it.unipi.hadoop.BloomFilter;
 
 public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
 
-    private HashMap<VIntWritable, BloomFilter> bloomFilter_param = new HashMap<VIntWritable, BloomFilter>();
+    private HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, BloomFilter>();
     private Map<Integer, Integer> bloomFP = new HashMap<Integer, Integer>();
 
     public void setup(Context context) throws IOException, InterruptedException {
@@ -35,7 +35,7 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
             boolean hasNext;
             do {
 
-              VIntWritable key = new VIntWritable();
+              Text key = new Text();
               BloomFilter bf = new BloomFilter();
               hasNext = reader.next(key, bf);
               bloomFilter_param.put(key, bf);
@@ -55,7 +55,7 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
           String ratingRaw = itr.nextToken().toString();
           String movieId = ratingRaw.split("\t")[0];
           rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
-
+          /* 
           for (Map.Entry<VIntWritable, BloomFilter> entry : bloomFilter_param.entrySet()) {
             if(entry.getValue().check(movieId))
 
@@ -67,7 +67,7 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
 
                 bloomFP.put(rating, 1);
             
-          }
+          }*/
         
         }
         
@@ -83,7 +83,7 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
   
             
         }
-        context.write(new Text("keyVal"), new IntWritable(bloomFilter_param.get(1).get_size()));
+        context.write(new Text("keyVal"), new IntWritable(bloomFilter_param.get(new Text("1")).get_size()));
     }
 
 
