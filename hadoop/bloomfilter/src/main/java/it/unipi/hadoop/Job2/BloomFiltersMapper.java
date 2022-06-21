@@ -3,8 +3,9 @@ package it.unipi.hadoop.Job2;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.ArrayList;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
@@ -16,7 +17,7 @@ import java.io.InputStreamReader;
 public class BloomFiltersMapper extends Mapper<Object, Text, Text, BloomFilter> {
     private Text word = new Text();
     private HashMap<Integer, BloomFilter> bloomFilter_param = new HashMap<Integer, BloomFilter>();
- 
+    private Map<Integer, BloomFilter> combiner = new HashMap<Integer, BloomFilter>(); 
     public void setup(Context context) throws IOException, InterruptedException {
       
       try {
@@ -39,19 +40,39 @@ public class BloomFiltersMapper extends Mapper<Object, Text, Text, BloomFilter> 
 
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 
+    
       StringTokenizer itr = new StringTokenizer(value.toString(), "\n");
       
       while (itr.hasMoreTokens()) {
         String ratingRaw = itr.nextToken().toString();
         Integer rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
         String movieId = ratingRaw.split("\t")[0];
-        
-        bloomFilter_param.get(rating).add(movieId);
 
-        word.set("" + rating);
-        context.write(word, bloomFilter_param.get(rating));   //rating  bloomfilter
+        if(combiner.containsKey(rating)) { 
+          bloomFilter_param.get(rating).add(movieId); 
+          combiner.get(rating).or(bloomFilter_param.get(rating));
+          combiner.put(rating, combiner.get(rating));       
+        }
+        else {
+          bloomFilter_param.get(rating).add(movieId);  
+          combiner.put(rating, bloomFilter_param.get(rating)); 
+      
+        }
+      
       }
 
     }
+
+    public void cleanup(Context context) throws IOException, InterruptedException {
+      Iterator<Map.Entry<Integer, BloomFilter>> temp = combiner.entrySet().iterator();
+
+      while(temp.hasNext()) {
+          Map.Entry<Integer, BloomFilter> entry = temp.next();
+          String keyVal = entry.getKey()+"";
+          BloomFilter bloomFilter = entry.getValue();
+
+          context.write(new Text(keyVal), bloomFilter);
+      }
+  }
     
 }
