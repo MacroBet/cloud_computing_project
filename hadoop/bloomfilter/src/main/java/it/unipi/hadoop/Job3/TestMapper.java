@@ -57,7 +57,7 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
           rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
 
           for (Map.Entry<VIntWritable, BloomFilter> entry : bloomFilter_param.entrySet()) {
-            if(new VIntWritable(rating) != entry.getKey() && entry.getValue().check(movieId))
+            if(entry.getValue().check(movieId))
 
               if(bloomFP.containsKey(rating))
              
