@@ -86,14 +86,14 @@ public class Main {
 
     job3.setJarByClass(Main.class);
     job3.setMapperClass(TestMapper.class);
-    //job3.setCombinerClass(TestReducer.class);
+    job3.setCombinerClass(TestReducer.class);
     job3.setReducerClass(TestReducer.class);
 
     job3.setMapOutputKeyClass(Text.class);
     job3.setMapOutputValueClass(IntWritable.class); 
     
     job3.setOutputKeyClass(Text.class);
-    job3.setOutputValueClass(IntWritable.class);
+    job3.setOutputValueClass(DoubleWritable.class);
 
     FileOutputFormat.setOutputPath(job3, new Path(otherArgs[otherArgs.length - 1] + "_3"));
     Boolean countSuccess3 = job3.waitForCompletion(true);

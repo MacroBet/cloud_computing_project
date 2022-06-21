@@ -6,7 +6,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-public class TestReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+public class TestReducer extends Reducer<Text, IntWritable, Text, DoubleWritable> {
 
 
     public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
@@ -16,10 +16,10 @@ public class TestReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
         for (IntWritable val : values) {
             sum += val.get();
             n++;
-            context.write(key, val); 
           }
             
-           
+        context.write(key, new DoubleWritable(sum/n)); 
+ 
       }
 
     

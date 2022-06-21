@@ -25,7 +25,7 @@ import it.unipi.hadoop.BloomFilter;
 public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
 
     private HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, BloomFilter>();
-    private Map<Integer, Integer> bloomFP = new HashMap<Integer, Integer>();
+    private Map<String, Integer> bloomFP = new HashMap<String, Integer>();
 
     public void setup(Context context) throws IOException, InterruptedException {
       
@@ -55,35 +55,35 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
           String ratingRaw = itr.nextToken().toString();
           String movieId = ratingRaw.split("\t")[0];
           rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
-          /* 
-          for (Map.Entry<VIntWritable, BloomFilter> entry : bloomFilter_param.entrySet()) {
+          
+          for (Map.Entry<Text, BloomFilter> entry : bloomFilter_param.entrySet()) {
             if(entry.getValue().check(movieId))
 
-              if(bloomFP.containsKey(rating))
+              if(bloomFP.containsKey(rating.toString()))
              
-                bloomFP.put(rating, bloomFP.get(rating)+1);      
+                bloomFP.put(rating.toString(), bloomFP.get(rating.toString())+1);      
            
               else 
 
-                bloomFP.put(rating, 1);
+                bloomFP.put(rating.toString(), 1);
             
-          }*/
+          }
         
         }
         
       }
 
       public void cleanup(Context context) throws IOException, InterruptedException {
-        Iterator<Map.Entry<Integer, Integer>> temp = bloomFP.entrySet().iterator();
+        Iterator<Map.Entry<String, Integer>> temp = bloomFP.entrySet().iterator();
   
         while(temp.hasNext()) {
-            Map.Entry<Integer, Integer> entry = temp.next();
-            String keyVal = entry.getKey()+"";
+            Map.Entry<String, Integer> entry = temp.next();
+            String keyVal = entry.getKey();
             Integer falsePositive = entry.getValue();
-  
+            context.write(new Text(keyVal), new IntWritable(falsePositive));
             
         }
-        context.write(new Text("keyVal"), new IntWritable(bloomFilter_param.get(new Text("1")).get_size()));
+       
     }
 
 
