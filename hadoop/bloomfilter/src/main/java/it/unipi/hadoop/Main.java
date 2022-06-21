@@ -35,7 +35,7 @@ public class Main {
 
     job1.setJarByClass(Main.class);
     job1.setMapperClass(RatingMapper.class);
-    job1.setCombinerClass(Job1Combiner.class);
+    //job1.setCombinerClass(Job1Combiner.class);
     job1.setReducerClass(CreateParametersReducer.class);
 
     job1.setMapOutputKeyClass(Text.class);
@@ -61,7 +61,7 @@ public class Main {
     
     job2.setJarByClass(Main.class);
     job2.setMapperClass(BloomFiltersMapper.class);
-    job2.setCombinerClass(BloomFiltersReducer.class);
+   // job2.setCombinerClass(BloomFiltersReducer.class);
     job2.setReducerClass(BloomFiltersReducer.class);
 
     job2.setMapOutputKeyClass(Text.class);
