@@ -22,10 +22,11 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 import it.unipi.hadoop.BloomFilter;
 
-public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
+public class TestMapper  extends Mapper<Object, Text, BloomFilter, Text> {
 
-    private HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, BloomFilter>();
-    private Map<String, Integer> bloomFP = new HashMap<String, Integer>();
+    private HashMap<String, BloomFilter> bloomFilter_param = new HashMap<String, BloomFilter>();
+    //private Map<String, Integer> bloomFP = new HashMap<String, Integer>();
+    private String res = new String();
 
     public void setup(Context context) throws IOException, InterruptedException {
       
@@ -38,7 +39,7 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
               Text key = new Text();
               BloomFilter bf = new BloomFilter();
               hasNext = reader.next(key, bf);
-              bloomFilter_param.put(key, bf);
+              bloomFilter_param.put(key.toString(), bf);
 
             } while(hasNext);
 
@@ -55,9 +56,11 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
           String ratingRaw = itr.nextToken().toString();
           String movieId = ratingRaw.split("\t")[0];
           rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
-          
+          res = (Integer.toString(rating)) + "\t" + movieId;
+          context.write(bloomFilter_param.get(rating.toString()), new Text(res));
+          /* 
           for (Map.Entry<Text, BloomFilter> entry : bloomFilter_param.entrySet()) {
-            if(entry.getValue().check(movieId))
+            if((entry.getKey() == new Text(rating.toString())) && entry.getValue().check(movieId))
 
               if(bloomFP.containsKey(rating.toString()))
              
@@ -67,12 +70,12 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
 
                 bloomFP.put(rating.toString(), 1);
             
-          }
+          }*/
         
         }
         
       }
-
+      /* 
       public void cleanup(Context context) throws IOException, InterruptedException {
         Iterator<Map.Entry<String, Integer>> temp = bloomFP.entrySet().iterator();
   
@@ -80,11 +83,11 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
             Map.Entry<String, Integer> entry = temp.next();
             String keyVal = entry.getKey();
             Integer falsePositive = entry.getValue();
-            context.write(new Text(keyVal), new IntWritable(falsePositive));
+          
             
         }
        
-    }
+    }*/
 
 
     

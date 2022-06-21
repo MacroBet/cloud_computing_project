@@ -89,8 +89,8 @@ public class Main {
     job3.setCombinerClass(TestReducer.class);
     job3.setReducerClass(TestReducer.class);
 
-    job3.setMapOutputKeyClass(Text.class);
-    job3.setMapOutputValueClass(IntWritable.class); 
+    job3.setMapOutputKeyClass(BloomFilter.class);
+    job3.setMapOutputValueClass(Text.class); 
     
     job3.setOutputKeyClass(Text.class);
     job3.setOutputValueClass(DoubleWritable.class);
