@@ -86,7 +86,7 @@ public class Main {
 
     job3.setJarByClass(Main.class);
     job3.setMapperClass(TestMapper.class);
-    job3.setCombinerClass(TestReducer.class);
+    //job3.setCombinerClass(TestReducer.class);
     job3.setReducerClass(TestReducer.class);
 
     job3.setMapOutputKeyClass(BloomFilter.class);
