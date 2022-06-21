@@ -15,7 +15,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import it.unipi.hadoop.BloomFilter;
 
 public class TestMapper  extends Mapper<Object, Text, Text, DoubleWritable> {
-    private Text word = new Text();
+
     private ArrayList<BloomFilter> bloomFilter_param = new ArrayList<BloomFilter> ();
 
     public void setup(Context context) throws IOException, InterruptedException {
@@ -49,7 +49,6 @@ public class TestMapper  extends Mapper<Object, Text, Text, DoubleWritable> {
 
           for (int i = 0; i < bloomFilter_param.size(); i++) {
 
-            
             if( bloomFilter_param.get(i).check(movieId))  
               
               falsePositive++;

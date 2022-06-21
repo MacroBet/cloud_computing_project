@@ -15,8 +15,8 @@ import java.io.InputStreamReader;
 
 public class BloomFiltersMapper extends Mapper<Object, Text, Text, BloomFilter> {
     private Text word = new Text();
-    private HashMap<Integer, ArrayList<Integer>> bloomFilter_param = new HashMap<Integer, ArrayList<Integer>>();
-
+    private HashMap<Integer, BloomFilter> bloomFilter_param = new HashMap<Integer, BloomFilter>();
+ 
     public void setup(Context context) throws IOException, InterruptedException {
       
       try {
@@ -27,14 +27,10 @@ public class BloomFiltersMapper extends Mapper<Object, Text, Text, BloomFilter> 
 
             line = br.readLine();
             
-            //rating  m k
             while (line != null) {
-              ArrayList<Integer> parameters = new ArrayList<Integer>();
               String[] currencies = line.split("\t");
-              parameters.add(Integer.parseInt(currencies[1]));
-              parameters.add(Integer.parseInt(currencies[2]));
-
-              bloomFilter_param.put(Integer.parseInt(currencies[0]), parameters);
+              BloomFilter bloomFilter = new BloomFilter(Integer.parseInt(currencies[1]),Integer.parseInt(currencies[2]));
+              bloomFilter_param.put(Integer.parseInt(currencies[0]), bloomFilter);
               line = br.readLine();
             }
 
@@ -49,11 +45,11 @@ public class BloomFiltersMapper extends Mapper<Object, Text, Text, BloomFilter> 
         String ratingRaw = itr.nextToken().toString();
         Integer rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
         String movieId = ratingRaw.split("\t")[0];
-        BloomFilter bloomFilter = new BloomFilter(bloomFilter_param.get(rating).get(0), bloomFilter_param.get(rating).get(1));
-        bloomFilter.add(movieId);
+        
+        bloomFilter_param.get(rating).add(movieId);
 
         word.set("" + rating);
-        context.write(word, bloomFilter);   //rating  bloomfilter
+        context.write(word, bloomFilter_param.get(rating));   //rating  bloomfilter
       }
 
     }

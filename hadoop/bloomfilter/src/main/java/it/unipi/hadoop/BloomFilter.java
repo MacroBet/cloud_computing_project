@@ -47,16 +47,6 @@ public class BloomFilter implements Writable {
 
   }
 
-  // BloomFilter(int size, int hashCount, String bitSet) {
-  // this.size = size;
-  // this.hashCount = hashCount;
-  // // short a = Short.parseShort(bitSet, 2);
-  // // ByteBuffer bytes = ByteBuffer.allocate((int) Math.round(size / 8 +
-  // // 0.5)).putShort(a);
-  // // byte[] array = bytes.array();
-  // this.bitSet = fromString(bitSet);
-  // }
-
   @Override
   public void write(DataOutput dataOutput) throws IOException {
 
@@ -96,9 +86,6 @@ public class BloomFilter implements Writable {
 
       String id = s.replace("t", "0");
       int digest = (int) (getUnsignedInt(MurmurHash.getInstance().hash(id.getBytes(), i)) % size);
-      // if (digest < 0) {
-      // digest += this.size;
-      // }
       this.bitset.set(digest);
 
     }
@@ -120,37 +107,6 @@ public class BloomFilter implements Writable {
     }
     return true;
   }
-
-  // @Override
-  // public String toString() {
-  // return this.size + "\t" + this.hashCount + "\t" + toString(this.bitSet);
-
-  // }
-
-  // private static BitSet fromString(final String str_bitset) {
-  // BitSet bitSet = new BitSet(str_bitset.length());
-  // // System.out.println(str_bitset);
-
-  // for (int i = 0; i < str_bitset.toCharArray().length; i++) {
-  // bitSet.set(str_bitset.toCharArray().length - 1 - i, ((str_bitset.charAt(i))
-  // == '1' ? true : false));
-  // }
-  // return bitSet;
-  // }
-
-  // private static String toString(BitSet bs) {
-  // String strlong = "";
-
-  // for (int i = 0; i < bs.toLongArray().length; i++) {
-  // int n_fill = 64 - Long.toString(bs.toLongArray()[bs.toLongArray().length - 1
-  // - i], 2).length();
-  // String fill_bits = new String(new char[n_fill]).replace('\0', '0');
-  // strlong = strlong + fill_bits +
-  // Long.toString(bs.toLongArray()[bs.toLongArray().length - 1 - i], 2);
-  // }
-  // System.out.println("STRINGA BIT LUNGA = " + strlong.length());
-  // return strlong;
-  // }
 
   public int get_hash_count() { return this.hashCount.get(); }
 
