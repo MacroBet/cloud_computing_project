@@ -3,20 +3,29 @@ package it.unipi.hadoop.Job3;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
+
+import javax.lang.model.util.ElementScanner6;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.DoubleWritable;
+import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.SequenceFile.Reader;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.VIntWritable;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import it.unipi.hadoop.BloomFilter;
 
-public class TestMapper  extends Mapper<Object, Text, Text, DoubleWritable> {
+public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
 
-    private ArrayList<BloomFilter> bloomFilter_param = new ArrayList<BloomFilter> ();
+    private HashMap<VIntWritable, BloomFilter> bloomFilter_param = new HashMap<VIntWritable, BloomFilter>();
+    private Map<Integer, Integer> bloomFP = new HashMap<Integer, Integer>();
 
     public void setup(Context context) throws IOException, InterruptedException {
       
@@ -26,10 +35,10 @@ public class TestMapper  extends Mapper<Object, Text, Text, DoubleWritable> {
             boolean hasNext;
             do {
 
-              Text key = new Text();
+              VIntWritable key = new VIntWritable();
               BloomFilter bf = new BloomFilter();
               hasNext = reader.next(key, bf);
-              bloomFilter_param.add(bf);
+              bloomFilter_param.put(key, bf);
 
             } while(hasNext);
 
@@ -40,24 +49,41 @@ public class TestMapper  extends Mapper<Object, Text, Text, DoubleWritable> {
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 
         StringTokenizer itr = new StringTokenizer(value.toString(), "\n");
-        Double falsePositive;
-         
+        Integer rating;
         while (itr.hasMoreTokens()) {
-          falsePositive = 0.0;
+         
           String ratingRaw = itr.nextToken().toString();
           String movieId = ratingRaw.split("\t")[0];
+          rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
 
-          for (int i = 0; i < bloomFilter_param.size(); i++) {
+          for (Map.Entry<VIntWritable, BloomFilter> entry : bloomFilter_param.entrySet()) {
+            if(new VIntWritable(rating) != entry.getKey() && entry.getValue().check(movieId))
 
-            if( bloomFilter_param.get(i).check(movieId))  
-              
-              falsePositive++;
+              if(bloomFP.containsKey(rating))
+             
+                bloomFP.put(rating, bloomFP.get(rating)+1);      
+           
+              else 
+
+                bloomFP.put(rating, 1);
             
           }
-          context.write(new Text("sum"),new DoubleWritable(falsePositive/10));//rating  bloomfilter
+        
         }
-  
+        
       }
+
+      public void cleanup(Context context) throws IOException, InterruptedException {
+        Iterator<Map.Entry<Integer, Integer>> temp = bloomFP.entrySet().iterator();
+  
+        while(temp.hasNext()) {
+            Map.Entry<Integer, Integer> entry = temp.next();
+            String keyVal = entry.getKey()+"";
+            Integer falsePositive = entry.getValue();
+  
+            context.write(new Text(keyVal), new IntWritable(falsePositive));
+        }
+    }
 
 
     

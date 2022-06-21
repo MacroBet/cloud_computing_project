@@ -82,7 +82,7 @@ public class Main {
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job3, new Path(args[0]));
-    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 600000);
+    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 100000);
 
     job3.setJarByClass(Main.class);
     job3.setMapperClass(TestMapper.class);
@@ -90,10 +90,10 @@ public class Main {
     job3.setReducerClass(TestReducer.class);
 
     job3.setMapOutputKeyClass(Text.class);
-    job3.setMapOutputValueClass(DoubleWritable.class); 
+    job3.setMapOutputValueClass(IntWritable.class); 
     
     job3.setOutputKeyClass(Text.class);
-    job3.setOutputValueClass(DoubleWritable.class);
+    job3.setOutputValueClass(IntWritable.class);
 
     FileOutputFormat.setOutputPath(job3, new Path(otherArgs[otherArgs.length - 1] + "_3"));
     Boolean countSuccess3 = job3.waitForCompletion(true);
