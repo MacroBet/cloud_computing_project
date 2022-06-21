@@ -78,7 +78,7 @@ public class Main {
     }
 
 
-    
+    /*
     Configuration conf3 = new Configuration();
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
@@ -101,7 +101,7 @@ public class Main {
     if(!countSuccess3) {
       System.exit(0);
     }
-    
+    */
     System.exit(0);
 
     
