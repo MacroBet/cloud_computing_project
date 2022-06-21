@@ -51,7 +51,7 @@ public class Main {
       System.exit(0);
     }
     
-    /* 
+    
     Configuration conf2 = new Configuration();
     Job job2 = Job.getInstance(conf2, "test");
     job2.setInputFormatClass(NLineInputFormat.class);
@@ -76,7 +76,7 @@ public class Main {
     if(!countSuccess2) {
       System.exit(0);
     }
-    */
+    
 
     /*
     Configuration conf3 = new Configuration();
