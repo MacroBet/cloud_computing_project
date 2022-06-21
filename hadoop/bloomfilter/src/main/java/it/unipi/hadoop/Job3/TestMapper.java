@@ -83,7 +83,7 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
   
             
         }
-        context.write(new Text("keyVal"), new IntWritable(1));
+        context.write(new Text("keyVal"), new IntWritable(bloomFilter_param.get(1).get_size()));
     }
 
 
