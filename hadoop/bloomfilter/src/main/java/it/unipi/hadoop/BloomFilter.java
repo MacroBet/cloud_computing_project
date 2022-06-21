@@ -29,7 +29,7 @@ public class BloomFilter implements Writable {
     hashCount = new VIntWritable();
   }
 
-  BloomFilter(int n) {
+  public BloomFilter(int n) {
     int size = get_size(n, (float) 0.01);
     int hashCount = get_hash_count(size, n);
     this.size = new VIntWritable(size);
