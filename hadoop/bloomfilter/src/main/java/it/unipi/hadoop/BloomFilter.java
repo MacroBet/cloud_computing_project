@@ -152,20 +152,16 @@ public class BloomFilter implements Writable {
   // return strlong;
   // }
 
-  public int get_hash_count() {
-    return this.hashCount.get();
-  }
+  public int get_hash_count() { return this.hashCount.get(); }
 
-  public int get_size() {
-    return this.size.get();
-  }
+  public int get_size() { return this.size.get(); }
 
-  public BitSet get_bitset() {
-    return this.bitset;
-  }
+  public BitSet get_bitset() { return this.bitset; }
 
-  public BytesWritable gBytesWritable() {
-    return this.bytes;
-  }
+  public BytesWritable gBytesWritable() { return this.bytes; }
+
+  public void set_hash_count(VIntWritable k) { this.hashCount = k; }
+
+  public void set_size(VIntWritable m) { this.hashCount = m; }
 
 }
