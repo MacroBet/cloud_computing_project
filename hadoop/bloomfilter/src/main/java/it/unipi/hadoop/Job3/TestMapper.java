@@ -22,7 +22,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 import it.unipi.hadoop.BloomFilter;
 
-public class TestMapper  extends Mapper<Object, Text, BloomFilter, Text> {
+public class TestMapper  extends Mapper<Object, Text, Text, Text> {
 
     private HashMap<String, BloomFilter> bloomFilter_param = new HashMap<String, BloomFilter>();
     //private Map<String, Integer> bloomFP = new HashMap<String, Integer>();
@@ -57,8 +57,9 @@ public class TestMapper  extends Mapper<Object, Text, BloomFilter, Text> {
           String movieId = ratingRaw.split("\t")[0];
           rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
           res = (Integer.toString(rating)) + "\t" + movieId;
-          context.write(bloomFilter_param.get(rating.toString()), new Text(res));
+          context.write(new Text("sum"), new Text(res));
           /* 
+          bloomFilter_param.get(rating.toString())
           for (Map.Entry<Text, BloomFilter> entry : bloomFilter_param.entrySet()) {
             if((entry.getKey() == new Text(rating.toString())) && entry.getValue().check(movieId))
 
