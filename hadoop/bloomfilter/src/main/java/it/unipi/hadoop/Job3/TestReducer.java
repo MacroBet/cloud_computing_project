@@ -25,7 +25,7 @@ import it.unipi.hadoop.BloomFilter;
 
 public class TestReducer extends Reducer<IntWritable, Text, IntWritable, DoubleWritable> {
 
-  private HashMap<String, BloomFilter> bloomFilter_param = new HashMap<String, BloomFilter>();
+  private HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, BloomFilter>();
   private Map<String, ArrayList<String>> bloomFP = new HashMap<String, ArrayList<String>>();
  
   public void setup(Context context) throws IOException, InterruptedException {
@@ -39,7 +39,7 @@ public class TestReducer extends Reducer<IntWritable, Text, IntWritable, DoubleW
             Text key = new Text();
             BloomFilter bf = new BloomFilter();
             hasNext = reader.next(key, bf);
-            bloomFilter_param.put(key.toString(), bf);
+            bloomFilter_param.put(key, bf);
 
           } while(hasNext);
 
