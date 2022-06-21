@@ -81,8 +81,9 @@ public class TestMapper  extends Mapper<Object, Text, Text, IntWritable> {
             String keyVal = entry.getKey()+"";
             Integer falsePositive = entry.getValue();
   
-            context.write(new Text(keyVal), new IntWritable(1));
+            
         }
+        context.write(new Text("keyVal"), new IntWritable(1));
     }
 
 
