@@ -14,7 +14,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import it.unipi.hadoop.Job2_1.BloomFilterCreator;
 
 
-public class Main {
+public class Main2 {
 
   public static void main(String[] args) throws Exception {
     

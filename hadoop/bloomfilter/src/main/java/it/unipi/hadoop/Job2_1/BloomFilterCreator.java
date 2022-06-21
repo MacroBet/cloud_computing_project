@@ -1,4 +1,5 @@
-package it.unipi.hadoop;
+package it.unipi.hadoop.Job2_1;
+
 import java.io.IOException;
 import java.util.StringTokenizer;
 import java.util.ArrayList;
