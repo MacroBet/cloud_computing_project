@@ -91,7 +91,7 @@ public class Main {
     job3.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job3, new Path(args[0]));
     job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 10000);
-
+    //job3.getConfiguration().getInt("bloom", defaultValue)
     job3.setJarByClass(Main.class);
     job3.setMapperClass(TestMapper.class);
     job3.setCombinerClass(TestCombiner.class);
@@ -129,7 +129,7 @@ public class Main {
         System.out.println("+++++++++++++++++");
         System.out.println(bf.get_size() + "----" + bf.get_hash_count());
       } while(hasNext);
-
+        bloomFilter_param.remove(new Text("0"));
     } catch (Exception e) { e.getStackTrace(); }
   }
 }
