@@ -25,7 +25,7 @@ public class TestMapper2  extends Mapper<Object, Text, Text,Text> {
   
 
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-
+/* 
         StringTokenizer itr = new StringTokenizer(value.toString(), "\n");
         Integer rating;
         while (itr.hasMoreTokens()) {
@@ -43,4 +43,4 @@ public class TestMapper2  extends Mapper<Object, Text, Text,Text> {
         }
         
       }
-    }
+    
