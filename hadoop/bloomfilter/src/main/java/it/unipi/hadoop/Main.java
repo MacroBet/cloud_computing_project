@@ -3,6 +3,7 @@ package it.unipi.hadoop;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -107,7 +108,7 @@ public class Main {
     job3.setMapOutputValueClass(Text.class); 
     
     job3.setOutputKeyClass(Text.class);
-    job3.setOutputValueClass(ArrayWritable.class);
+    job3.setOutputValueClass(Text[].class);
 
     FileOutputFormat.setOutputPath(job3, new Path(outputTempDir));
     Boolean countSuccess3 = job3.waitForCompletion(true);
