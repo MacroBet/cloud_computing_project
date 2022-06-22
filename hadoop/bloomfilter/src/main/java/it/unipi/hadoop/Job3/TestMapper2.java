@@ -24,7 +24,6 @@ import it.unipi.hadoop.BloomFilter;
 public class TestMapper2  extends Mapper<Object, Text, Text,Text> {
   
   private HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, BloomFilter>();
-  private Map<String, Integer> combinerOne = new HashMap<String, Integer>(); 
   private Map<String, ArrayList<Integer>> combiner = new HashMap<String, ArrayList<Integer>>(); 
 
   public void setup(Context context) throws IOException, InterruptedException {
@@ -57,9 +56,9 @@ public class TestMapper2  extends Mapper<Object, Text, Text,Text> {
           
           if(bloomFilter_param.get(new Text(String.valueOf(rating))).check(id)) {
          
-            if(combinerOne.containsKey(String.valueOf(rating))) { 
+            if(combiner.containsKey(String.valueOf(rating))) { 
 
-              int FPsum = combiner.get(String.valueOf(rating)).get(0) +1;
+              int FPsum = combiner.get(String.valueOf(rating)).get(0) + 1;
               int NFPsum = combiner.get(String.valueOf(rating)).get(1);
               ArrayList<Integer> val = new ArrayList<Integer>();
               val.add(FPsum);
@@ -67,8 +66,8 @@ public class TestMapper2  extends Mapper<Object, Text, Text,Text> {
               combiner.put(String.valueOf(rating), val);      
 
             } else {
-            
-              ArrayList<Integer> val = new ArrayList<Integer>();
+                                                                     
+              ArrayList<Integer> val = new ArrayList<Integer>();    
               val.add(1);
               val.add(0);
               combiner.put(String.valueOf(rating), val);
@@ -76,7 +75,7 @@ public class TestMapper2  extends Mapper<Object, Text, Text,Text> {
           }
 
           } else {
-            if(combinerOne.containsKey(String.valueOf(rating))) { 
+            if(combiner.containsKey(String.valueOf(rating))) { 
 
               int FPsum = combiner.get(String.valueOf(rating)).get(0);
               int NFPsum = combiner.get(String.valueOf(rating)).get(1) + 1;
