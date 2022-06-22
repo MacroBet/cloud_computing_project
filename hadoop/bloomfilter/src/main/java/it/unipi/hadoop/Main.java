@@ -23,12 +23,8 @@ public class Main {
 
   public static void main(String[] args) throws Exception {
     
-    Configuration conf1 = new Configuration();
-    String[] otherArgs = new GenericOptionsParser(conf1, args).getRemainingArgs();
-    if (otherArgs.length < 2) {
-      System.err.println("Usage: bloom filter <in> [<in>...] <out>");
-      System.exit(2);
-    }
+    //Configuration conf1 = new Configuration();
+    
     /* 
     Job job1 = Job.getInstance(conf1, "tokenizer of data");
     job1.setInputFormatClass(NLineInputFormat.class);
@@ -80,6 +76,11 @@ public class Main {
     }
     */
     Configuration conf3 = new Configuration();
+    String[] otherArgs = new GenericOptionsParser(conf3, args).getRemainingArgs();
+    if (otherArgs.length < 2) {
+      System.err.println("Usage: bloom filter <in> [<in>...] <out>");
+      System.exit(2);
+    }
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job3, new Path(args[0]));
