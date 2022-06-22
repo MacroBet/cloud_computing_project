@@ -97,7 +97,7 @@ public class TestMapper2  extends Mapper<Object, Text, Text,Text> {
         }
       }
     }
-  }
+  
 
   /* 
        context.write(new Text(String.valueOf(rating)), new Text("1"));
@@ -119,4 +119,6 @@ public class TestMapper2  extends Mapper<Object, Text, Text,Text> {
           }
         
       }
+
+}
     
