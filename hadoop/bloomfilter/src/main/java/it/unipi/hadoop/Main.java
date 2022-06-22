@@ -90,10 +90,10 @@ public class Main {
     job3.setCombinerClass(TestCombiner.class);
     job3.setReducerClass(TestReducer.class);
 
-    job3.setMapOutputKeyClass(IntWritable.class);
+    job3.setMapOutputKeyClass(Text.class);
     job3.setMapOutputValueClass(Text.class); 
     
-    job3.setOutputKeyClass(IntWritable.class);
+    job3.setOutputKeyClass(Text.class);
     job3.setOutputValueClass(DoubleWritable.class);
 
     FileOutputFormat.setOutputPath(job3, new Path(otherArgs[otherArgs.length - 1] + "_3"));
