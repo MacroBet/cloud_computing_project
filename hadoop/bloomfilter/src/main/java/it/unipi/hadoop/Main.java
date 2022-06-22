@@ -15,6 +15,9 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
+
+import com.google.gson.Gson;
+
 import it.unipi.hadoop.Job1.*;
 import it.unipi.hadoop.Job2.BloomFiltersMapper;
 import it.unipi.hadoop.Job2.BloomFiltersReducer;
@@ -90,8 +93,7 @@ public class Main {
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job3, new Path(args[0]));
-    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 10000);
-    //job3.getConfiguration().getInt("bloom", defaultValue)
+    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 5000);
     job3.setJarByClass(Main.class);
     job3.setMapperClass(TestMapper.class);
     job3.setCombinerClass(TestCombiner.class);
