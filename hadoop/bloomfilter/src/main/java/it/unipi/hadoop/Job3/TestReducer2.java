@@ -20,11 +20,11 @@ import com.google.common.collect.Iterables;
 
 import it.unipi.hadoop.BloomFilter;
 
-public class TestReducer2 extends Reducer<Text, Text, Text, DoubleWritable> {
+public class TestReducer2 extends Reducer<Text, Text, Text, IntWritable> {
 
   public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
-    Double falsePositive = 0.0;
+    int falsePositive = 0;
     int n = 0;
     for (Text val : values) {
       if(val.toString().equals("1")) 
@@ -32,6 +32,6 @@ public class TestReducer2 extends Reducer<Text, Text, Text, DoubleWritable> {
       n++;
     }
 
-    context.write(key, new DoubleWritable(falsePositive/n));
+    context.write(key, new IntWritable(falsePositive));
   }
 }

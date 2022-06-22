@@ -124,7 +124,7 @@ public class Main {
       job3_1.setMapOutputKeyClass(Text.class);
       job3_1.setMapOutputValueClass(Text.class); 
       job3_1.setOutputKeyClass(Text.class);
-      job3_1.setOutputValueClass(DoubleWritable.class);
+      job3_1.setOutputValueClass(IntWritable.class);
   
       NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
       FileOutputFormat.setOutputPath(job3_1, new Path(otherArgs[otherArgs.length - 1] + "_3.1"));
