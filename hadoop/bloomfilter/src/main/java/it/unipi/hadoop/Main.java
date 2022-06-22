@@ -1,10 +1,14 @@
 package it.unipi.hadoop;
 
 
+import java.util.HashMap;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.SequenceFile;
+import org.apache.hadoop.io.SequenceFile.Reader;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.lib.input.NLineInputFormat;
 import org.apache.hadoop.mapreduce.Job;
@@ -21,6 +25,7 @@ import it.unipi.hadoop.Job3.TestReducer;
 
 public class Main {
 
+  public static HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, BloomFilter>();
   public static void main(String[] args) throws Exception {
     
     Configuration conf1 = new Configuration();
@@ -78,12 +83,14 @@ public class Main {
     if(!countSuccess2) {
       System.exit(0);
     }
-    
+
+    readOutput_2();
+  
     Configuration conf3 = new Configuration();
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job3, new Path(args[0]));
-    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 20000);
+    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 10000);
 
     job3.setJarByClass(Main.class);
     job3.setMapperClass(TestMapper.class);
@@ -105,6 +112,24 @@ public class Main {
     System.exit(0);
 
     
+  }
+
+  private static void readOutput_2() {
+
+    try {
+      Path pt = new Path("hdfs://hadoop-namenode:9820/user/hadoop/output_2/part-r-00000");// Location of file in HDFS
+      SequenceFile.Reader reader = new SequenceFile.Reader(new Configuration(), Reader.file(pt));
+      boolean hasNext;
+      do {
+
+        Text key = new Text();
+        BloomFilter bf = new BloomFilter();
+        hasNext = reader.next(key, bf);
+        bloomFilter_param.put(key, bf);
+
+      } while(hasNext);
+
+    } catch (Exception e) { e.getStackTrace(); }
   }
 }
 

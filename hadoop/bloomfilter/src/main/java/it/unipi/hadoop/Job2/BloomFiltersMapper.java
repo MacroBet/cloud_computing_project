@@ -15,7 +15,7 @@ import it.unipi.hadoop.BloomFilter;
 import java.io.InputStreamReader;
 
 public class BloomFiltersMapper extends Mapper<Object, Text, Text, BloomFilter> {
-    private Text word = new Text();
+
     private HashMap<Integer, BloomFilter> bloomFilter_param = new HashMap<Integer, BloomFilter>();
     private Map<Integer, BloomFilter> combiner = new HashMap<Integer, BloomFilter>(); 
     public void setup(Context context) throws IOException, InterruptedException {
