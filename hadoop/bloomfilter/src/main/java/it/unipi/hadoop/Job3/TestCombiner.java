@@ -23,7 +23,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import it.unipi.hadoop.BloomFilter;
 
-public class TestCombiner extends Reducer<Text, Text, Text, Text> {
+public class TestCombiner extends Reducer<Text, HashMap<String, String>, Text, Text> {
 
     private HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, BloomFilter>();
    
@@ -44,13 +44,15 @@ public class TestCombiner extends Reducer<Text, Text, Text, Text> {
   
         } catch (Exception e) { e.getStackTrace(); }
     }
-  
-      public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+    /* 
+      public void reduce(Text key, Iterable<HashMap<String, String>> values, Context context) throws IOException, InterruptedException {
           
+        Iterator<Map.Entry<String, String>> temp = values.entrySet().iterator();
+
           double falsePositive = 0.0;
           int n = 0;
-          for (Text val : values) {
-              if(bloomFilter_param.get(new Text(key)).check(val.toString()))
+          while(values.ha) {
+              if(bloomFilter_param.get(new Text(key)).check(val.get(key)))
                 falsePositive++;
               n++;
             }
@@ -59,5 +61,5 @@ public class TestCombiner extends Reducer<Text, Text, Text, Text> {
    
         }
   
-    
+    */
 }
