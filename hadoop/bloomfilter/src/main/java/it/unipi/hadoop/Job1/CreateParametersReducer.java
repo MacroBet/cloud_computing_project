@@ -8,7 +8,7 @@ import it.unipi.hadoop.*;
 
 public class CreateParametersReducer extends Reducer<Text, IntWritable, Text, Text> {
     
-    private static final float p_rate = (float) 0.001;
+    private static final float p_rate = (float) 0.1;
     private Text result = new Text();
     private String res = new String();
 
