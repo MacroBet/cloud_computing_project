@@ -14,26 +14,7 @@ import it.unipi.hadoop.BloomFilter;
 
 public class TestReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable> {
 
-  private HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, BloomFilter>();
- 
-  public void setup(Context context) throws IOException, InterruptedException {
     
-    try {
-          Path pt = new Path("hdfs://hadoop-namenode:9820/user/hadoop/output_2/part-r-00000");// Location of file in HDFS
-          SequenceFile.Reader reader = new SequenceFile.Reader(new Configuration(), Reader.file(pt));
-          boolean hasNext;
-          do {
-
-            Text key = new Text();
-            BloomFilter bf = new BloomFilter();
-            hasNext = reader.next(key, bf);
-            bloomFilter_param.put(key, bf);
-
-          } while(hasNext);
-
-      } catch (Exception e) { e.getStackTrace(); }
-  }
-
     public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
         
       double falsePositive = 0.0;
