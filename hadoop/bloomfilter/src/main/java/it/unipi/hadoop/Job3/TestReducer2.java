@@ -20,18 +20,18 @@ import com.google.common.collect.Iterables;
 
 import it.unipi.hadoop.BloomFilter;
 
-public class TestReducer2 extends Reducer<Text, Text, Text, IntWritable> {
+public class TestReducer2 extends Reducer<Text, Text, Text, DoubleWritable> {
 
   public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
-    int falsePositive = 0;
+    Double falsePositive = 0.0;
     int n = 0;
     for (Text val : values) {
       if(val.toString().equals("1")) 
-        falsePositive += 1;
+        falsePositive += Double.parseDouble(val.toString());
       n++;
     }
 
-    context.write(key, new IntWritable(falsePositive));
+    context.write(key, new DoubleWritable(falsePositive/n));
   }
 }
