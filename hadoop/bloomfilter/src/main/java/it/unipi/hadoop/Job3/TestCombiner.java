@@ -47,7 +47,7 @@ public class TestCombiner extends Reducer<Text, Text, Text, Text> {
   
       public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
           
-          int falsePositive = 0;
+          double falsePositive = 0.0;
           int n = 0;
           for (Text val : values) {
               if(bloomFilter_param.get(new Text("2")).check(val.toString()))
