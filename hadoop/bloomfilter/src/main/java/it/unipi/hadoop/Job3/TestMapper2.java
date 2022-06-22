@@ -112,9 +112,9 @@ public class TestMapper2  extends Mapper<Object, Text, Text,Text> {
               String keyVal = entry.getKey();
               Integer falsePositive = entry.getValue().get(0);
               Integer NonFalsePositive = entry.getValue().get(1);
-              //Double FPrate = (double) (falsePositive/(falsePositive+NonFalsePositive));
+              Double FPrate = (double) (falsePositive/(falsePositive+NonFalsePositive));
     
-              context.write(new Text(keyVal), new Text(String.valueOf(falsePositive)));
+              context.write(new Text(keyVal), new Text(String.valueOf(FPrate)));
           }
         
       }
