@@ -26,7 +26,6 @@ import it.unipi.hadoop.BloomFilter;
 public class TestCombiner extends Reducer<Text, Text, Text, Text> {
 
     private HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, BloomFilter>();
-    private Map<String, ArrayList<String>> bloomFP = new HashMap<String, ArrayList<String>>();
    
     public void setup(Context context) throws IOException, InterruptedException {
       
@@ -51,7 +50,7 @@ public class TestCombiner extends Reducer<Text, Text, Text, Text> {
           int falsePositive = 0;
           int n = 0;
           for (Text val : values) {
-              if(bloomFilter_param.get(key).check(val.toString()))
+              if(bloomFilter_param.get(new Text("2")).check(val.toString()))
                 falsePositive++;
               n++;
             }
