@@ -126,7 +126,8 @@ public class Main {
         BloomFilter bf = new BloomFilter();
         hasNext = reader.next(key, bf);
         bloomFilter_param.put(key, bf);
-
+        System.out.println("+++++++++++++++++");
+        System.out.println(bf.get_size() + "----" + bf.get_hash_count());
       } while(hasNext);
 
     } catch (Exception e) { e.getStackTrace(); }
