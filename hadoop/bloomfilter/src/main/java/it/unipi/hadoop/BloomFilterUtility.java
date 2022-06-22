@@ -6,8 +6,8 @@ public class BloomFilterUtility {
         return (int) (-(n * Math.log(p)) / Math.pow((Math.log(2)), 2));
       }
     
-      public static int get_hash_count(int size, int n) {
-        return (int) ((size / n) * Math.log(2));
-      }
-    
+     
+  public static int get_hash_count(int size, int n) {
+    return (int) ((size / n) * Math.log(2));
+  }
 }
