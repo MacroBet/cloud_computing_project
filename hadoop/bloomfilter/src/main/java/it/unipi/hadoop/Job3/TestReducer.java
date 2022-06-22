@@ -23,7 +23,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import it.unipi.hadoop.BloomFilter;
 
-public class TestReducer extends Reducer<Text, Text, Text, DoubleWritable> {
+public class TestReducer extends Reducer<Text, DoubleWritable, Text, DoubleWritable> {
 
   private HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, BloomFilter>();
   private Map<String, ArrayList<String>> bloomFP = new HashMap<String, ArrayList<String>>();
@@ -46,11 +46,11 @@ public class TestReducer extends Reducer<Text, Text, Text, DoubleWritable> {
       } catch (Exception e) { e.getStackTrace(); }
   }
 
-    public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+    public void reduce(Text key, Iterable<DoubleWritable> values, Context context) throws IOException, InterruptedException {
         
       int falsePositive = 0;
       int n = 0;
-      for (Text val : values) {
+      for (DoubleWritable val : values) {
           if(bloomFilter_param.get(key).check(val.toString()))
             falsePositive++;
           n++;

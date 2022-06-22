@@ -46,7 +46,7 @@ public class TestCombiner extends Reducer<Text, Text, Text, DoubleWritable> {
         } catch (Exception e) { e.getStackTrace(); }
     }
   
-      public void combine(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+      public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
           
           int falsePositive = 0;
           int n = 0;
