@@ -78,8 +78,7 @@ public class Main {
     if(!countSuccess2) {
       System.exit(0);
     }
-    hadoop fs -rm -r output
-
+   
     Configuration conf3 = new Configuration();
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
