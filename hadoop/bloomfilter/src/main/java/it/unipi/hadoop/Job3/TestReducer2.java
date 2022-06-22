@@ -27,8 +27,9 @@ public class TestReducer2 extends Reducer<Text, Text, Text, DoubleWritable> {
     Double falsePositive = 0.0;
     int n = 0;
     for (Text val : values) {
-        falsePositive += Double.parseDouble(val.toString());
-        n++;
+      if(val.toString().equals("1")) 
+        falsePositive += 1;
+      n++;
     }
 
     context.write(key, new DoubleWritable(falsePositive/n));
