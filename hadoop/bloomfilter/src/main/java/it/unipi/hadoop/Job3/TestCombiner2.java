@@ -38,5 +38,5 @@ public class TestCombiner2 extends Reducer<Text, Text, Text, Text> {
    
         }
   
-    */
+    
 }
