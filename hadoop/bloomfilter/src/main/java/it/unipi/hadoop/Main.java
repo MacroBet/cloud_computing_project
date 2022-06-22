@@ -83,7 +83,7 @@ public class Main {
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job3, new Path(args[0]));
-    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 50000);
+    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 20000);
 
     job3.setJarByClass(Main.class);
     job3.setMapperClass(TestMapper.class);
