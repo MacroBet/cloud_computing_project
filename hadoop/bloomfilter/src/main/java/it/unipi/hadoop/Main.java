@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.SequenceFile;
@@ -106,12 +107,12 @@ public class Main {
     job3.setMapOutputValueClass(Text.class); 
     
     job3.setOutputKeyClass(Text.class);
-    job3.setOutputValueClass(ArrayList.class);
+    job3.setOutputValueClass(ArrayWritable.class);
 
     FileOutputFormat.setOutputPath(job3, new Path(outputTempDir));
     Boolean countSuccess3 = job3.waitForCompletion(true);
-   /* if(!countSuccess3) {
-      Job job3_1 = Job.getInstance(conf3, "JOB_3.1");
+    if(!countSuccess3) {
+      /*Job job3_1 = Job.getInstance(conf3, "JOB_3.1");
       job3_1.setJarByClass(Main.class);
       job3_1.setMapperClass(TestMapper2.class);
       job3_1.setReducerClass(TestReducer2.class);
@@ -124,7 +125,7 @@ public class Main {
       if(!countSuccess3) {
         System.exit(0);
       }
-    //}
+    }
     
     System.exit(0);
 
