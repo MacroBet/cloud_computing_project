@@ -24,7 +24,9 @@ import it.unipi.hadoop.BloomFilter;
 public class TestMapper2  extends Mapper<Object, Text, Text,Text> {
   
   private HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, BloomFilter>();
-   
+  private Map<String, Integer> combinerOne = new HashMap<String, Integer>(); 
+  private Map<String, Integer> combinerZero = new HashMap<String, Integer>(); 
+
   public void setup(Context context) throws IOException, InterruptedException {
     
     try {
@@ -52,14 +54,42 @@ public class TestMapper2  extends Mapper<Object, Text, Text,Text> {
           String id = ratingRaw.split("\t")[1];
           
           if(bloomFilter_param.get(new Text(String.valueOf(rating))).check(id))
-
             context.write(new Text(String.valueOf(rating)), new Text("1"));
           else
-            context.write(new Text(String.valueOf(rating)), new Text("0"));
-         
+          context.write(new Text(String.valueOf(rating)), new Text("0"));
+           /*  if(combinerOne.containsKey(rating)) { 
+              int sum = (int) combinerOne.get(rating) + 1;
+              combinerOne.put(String.valueOf(rating), sum);      
+            }
+            else {
+              combinerOne.put(String.valueOf(rating), 1);
+          
+            }
+          else 
+          if(combinerOne.containsKey(rating)) { 
+            int sum = (int) combinerOne.get(rating) + 1;
+            combinerOne.put(String.valueOf(rating), sum);      
+          }
+          else {
+            combinerOne.put(String.valueOf(rating), 1);
+        
+          }*/
+
           }
         
         }
+}
+
+      /*   public void cleanup(Context context) throws IOException, InterruptedException {
+          Iterator<Map.Entry<String, Integer>> temp = combiner.entrySet().iterator();
+    
+          while(temp.hasNext()) {
+              Map.Entry<String, Integer> entry = temp.next();
+              String keyVal = entry.getKey();
+              Integer sum = entry.getValue();
+    
+              context.write(new Text(keyVal), su);
+          }
         
-      }
+      }*/
     
