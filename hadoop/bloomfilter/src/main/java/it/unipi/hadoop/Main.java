@@ -1,30 +1,21 @@
 package it.unipi.hadoop;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.SequenceFile;
-import org.apache.hadoop.io.SequenceFile.Reader;
-import org.apache.hadoop.mapred.FileInputFormat;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.lib.input.NLineInputFormat;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
-import com.google.gson.Gson;
 
 import it.unipi.hadoop.Job1.*;
 import it.unipi.hadoop.Job2.BloomFiltersMapper;
 import it.unipi.hadoop.Job2.BloomFiltersReducer;
-import it.unipi.hadoop.Job3.TestCombiner2;
 import it.unipi.hadoop.Job3.TestMapper1;
 import it.unipi.hadoop.Job3.TestMapper2;
 import it.unipi.hadoop.Job3.TestReducer1;
@@ -91,8 +82,6 @@ public class Main {
     if(!countSuccess2) {
       System.exit(0);
     }
-
-    readOutput_2();
     
     String outputTempDir = otherArgs[otherArgs.length - 1] + "_3";
     Configuration conf3 = new Configuration();
@@ -113,7 +102,6 @@ public class Main {
     FileOutputFormat.setOutputPath(job3, new Path(outputTempDir));
     Boolean countSuccess3 = job3.waitForCompletion(true);
     if(countSuccess3) {
-      System.out.println("++++++++++++++");
       Job job3_1 = Job.getInstance(conf3, "JOB_3.1");
       job3_1.setJarByClass(Main.class);
       job3_1.setMapperClass(TestMapper2.class);
@@ -139,23 +127,6 @@ public class Main {
     
   }
 
-  private static void readOutput_2() {
-
-    try {
-      Path pt = new Path("hdfs://hadoop-namenode:9820/user/hadoop/output_2/part-r-00000");// Location of file in HDFS
-      SequenceFile.Reader reader = new SequenceFile.Reader(new Configuration(), Reader.file(pt));
-      boolean hasNext;
-      do {
-
-        Text key = new Text();
-        BloomFilter bf = new BloomFilter();
-        hasNext = reader.next(key, bf);
-        bloomFilter_param.put(key, bf);
-        System.out.println("+++++++++++++++++");
-        System.out.println(bf.get_size() + "----" + bf.get_hash_count());
-      } while(hasNext);
-        bloomFilter_param.remove(new Text("0"));
-    } catch (Exception e) { e.getStackTrace(); }
-  }
+  
 }
 
