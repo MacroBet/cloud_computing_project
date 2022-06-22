@@ -87,7 +87,7 @@ public class Main {
 
     job3.setJarByClass(Main.class);
     job3.setMapperClass(TestMapper.class);
-    job3.setCombinerClass(TestCombiner.class);
+    //job3.setCombinerClass(TestCombiner.class);
     job3.setReducerClass(TestReducer.class);
 
     job3.setMapOutputKeyClass(Text.class);
