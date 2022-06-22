@@ -118,14 +118,14 @@ public class Main {
       job3_1.setJarByClass(Main.class);
       job3_1.setMapperClass(TestMapper2.class);
       job3_1.setReducerClass(TestReducer2.class);
-      job3.setInputFormatClass(NLineInputFormat.class);
-      job2.setCombinerClass(TestCombiner2.class);
-      NLineInputFormat.addInputPath(job3, new Path(args[0]));
+      job3_1.setInputFormatClass(NLineInputFormat.class);
+      job3_1.setCombinerClass(TestCombiner2.class);
+      NLineInputFormat.addInputPath(job3_1, new Path(args[0]));
       job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 100000);
       job3_1.setMapOutputKeyClass(Text.class);
       job3_1.setMapOutputValueClass(Text.class); 
-      job3.setOutputKeyClass(Text.class);
-      job3.setOutputValueClass(DoubleWritable.class);
+      job3_1.setOutputKeyClass(Text.class);
+      job3_1.setOutputValueClass(DoubleWritable.class);
   
       NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
       FileOutputFormat.setOutputPath(job3_1, new Path(otherArgs[otherArgs.length - 1] + "_3.1"));
