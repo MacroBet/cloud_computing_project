@@ -55,7 +55,7 @@ public class TestCombiner extends Reducer<Text, Text, Text, Text> {
               n++;
             }
               
-          context.write(key, new Text((falsePositive/n)+"")); 
+          context.write(key, new Text(String.valueOf(falsePositive/n))); 
    
         }
   
