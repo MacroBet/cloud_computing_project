@@ -25,7 +25,7 @@ public class TestMapper2  extends Mapper<Object, Text, Text,Text> {
   
   private HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, BloomFilter>();
   private Map<String, Integer> combinerOne = new HashMap<String, Integer>(); 
-  private Map<String, Integer> combinerZero = new HashMap<String, Integer>(); 
+  private Map<String, ArrayList<Integer>> combiner = new HashMap<String, ArrayList<Integer>>(); 
 
   public void setup(Context context) throws IOException, InterruptedException {
     
@@ -44,6 +44,8 @@ public class TestMapper2  extends Mapper<Object, Text, Text,Text> {
 
       } catch (Exception e) { e.getStackTrace(); }
   }
+
+
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
  
         StringTokenizer itr = new StringTokenizer(value.toString(), "\n");
@@ -53,43 +55,68 @@ public class TestMapper2  extends Mapper<Object, Text, Text,Text> {
           int rating = Integer.parseInt(ratingRaw.split("\t")[0]);
           String id = ratingRaw.split("\t")[1];
           
-          if(bloomFilter_param.get(new Text(String.valueOf(rating))).check(id))
-            context.write(new Text(String.valueOf(rating)), new Text("1"));
-          else
-          context.write(new Text(String.valueOf(rating)), new Text("0"));
-           /*  if(combinerOne.containsKey(rating)) { 
-              int sum = (int) combinerOne.get(rating) + 1;
-              combinerOne.put(String.valueOf(rating), sum);      
-            }
-            else {
-              combinerOne.put(String.valueOf(rating), 1);
+          if(bloomFilter_param.get(new Text(String.valueOf(rating))).check(id)) {
+         
+            if(combinerOne.containsKey(String.valueOf(rating))) { 
+
+              int FPsum = combiner.get(String.valueOf(rating)).get(0) +1;
+              int NFPsum = combiner.get(String.valueOf(rating)).get(1);
+              ArrayList<Integer> val = new ArrayList<Integer>();
+              val.add(FPsum);
+              val.add(NFPsum);
+              combiner.put(String.valueOf(rating), val);      
+
+            } else {
+            
+              ArrayList<Integer> val = new ArrayList<Integer>();
+              val.add(1);
+              val.add(0);
+              combiner.put(String.valueOf(rating), val);
           
-            }
-          else 
-          if(combinerOne.containsKey(rating)) { 
-            int sum = (int) combinerOne.get(rating) + 1;
-            combinerOne.put(String.valueOf(rating), sum);      
           }
-          else {
-            combinerOne.put(String.valueOf(rating), 1);
-        
-          }*/
+
+          } else {
+            if(combinerOne.containsKey(String.valueOf(rating))) { 
+
+              int FPsum = combiner.get(String.valueOf(rating)).get(0);
+              int NFPsum = combiner.get(String.valueOf(rating)).get(1) + 1;
+              ArrayList<Integer> val = new ArrayList<Integer>();
+              val.add(FPsum);
+              val.add(NFPsum);
+              combiner.put(String.valueOf(rating), val);      
+
+            } else {
+            
+              ArrayList<Integer> val = new ArrayList<Integer>();
+              val.add(0);
+              val.add(1);
+              combiner.put(String.valueOf(rating), val);
 
           }
         
         }
-}
+      }
+    }
+  }
 
-      /*   public void cleanup(Context context) throws IOException, InterruptedException {
-          Iterator<Map.Entry<String, Integer>> temp = combiner.entrySet().iterator();
+  /* 
+       context.write(new Text(String.valueOf(rating)), new Text("1"));
+          else
+            context.write(new Text(String.valueOf(rating)), new Text("0"));*/
+
+
+      public void cleanup(Context context) throws IOException, InterruptedException {
+          Iterator<Map.Entry<String, ArrayList<Integer>>> temp = combiner.entrySet().iterator();
     
           while(temp.hasNext()) {
-              Map.Entry<String, Integer> entry = temp.next();
+              Map.Entry<String, ArrayList<Integer>> entry = temp.next();
               String keyVal = entry.getKey();
-              Integer sum = entry.getValue();
+              Integer falsePositive = entry.getValue().get(0);
+              Integer NonFalsePositive = entry.getValue().get(0);
+              Double FPrate = (double) (falsePositive/(falsePositive+NonFalsePositive));
     
-              context.write(new Text(keyVal), su);
+              context.write(new Text(keyVal), new Text(FPrate.toString()));
           }
         
-      }*/
+      }
     
