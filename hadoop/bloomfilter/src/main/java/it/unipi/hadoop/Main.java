@@ -24,7 +24,7 @@ import com.google.gson.Gson;
 import it.unipi.hadoop.Job1.*;
 import it.unipi.hadoop.Job2.BloomFiltersMapper;
 import it.unipi.hadoop.Job2.BloomFiltersReducer;
-import it.unipi.hadoop.Job3.TestCombiner;
+import it.unipi.hadoop.Job3.TestCombiner2;
 import it.unipi.hadoop.Job3.TestMapper1;
 import it.unipi.hadoop.Job3.TestMapper2;
 import it.unipi.hadoop.Job3.TestReducer1;
@@ -108,22 +108,28 @@ public class Main {
     job3.setMapOutputValueClass(Text.class); 
     
     job3.setOutputKeyClass(Text.class);
-    job3.setOutputValueClass(ArrayWritable.class);
+    job3.setOutputValueClass(Text.class);
 
     FileOutputFormat.setOutputPath(job3, new Path(outputTempDir));
     Boolean countSuccess3 = job3.waitForCompletion(true);
     if(!countSuccess3) {
-      /*Job job3_1 = Job.getInstance(conf3, "JOB_3.1");
+      Job job3_1 = Job.getInstance(conf3, "JOB_3.1");
       job3_1.setJarByClass(Main.class);
       job3_1.setMapperClass(TestMapper2.class);
       job3_1.setReducerClass(TestReducer2.class);
       job3.setInputFormatClass(NLineInputFormat.class);
+      job2.setCombinerClass(TestCombiner2.class);
       NLineInputFormat.addInputPath(job3, new Path(args[0]));
-      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 5000);
+      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 100000);
+      job3_1.setMapOutputKeyClass(Text.class);
+      job3_1.setMapOutputValueClass(Text.class); 
+      job3.setOutputKeyClass(Text.class);
+      job3.setOutputValueClass(DoubleWritable.class);
+  
       NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
       FileOutputFormat.setOutputPath(job3_1, new Path(otherArgs[otherArgs.length - 1] + "_3.1"));
-      Boolean countSuccess3_1 = job3_1.waitForCompletion(true);*/
-      if(!countSuccess3) {
+      Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
+      if(!countSuccess3_1) {
         System.exit(0);
       }
     }
