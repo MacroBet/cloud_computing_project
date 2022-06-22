@@ -50,7 +50,7 @@ public class TestCombiner extends Reducer<Text, Text, Text, Text> {
           double falsePositive = 0.0;
           int n = 0;
           for (Text val : values) {
-              if(bloomFilter_param.get(new Text("2")).check(val.toString()))
+              if(bloomFilter_param.get(new Text(key)).check(val.toString()))
                 falsePositive++;
               n++;
             }
