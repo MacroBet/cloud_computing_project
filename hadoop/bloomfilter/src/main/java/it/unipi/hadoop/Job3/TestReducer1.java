@@ -22,7 +22,7 @@ public class TestReducer1 extends Reducer<Text, Text, Text, Text[]> {
 
     public void reduce(Text key, List<Text> values, Context context) throws IOException, InterruptedException {
         
-      Text[] valRate = new Text[Iterables.size(values)];
+      Text[] valRate = new Text[values.size()];
       for (int i = 0; i < Iterables.size(values); i++) {
           valRate[i] = values.get(i);
         }
