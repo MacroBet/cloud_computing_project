@@ -9,21 +9,23 @@ import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.SequenceFile.Reader;
+import org.apache.hadoop.mapred.FileInputFormat;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.lib.input.NLineInputFormat;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
-
 import com.google.gson.Gson;
 
 import it.unipi.hadoop.Job1.*;
 import it.unipi.hadoop.Job2.BloomFiltersMapper;
 import it.unipi.hadoop.Job2.BloomFiltersReducer;
 import it.unipi.hadoop.Job3.TestCombiner;
-import it.unipi.hadoop.Job3.TestMapper;
-import it.unipi.hadoop.Job3.TestReducer;
+import it.unipi.hadoop.Job3.TestMapper1;
+import it.unipi.hadoop.Job3.TestMapper2;
+import it.unipi.hadoop.Job3.TestReducer1;
+import it.unipi.hadoop.Job3.TestReducer2;
 
 
 public class Main {
@@ -88,16 +90,16 @@ public class Main {
     }
 
     readOutput_2();
-  
+    
+    String outputTempDir = otherArgs[otherArgs.length - 1] + "_3";
     Configuration conf3 = new Configuration();
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job3, new Path(args[0]));
     job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 5000);
     job3.setJarByClass(Main.class);
-    job3.setMapperClass(TestMapper.class);
-    job3.setCombinerClass(TestCombiner.class);
-    job3.setReducerClass(TestReducer.class);
+    job3.setMapperClass(TestMapper1.class);
+    job3.setReducerClass(TestReducer1.class);
 
     job3.setMapOutputKeyClass(Text.class);
     job3.setMapOutputValueClass(Text.class); 
@@ -105,11 +107,23 @@ public class Main {
     job3.setOutputKeyClass(Text.class);
     job3.setOutputValueClass(DoubleWritable.class);
 
-    FileOutputFormat.setOutputPath(job3, new Path(otherArgs[otherArgs.length - 1] + "_3"));
+    FileOutputFormat.setOutputPath(job3, new Path(outputTempDir));
     Boolean countSuccess3 = job3.waitForCompletion(true);
-    if(!countSuccess3) {
-      System.exit(0);
-    }
+   /* if(!countSuccess3) {
+      Job job3_1 = Job.getInstance(conf3, "JOB_3.1");
+      job3_1.setJarByClass(Main.class);
+      job3_1.setMapperClass(TestMapper2.class);
+      job3_1.setReducerClass(TestReducer2.class);
+      job3.setInputFormatClass(NLineInputFormat.class);
+      NLineInputFormat.addInputPath(job3, new Path(args[0]));
+      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 5000);
+      NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
+      FileOutputFormat.setOutputPath(job3_1, new Path(otherArgs[otherArgs.length - 1] + "_3.1"));
+      Boolean countSuccess3_1 = job3_1.waitForCompletion(true);*/
+      if(!countSuccess3) {
+        System.exit(0);
+      }
+    //}
     
     System.exit(0);
 

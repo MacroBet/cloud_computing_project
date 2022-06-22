@@ -22,7 +22,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 import it.unipi.hadoop.BloomFilter;
 
-public class TestMapper  extends Mapper<Object, Text, Text, Text> {
+public class TestMapper1  extends Mapper<Object, Text, Text,Text> {
 
 
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
@@ -34,9 +34,9 @@ public class TestMapper  extends Mapper<Object, Text, Text, Text> {
           String ratingRaw = itr.nextToken().toString();
           String movieId = ratingRaw.split("\t")[0];
           rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
-          
           for(int i = 1; i < 11; i++)
             if(i != rating)
+
               context.write(new Text(String.valueOf(i)), new Text(movieId));
           /* 
           for (Map.Entry<String, BloomFilter> entry : bloomFilter_param.entrySet()) {
