@@ -46,13 +46,13 @@ public class TestReducer extends Reducer<Text, DoubleWritable, Text, DoubleWrita
       } catch (Exception e) { e.getStackTrace(); }
   }
 
-    public void reduce(Text key, Iterable<DoubleWritable> values, Context context) throws IOException, InterruptedException {
+    public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
         
-      int falsePositive = 0;
+      double falsePositive = 0.0;
       int n = 0;
-      for (DoubleWritable val : values) {
-          if(bloomFilter_param.get(key).check(val.toString()))
-            falsePositive++;
+      for (Text val : values) {
+
+          falsePositive += Double.parseDouble(val.toString());
           n++;
         }
           

@@ -23,7 +23,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 
 import it.unipi.hadoop.BloomFilter;
 
-public class TestCombiner extends Reducer<Text, Text, Text, DoubleWritable> {
+public class TestCombiner extends Reducer<Text, Text, Text, Text> {
 
     private HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, BloomFilter>();
     private Map<String, ArrayList<String>> bloomFP = new HashMap<String, ArrayList<String>>();
@@ -56,7 +56,7 @@ public class TestCombiner extends Reducer<Text, Text, Text, DoubleWritable> {
               n++;
             }
               
-          context.write(key, new DoubleWritable(falsePositive/n)); 
+          context.write(key, new Text((falsePositive/n)+"")); 
    
         }
   
