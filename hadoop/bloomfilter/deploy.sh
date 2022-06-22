@@ -6,4 +6,4 @@ mvn clean package
 cd target
 hadoop jar bloomfilter-1.0-SNAPSHOT.jar it.unipi.hadoop.Main mini.ratings.txt output
 hadoop fs -cat output/part-r-00000
-hadoop fs -cat output_3/part-r-00000
+hadoop fs -cat output_3.1/part-r-00000
