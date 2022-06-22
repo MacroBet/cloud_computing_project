@@ -18,19 +18,16 @@ import com.google.common.collect.Iterables;
 
 import it.unipi.hadoop.BloomFilter;
 
-public class TestReducer1 extends Reducer<Text, Text, Text, Text[]> {
+public class TestReducer1 extends Reducer<Text, Text, Text, ArrayWritable> {
 
-    public void reduce(Text key, List<Text> values, Context context) throws IOException, InterruptedException {
-        
-      Text[] valRate = new Text[values.size()];
-      for (int i = 0; i < Iterables.size(values); i++) {
-          valRate[i] = values.get(i);
-        }
-          
-      context.write(key, valRate); 
+  public void reduce(Text key, List<Text> values, Context context) throws IOException, InterruptedException {
 
- 
-      }
+    String[] valRate = new String[Iterables.size(values)];
+    for (int i = 0; i < Iterables.size(values); i++) {
+      valRate[i] = values.get(i).toString();
+    }
 
-    
+    context.write(key, new ArrayWritable(valRate));
+
+  }
 }

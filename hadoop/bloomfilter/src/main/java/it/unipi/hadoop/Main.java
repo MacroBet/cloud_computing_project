@@ -108,7 +108,7 @@ public class Main {
     job3.setMapOutputValueClass(Text.class); 
     
     job3.setOutputKeyClass(Text.class);
-    job3.setOutputValueClass(Text[].class);
+    job3.setOutputValueClass(ArrayWritable.class);
 
     FileOutputFormat.setOutputPath(job3, new Path(outputTempDir));
     Boolean countSuccess3 = job3.waitForCompletion(true);
