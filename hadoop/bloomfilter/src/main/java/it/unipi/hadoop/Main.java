@@ -28,8 +28,6 @@ import java.io.BufferedReader;
 public class Main {
 
   public static HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, BloomFilter>();
-  public static HashMap<String, Double> FP = new HashMap<String, Double>();
-
 
   public static void main(String[] args) throws Exception {
     
@@ -135,25 +133,31 @@ public class Main {
   }
 
   private static Double countFalsePositiveRate() {
+    
+    Double fp = 0.0;
     try {
       Path pt = new Path("hdfs://hadoop-namenode:9820/user/hadoop_3.1/output/part-r-00000");// Location of file in HDFS
       FileSystem fs = FileSystem.get(new Configuration());
       BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(pt)));
       String line;
-
+    
       line = br.readLine();
       
       while (line != null) {
         String[] currencies = line.split("\t");
-        FP.put(currencies[0].toString(), Double.parseDouble(currencies[1]));
+        fp += Double.parseDouble(currencies[1]);
         line = br.readLine();
       }
+   
 
-  } catch (Exception e) { e.getStackTrace(); }
-}
+    } catch (Exception e) { e.getStackTrace(); }
+
+    return fp;
 
   }
 
-  
 }
+
+  
+
 
