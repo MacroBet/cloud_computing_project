@@ -34,13 +34,20 @@ def get_size(n, p):
     """Get the size of the bitarray used in bloom filter
     Args:
         n: number of elements that bloom filter is expected to contain
-        p: The account that will create the auction application.
+        p: desired false positive rate
     Returns:
-        The size o
+        The size of bitarray
     """
     return int(-(n * math.log(p))/(math.log(2)**2))
 
 def get_hash_count(size, n):
+    """Get the number of hash function to use in bloom filter
+    Args:
+        size: size of the bitarray used in bloom filter
+        n: number of elements that bloom filter is expected to contain
+    Returns:
+        The size of bitarray
+    """
     return int((size/n) * math.log(2))
 
 
@@ -56,15 +63,22 @@ def _rating_str(rating_raw):
 def count_ratings_occurences(lines):
     return lines.map(lambda x: (_rating_str(x.split('\t')[1]),1)).filter(lambda x: x[0]!="0").reduceByKey(add)
 
-rating_extractor= lambda x: ( x.split('\t')[0],round(0.0001+float(x.split('\t')[1])))
+#  return tuple like (id, rating)
+rating_extractor = lambda x: ( x.split('\t')[0],_rating(x.split('\t')[1]))
     
 
 def insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS):
-    ratings = lines.map(rating_extractor)
-    output = ratings.map(lambda rating: (rating[1],add_item_to_bloom_filter(HASH_COUNTS[rating[1]],SIZES[rating[1]],rating[0]))).reduceByKey(lambda bit_arr, acc: bit_arr | acc)
-    return output.collect()
+    return lines.map(rating_extractor).\
+    map(lambda rating: (rating[1],add_item_to_bloom_filter(HASH_COUNTS[rating[1]],SIZES[rating[1]],rating[0]))).\
+    reduceByKey(lambda bit_arr, acc: bit_arr | acc)
  
 def check_item_in_bloom_filters(item, bloomFilters, HASH_COUNTS, SIZES):
+    """check_item_in_bloom_filters 
+    Args:
+        
+    Returns:
+        example of return value: [("3",1),("7",1)]
+    """
     false_positive = []
     for bloom_filter in bloomFilters:
         rating = bloom_filter[0]
@@ -73,58 +87,66 @@ def check_item_in_bloom_filters(item, bloomFilters, HASH_COUNTS, SIZES):
             false_positive.append((rating,1))
     return false_positive
 
-def calculate_false_positive_rate(lines, bloomFilters, HASH_COUNTS, SIZES ):
-    ratings = lines.map(rating_extractor)
-    false_positives = ratings.flatMap(lambda rating: check_item_in_bloom_filters(rating, bloomFilters, HASH_COUNTS, SIZES))
-    counts = false_positives.reduceByKey(add)
-    return counts.collect()
-
-# 1. read file and count occurences of each rounded ratings
-# => n1,..,n10
-# 2. create 10 empty arrays of size ni 
-# 3. fix false positive param and others too
-# 4. iterate over all ratings and insert into bloom filters
-# 5. iterate over all ratings and check if they are in the bloom filters
+def calculate_false_positive_count(lines, bloomFilters, HASH_COUNTS, SIZES ):
+    """calculate_false_positive_count 
+    Args:
+        
+    Example:
+        n di => [("3",1),("7",1)]
+        n = 2 [("3",1),("7",1)], [("2",1),("3",1)]
+        false_positives = [("3",1),("7",1),("2",1),("3",1)]
+    """
+    return lines.map(rating_extractor)\
+    .flatMap(lambda rating: check_item_in_bloom_filters(rating, bloomFilters, HASH_COUNTS, SIZES))\
+    .reduceByKey(add)
+    
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: BloomFilter <input file> [<output file>]", file=sys.stderr)
         sys.exit(-1)
-
+    if (sys.argv[2]!=None): p = float(sys.argv[2])
+    print("False positive probability: ",p)
     master = "local"
     sc = SparkContext(master, "BloomFilter")
-    lines = sc.textFile(sys.argv[1])
-    if (sys.argv[2]!=None): p = float(sys.argv[2])
-
-    print("False positive probability: ",p)
-    
-
-    rating_count= count_ratings_occurences(lines).collect()
-    #   0,1,2,3,4,5,6,7,8,9,10
     N = [1,1,1,1,1,1,1,1,1,1,1]
+    
+    # 1. read file creating the RDD
+    lines = sc.textFile(sys.argv[1])
 
-    for (word, count) in rating_count:
-        N[int(word)]= count
-        print("%s: %i" % (word, count))
+    # 2. count occurences of each ratings (rounded)
+    rating_count= count_ratings_occurences(lines).collect()
 
+    # 2.1. assign result of parallel counts
+    for (rating, count) in rating_count:
+        N[int(rating)]= count
+        print("%s: %i" % (rating, count))
+
+    # 2.2. configure bloom filter parameters 
     total_elements= sum(N)
     SIZES = [get_size(n, p) for n in N]
     HASH_COUNTS = [get_hash_count(size, n) for size, n in zip(SIZES, N)]
 
-    bloomFilters = insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS)
-    false_positive_count = calculate_false_positive_rate(lines, bloomFilters, HASH_COUNTS, SIZES)
+    # 3. insert elements in bloom filter
+    bloomFilters = insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS).collect()
+
+    # 4. compute false positive count
+    false_positive_count = calculate_false_positive_count(lines, bloomFilters, HASH_COUNTS, SIZES).collect()
    
     print("FALSE POSITIVE RATES")
     print(false_positive_count)
     # 10 => reduce =>10000
     false_positive_rates=[]
-    tot_fp = 0 
+    tot_fpr = 0 
+    
     for rate in false_positive_count:
         rating = rate[0]
-        fp = rate[1]
-        tot_fp += fp
+        fpc = rate[1]
         n = N[rating]
-        false_positive_rates.append({'rating':rating,'false_positive_rate':fp/(total_elements-n), 'total_elements':n, 'false_positives':fp})
+        fpr = fpc/(total_elements-n) # of rating 
+        tot_fpr += fpr
+        false_positive_rates.append({'rating':rating,'false_positive_rate':fpr, 'total_elements':n, 'false_positives':fpc})
+    
     print(false_positive_rates)
-    print("TOTAL FALSE POSITIVE RATE: %f" % (tot_fp/total_elements))
+    print("TOTAL FALSE POSITIVE RATE: %f" % (tot_fpr/10))
 
