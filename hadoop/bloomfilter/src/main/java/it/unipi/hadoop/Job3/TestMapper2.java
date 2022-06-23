@@ -2,21 +2,15 @@ package it.unipi.hadoop.Job3;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
-
-import javax.lang.model.util.ElementScanner6;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.SequenceFile.Reader;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.VIntWritable;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import it.unipi.hadoop.BloomFilter;
@@ -98,26 +92,22 @@ public class TestMapper2  extends Mapper<Object, Text, Text,Text> {
     }
   
 
-  /* 
-       context.write(new Text(String.valueOf(rating)), new Text("1"));
-          else
-            context.write(new Text(String.valueOf(rating)), new Text("0"));*/
 
-
-      public void cleanup(Context context) throws IOException, InterruptedException {
-          Iterator<Map.Entry<String, ArrayList<Integer>>> temp = combiner.entrySet().iterator();
+    public void cleanup(Context context) throws IOException, InterruptedException {
+       
+      Iterator<Map.Entry<String, ArrayList<Integer>>> temp = combiner.entrySet().iterator();
     
-          while(temp.hasNext()) {
-              Map.Entry<String, ArrayList<Integer>> entry = temp.next();
-              String keyVal = entry.getKey();
-              Double falsePositive = (double) entry.getValue().get(0);
-              Double NonFalsePositive = (double) entry.getValue().get(1);
-              Double FPrate = falsePositive/(falsePositive+NonFalsePositive);
+      while(temp.hasNext()) {
+          Map.Entry<String, ArrayList<Integer>> entry = temp.next();
+          String keyVal = entry.getKey();
+          Double falsePositive = (double) entry.getValue().get(0);
+          Double NonFalsePositive = (double) entry.getValue().get(1);
+          Double FPrate = falsePositive/(falsePositive+NonFalsePositive);
     
-              context.write(new Text(keyVal), new Text(String.valueOf(FPrate)));
-          }
-        
+          context.write(new Text(keyVal), new Text(String.valueOf(FPrate)));
       }
+        
+    }
 
 }
     

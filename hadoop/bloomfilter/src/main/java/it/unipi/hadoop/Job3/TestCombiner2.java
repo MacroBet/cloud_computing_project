@@ -1,27 +1,8 @@
 package it.unipi.hadoop.Job3;
 
 import java.io.IOException;
-import java.util.StringTokenizer;
-
-import javax.lang.model.util.ElementScanner6;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.DoubleWritable;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.SequenceFile;
-import org.apache.hadoop.io.SequenceFile.Reader;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.VIntWritable;
-import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
-
-import it.unipi.hadoop.BloomFilter;
 
 public class TestCombiner2 extends Reducer<Text, Text, Text, Text> {
  

@@ -3,9 +3,10 @@ package it.unipi.hadoop;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.hdfs.web.resources.NewLengthParam;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
@@ -40,19 +41,19 @@ public class Main {
     }
 
     startTime= System.currentTimeMillis();
-    Job1(conf1, otherArgs);
+    Job1(conf1, otherArgs, args);
     stopTime = System.currentTimeMillis();
-    System.out.println("TEMPO DI ESECUZIONE JOB1:" + (stopTime - startTime));
+    System.out.println("TEMPO DI ESECUZIONE JOB1:" + TimeUnit.MILLISECONDS.toSeconds(stopTime - startTime)+ "sec");
    
     startTime= System.currentTimeMillis();
-    Job2(otherArgs);
+    Job2(otherArgs, args);
     stopTime = System.currentTimeMillis();
-    System.out.println("TEMPO DI ESECUZIONE JOB2:" + (stopTime - startTime));
+    System.out.println("TEMPO DI ESECUZIONE JOB2:" + TimeUnit.MILLISECONDS.toSeconds(stopTime - startTime)+ "sec");
 
     startTime= System.currentTimeMillis();
-    Job3(otherArgs);
+    Job3(otherArgs, args);
     stopTime = System.currentTimeMillis();
-    System.out.println("TEMPO DI ESECUZIONE JOB3:" + (stopTime - startTime));
+    System.out.println("TEMPO DI ESECUZIONE JOB3:" + TimeUnit.MILLISECONDS.toSeconds(stopTime - startTime)+ "sec");
     
     System.out.println("FALSE POSITIVE RATE:" + (BloomFilterUtility.countFalsePositiveRate()/10));
      
@@ -61,13 +62,13 @@ public class Main {
     
   }
 
-  private static void Job3(String[] otherArgs) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException{
+  private static void Job3(String[] otherArgs, String[] args) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException{
 
     String outputTempDir = otherArgs[1] + "_3";
     Configuration conf3 = new Configuration();
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
-    NLineInputFormat.addInputPath(job3, new Path(otherArgs[0]));
+    NLineInputFormat.addInputPath(job3, new Path(args[0]));
     job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", Integer.parseInt(otherArgs[2])/20);
     job3.setJarByClass(Main.class);
     job3.setMapperClass(TestMapper1.class);
@@ -103,11 +104,11 @@ public class Main {
     
   }
 
-  private static void Job1(Configuration conf1, String[] otherArgs) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException {
+  private static void Job1(Configuration conf1, String[] otherArgs, String[] args) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException {
 
     Job job1 = Job.getInstance(conf1, "tokenizer of data");
     job1.setInputFormatClass(NLineInputFormat.class);
-    NLineInputFormat.addInputPath(job1, new Path(otherArgs[0]));
+    NLineInputFormat.addInputPath(job1, new Path(args[0]));
     job1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", Integer.parseInt(otherArgs[2]));
     job1.getConfiguration().setDouble("mapreduce.input.p_rate", Double.parseDouble(otherArgs[3]));
     job1.setJarByClass(Main.class);
@@ -131,12 +132,12 @@ public class Main {
 
   }
 
-  private static void Job2(String[] otherArgs) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException {
+  private static void Job2(String[] otherArgs, String[] args) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException {
 
     Configuration conf2 = new Configuration();
     Job job2 = Job.getInstance(conf2, "test");
     job2.setInputFormatClass(NLineInputFormat.class);
-    NLineInputFormat.addInputPath(job2, new Path(otherArgs[0]));
+    NLineInputFormat.addInputPath(job2, new Path(args[0]));
     
     job2.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", Integer.parseInt(otherArgs[2]));
     job2.getConfiguration().setDouble("mapreduce.input.p_rate", Double.parseDouble(otherArgs[3]));
