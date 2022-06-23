@@ -22,6 +22,7 @@ public class BloomFilterUtility {
     
     Double fp = 0.0;
     try {
+      
       Path pt = new Path("hdfs://hadoop-namenode:9820/user/hadoop_3.1/output/part-r-00000");// Location of file in HDFS
       FileSystem fs = FileSystem.get(new Configuration());
       BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(pt)));
@@ -36,7 +37,7 @@ public class BloomFilterUtility {
       }
    
 
-    } catch (Exception e) { e.getStackTrace(); }
+    } catch (Exception e) { e.printStackTrace(); }
 
     return fp;
 
