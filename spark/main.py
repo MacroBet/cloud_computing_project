@@ -12,13 +12,14 @@ import time
 def add_item_to_bloom_filter(hash_count,size,item):
     """"create digest for given item. I work as seed to mmh3.hash() function with different seed, digest created is different"""
     digests = []
-    bit_array = bitarray(size)
-    bit_array.setall(0)
+    # bit_array = bitarray(size)
+    # bit_array.setall(0)
     for i in range(hash_count):
         digest = mmh3.hash(item, i) % size
         digests.append(digest)
-        bit_array[digest] = True
-    return bit_array
+        # bit_array[digest] = True
+    # return bit_array
+    return digests
 
 
 
@@ -71,7 +72,7 @@ rating_extractor = lambda x: ( x.split('\t')[0],_rating(x.split('\t')[1]))
 def insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS):
     return lines.map(rating_extractor).\
     map(lambda rating: (rating[1],add_item_to_bloom_filter(HASH_COUNTS[rating[1]],SIZES[rating[1]],rating[0]))).\
-    reduceByKey(lambda bit_arr, acc: bit_arr | acc)
+    reduceByKey(lambda digest, acc: digest + acc)
  
 def check_item_in_bloom_filters(item, bloomFilters, HASH_COUNTS, SIZES):
     """check_item_in_bloom_filters 
@@ -131,7 +132,9 @@ if __name__ == "__main__":
 
     # 3. insert elements in bloom filter
     start_time = time.time()
-    bloomFilters = insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS).collect()
+    bloomFiltersDigests = insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS).collect()
+    print(bloomFiltersDigests)
+    exit()
     print("--- Created bloom filters in %s seconds ---" % (time.time() - start_time))
 
     # 4. compute false positive count
