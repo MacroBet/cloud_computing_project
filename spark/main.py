@@ -4,6 +4,7 @@ import math
 import mmh3
 from bitarray import bitarray
 from pyspark import SparkContext
+import time
 
 
 ###### BLOOM FILTERS PURE FUNCTIONS ######
@@ -115,12 +116,13 @@ if __name__ == "__main__":
     lines = sc.textFile(sys.argv[1])
 
     # 2. count occurences of each ratings (rounded)
+    start_time = time.time()
     rating_count= count_ratings_occurences(lines).collect()
+    print("--- Counted ratings in %s seconds ---" % (time.time() - start_time))
 
     # 2.1. assign result of parallel counts
     for (rating, count) in rating_count:
         N[int(rating)]= count
-        print("%s: %i" % (rating, count))
 
     # 2.2. configure bloom filter parameters 
     total_elements= sum(N)
@@ -128,10 +130,15 @@ if __name__ == "__main__":
     HASH_COUNTS = [get_hash_count(size, n) for size, n in zip(SIZES, N)]
 
     # 3. insert elements in bloom filter
+    start_time = time.time()
     bloomFilters = insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS).collect()
+    print("--- Created bloom filters in %s seconds ---" % (time.time() - start_time))
 
     # 4. compute false positive count
+    start_time = time.time()
     false_positive_count = calculate_false_positive_count(lines, bloomFilters, HASH_COUNTS, SIZES).collect()
+    print("--- Tested bloom filters in %s seconds ---" % (time.time() - start_time))
+
    
     print("FALSE POSITIVE RATES")
     print(false_positive_count)
