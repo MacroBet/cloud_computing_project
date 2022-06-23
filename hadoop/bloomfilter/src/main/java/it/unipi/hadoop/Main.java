@@ -41,7 +41,7 @@ public class Main {
       System.exit(2);
     }
 
-    N_SPLIT = Integer.parseInt(otherArgs[2]);
+    N_SPLIT = Integer.parseInt(args[2]);
     startTime= System.currentTimeMillis();
     Job1(conf1, otherArgs, args);
     stopTime = System.currentTimeMillis();
@@ -54,7 +54,7 @@ public class Main {
 
     startTime= System.currentTimeMillis();
     //Job3(otherArgs, args);
-    String outputTempDir = otherArgs[1] + "_3";
+    String outputTempDir = args[1] + "_3";
     Configuration conf3 = new Configuration();
     Job job3 = Job.getInstance(conf3, "false positive rate");
     job3.setInputFormatClass(NLineInputFormat.class);
@@ -85,7 +85,7 @@ public class Main {
       job3_1.setOutputValueClass(DoubleWritable.class);
   
       NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
-      FileOutputFormat.setOutputPath(job3_1, new Path(otherArgs[1] + "_3.1"));
+      FileOutputFormat.setOutputPath(job3_1, new Path(args[1] + "_3.1"));
       Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
       if(!countSuccess3_1) {
         System.exit(0);
@@ -104,7 +104,7 @@ public class Main {
 
   private static void Job3(String[] otherArgs, String[] args) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException{
 
-    String outputTempDir = otherArgs[1] + "_3";
+    String outputTempDir = args[1] + "_3";
     Configuration conf3 = new Configuration();
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
@@ -135,7 +135,7 @@ public class Main {
       job3_1.setOutputValueClass(DoubleWritable.class);
   
       NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
-      FileOutputFormat.setOutputPath(job3_1, new Path(otherArgs[1] + "_3.1"));
+      FileOutputFormat.setOutputPath(job3_1, new Path(args[1] + "_3.1"));
       Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
       if(!countSuccess3_1) {
         System.exit(0);
@@ -150,7 +150,7 @@ public class Main {
     job1.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job1, new Path(args[0]));
     job1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", (N_SPLIT/10));
-    job1.getConfiguration().setDouble("mapreduce.input.p_rate", Double.parseDouble(otherArgs[3]));
+    job1.getConfiguration().setDouble("mapreduce.input.p_rate", Double.parseDouble(args[3]));
     job1.setJarByClass(Main.class);
     job1.setMapperClass(RatingMapper.class);
     job1.setCombinerClass(Job1Combiner.class);
@@ -162,8 +162,7 @@ public class Main {
     job1.setOutputKeyClass(Text.class);
     job1.setOutputValueClass(Text.class);
    
-    FileOutputFormat.setOutputPath(job1,
-        new Path(otherArgs[1]));
+    FileOutputFormat.setOutputPath(job1, new Path(args[1]));
     Boolean countSuccess = job1.waitForCompletion(true);
     if(!countSuccess) { 
       System.exit(0);
@@ -180,7 +179,7 @@ public class Main {
     NLineInputFormat.addInputPath(job2, new Path(args[0]));
     
     job2.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", (N_SPLIT/10));
-    job2.getConfiguration().setDouble("mapreduce.input.p_rate", Double.parseDouble(otherArgs[3]));
+    job2.getConfiguration().setDouble("mapreduce.input.p_rate", Double.parseDouble(args[3]));
     job2.setJarByClass(Main.class);
     job2.setMapperClass(BloomFiltersMapper.class);
     job2.setCombinerClass(BloomFiltersReducer.class);
@@ -192,7 +191,7 @@ public class Main {
     job2.setOutputKeyClass(Text.class);
     job2.setOutputValueClass(BloomFilter.class);
     
-    FileOutputFormat.setOutputPath(job2, new Path(otherArgs[1] + "_2"));
+    FileOutputFormat.setOutputPath(job2, new Path(args[1] + "_2"));
     job2.setOutputFormatClass(SequenceFileOutputFormat.class);
     Boolean countSuccess2 = job2.waitForCompletion(true);
     if(!countSuccess2) {
