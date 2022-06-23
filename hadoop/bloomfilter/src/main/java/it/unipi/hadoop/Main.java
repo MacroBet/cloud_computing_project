@@ -131,7 +131,7 @@ public class Main {
       job3_1.setMapperClass(TestMapper2.class);
       job3_1.setReducerClass(TestReducer2.class);
       job3_1.setInputFormatClass(NLineInputFormat.class);
-      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformalinespermapt.", (N_SPLIT/3));
+      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformalinespermapt.", (N_SPLIT*2));
       job3_1.setMapOutputKeyClass(Text.class);
       job3_1.setMapOutputValueClass(Text.class); 
       job3_1.setOutputKeyClass(Text.class);
