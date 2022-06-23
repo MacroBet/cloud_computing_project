@@ -53,7 +53,7 @@ public class Main {
     System.out.println("TEMPO DI ESECUZIONE JOB2:" + TimeUnit.MILLISECONDS.toSeconds(stopTime - startTime)+ "sec");
 
 
-    System.exit(0);
+    
 
     startTime= System.currentTimeMillis();
     //Job3(otherArgs, args);
@@ -62,7 +62,7 @@ public class Main {
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job3, new Path(args[0]));
-    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 5000);
+    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", (N_SPLIT/3));
     job3.setJarByClass(Main.class);
     job3.setMapperClass(TestMapper1.class);
     job3.setReducerClass(TestReducer1.class);
@@ -82,7 +82,7 @@ public class Main {
       job3_1.setReducerClass(TestReducer2.class);
       job3_1.setInputFormatClass(NLineInputFormat.class);
       job3_1.setCombinerClass(TestReducer2.class);
-      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 5000);
+      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 400000);
       job3_1.setMapOutputKeyClass(Text.class);
       job3_1.setMapOutputValueClass(Text.class); 
       job3_1.setOutputKeyClass(Text.class);
