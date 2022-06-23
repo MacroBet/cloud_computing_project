@@ -55,7 +55,7 @@ public class Main {
     job1.setOutputValueClass(Text.class);
    
     FileOutputFormat.setOutputPath(job1,
-        new Path(otherArgs[otherArgs.length - 1]));
+        new Path(otherArgs[1]));
     Boolean countSuccess = job1.waitForCompletion(true);
     if(!countSuccess) { 
       System.exit(0);
@@ -80,7 +80,7 @@ public class Main {
     job2.setOutputKeyClass(Text.class);
     job2.setOutputValueClass(BloomFilter.class);
     
-    FileOutputFormat.setOutputPath(job2, new Path(otherArgs[otherArgs.length - 1] + "_2"));
+    FileOutputFormat.setOutputPath(job2, new Path(otherArgs[1] + "_2"));
     job2.setOutputFormatClass(SequenceFileOutputFormat.class);
     Boolean countSuccess2 = job2.waitForCompletion(true);
     if(!countSuccess2) {
@@ -118,7 +118,7 @@ public class Main {
       job3_1.setOutputValueClass(DoubleWritable.class);
   
       NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
-      FileOutputFormat.setOutputPath(job3_1, new Path(otherArgs[otherArgs.length - 1] + "_3.1"));
+      FileOutputFormat.setOutputPath(job3_1, new Path(otherArgs[1] + "_3.1"));
       Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
       if(!countSuccess3_1) {
         System.exit(0);
