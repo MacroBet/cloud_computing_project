@@ -87,7 +87,7 @@ public class Main {
       System.exit(0);
     }
     
-    String outputTempDir = otherArgs[otherArgs.length - 1] + "_3";
+    String outputTempDir = otherArgs[1] + "_3";
     Configuration conf3 = new Configuration();
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
