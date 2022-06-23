@@ -181,7 +181,7 @@ public class Main {
     job2.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job2, new Path(args[0]));
     
-    job2.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", (N_SPLIT*3));
+    job2.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", (N_SPLIT/2));
     job2.getConfiguration().setDouble("mapreduce.input.p_rate", Double.parseDouble(args[3]));
     job2.setJarByClass(Main.class);
     job2.setMapperClass(BloomFiltersMapper.class);
