@@ -1,19 +1,8 @@
-# 1. read file and count occurences of each rounded ratings
-# => n1,..,n10
-# 2. create 10 empty arrays of size ni 
-# 3. fix false positive param and others too
-# 4. iterate over all ratings and insert into bloom filters
-# 5. iterate over all ratings and check if they are in the bloom filters
 
-# Python 3 program to build Bloom Filter
-# Install mmh3 and bitarray 3rd party module first
-# pip install mmh3
-# pip install bitarray
 import math
 import mmh3
 from bitarray import bitarray
 
-# TODO handle items_count=0
 class BloomFilter(object):
 	def __init__(self, items_count, fp_prob, name):
 		self.fp_prob = fp_prob
