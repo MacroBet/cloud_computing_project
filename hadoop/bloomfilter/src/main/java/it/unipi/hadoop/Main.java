@@ -43,10 +43,32 @@ public class Main {
 
     N_SPLIT = Integer.parseInt(args[2]);
     startTime= System.currentTimeMillis();
-    Job1(conf1, otherArgs, args);
+    Job job1 = Job.getInstance(conf1, "tokenizer of data");
+    job1.setInputFormatClass(NLineInputFormat.class);
+    NLineInputFormat.addInputPath(job1, new Path(args[0]));
+    job1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", (N_SPLIT/10));
+    job1.getConfiguration().setDouble("mapreduce.input.p_rate", Double.parseDouble(args[3]));
+    job1.setJarByClass(Main.class);
+    job1.setMapperClass(RatingMapper.class);
+    job1.setCombinerClass(Job1Combiner.class);
+    job1.setReducerClass(CreateParametersReducer.class);
+
+    job1.setMapOutputKeyClass(Text.class);
+    job1.setMapOutputValueClass(IntWritable.class); // set output values for mapper
+    
+    job1.setOutputKeyClass(Text.class);
+    job1.setOutputValueClass(Text.class);
+   
+    FileOutputFormat.setOutputPath(job1, new Path(args[1]));
+    Boolean countSuccess = job1.waitForCompletion(true);
+    if(!countSuccess) { 
+      System.exit(0);
+    }
+    //Job1(conf1, otherArgs, args);
     stopTime = System.currentTimeMillis();
     System.out.println("TEMPO DI ESECUZIONE JOB1:" + TimeUnit.MILLISECONDS.toSeconds(stopTime - startTime)+ "sec");
    
+    System.exit(0);
     startTime= System.currentTimeMillis();
     Job2(otherArgs, args);
     stopTime = System.currentTimeMillis();
