@@ -39,19 +39,19 @@ public class Main {
       System.exit(2);
     }
 
-    startTime= System.nanoTime();
+    startTime= System.currentTimeMillis();
     Job1(conf1, otherArgs);
-    stopTime = System.nanoTime();
+    stopTime = System.currentTimeMillis();
     System.out.println("TEMPO DI ESECUZIONE JOB1:" + (stopTime - startTime));
    
-    startTime= System.nanoTime();
+    startTime= System.currentTimeMillis();
     Job2(otherArgs);
-    stopTime = System.nanoTime();
+    stopTime = System.currentTimeMillis();
     System.out.println("TEMPO DI ESECUZIONE JOB2:" + (stopTime - startTime));
 
-    startTime= System.nanoTime();
+    startTime= System.currentTimeMillis();
     Job3(otherArgs);
-    stopTime = System.nanoTime();
+    stopTime = System.currentTimeMillis();
     System.out.println("TEMPO DI ESECUZIONE JOB3:" + (stopTime - startTime));
     
     System.out.println("FALSE POSITIVE RATE:" + (BloomFilterUtility.countFalsePositiveRate()/10));
