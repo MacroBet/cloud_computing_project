@@ -5,7 +5,6 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import it.unipi.hadoop.*;
-
 public class CreateParametersReducer extends Reducer<Text, IntWritable, Text, Text> {
     
     private Text result = new Text();
