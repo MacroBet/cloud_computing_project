@@ -56,10 +56,10 @@ public class Main {
     //Job3(otherArgs, args);
     String outputTempDir = args[1] + "_3";
     Configuration conf3 = new Configuration();
-    Job job3 = Job.getInstance(conf3, "false positive rate");
+    Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job3, new Path(args[0]));
-    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", (N_SPLIT/10));
+    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 5000);
     job3.setJarByClass(Main.class);
     job3.setMapperClass(TestMapper1.class);
     job3.setReducerClass(TestReducer1.class);
@@ -73,12 +73,14 @@ public class Main {
     FileOutputFormat.setOutputPath(job3, new Path(outputTempDir));
     Boolean countSuccess3 = job3.waitForCompletion(true);
     if(countSuccess3) {
+      System.out.println("++++++++++++++");
       Job job3_1 = Job.getInstance(conf3, "JOB_3.1");
       job3_1.setJarByClass(Main.class);
       job3_1.setMapperClass(TestMapper2.class);
       job3_1.setReducerClass(TestReducer2.class);
       job3_1.setInputFormatClass(NLineInputFormat.class);
-      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformalinespermapt.", (N_SPLIT/10));
+      //job3_1.setCombinerClass(TestCombiner2.class);
+      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 100000);
       job3_1.setMapOutputKeyClass(Text.class);
       job3_1.setMapOutputValueClass(Text.class); 
       job3_1.setOutputKeyClass(Text.class);
@@ -91,7 +93,6 @@ public class Main {
         System.exit(0);
       }
     }
-    
     stopTime = System.currentTimeMillis();
     System.out.println("TEMPO DI ESECUZIONE JOB3:" + TimeUnit.MILLISECONDS.toSeconds(stopTime - startTime)+ "sec");
     
