@@ -62,7 +62,7 @@ public class Main {
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job3, new Path(args[0]));
-    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", (N_SPLIT/3));
+    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", (N_SPLIT*3));
     job3.setJarByClass(Main.class);
     job3.setMapperClass(TestMapper1.class);
     job3.setReducerClass(TestReducer1.class);
@@ -82,7 +82,7 @@ public class Main {
       job3_1.setReducerClass(TestReducer2.class);
       job3_1.setInputFormatClass(NLineInputFormat.class);
       job3_1.setCombinerClass(TestReducer2.class);
-      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 400000);
+      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 50000);
       job3_1.setMapOutputKeyClass(Text.class);
       job3_1.setMapOutputValueClass(Text.class); 
       job3_1.setOutputKeyClass(Text.class);
@@ -152,7 +152,7 @@ public class Main {
     Job job1 = Job.getInstance(conf1, "tokenizer of data");
     job1.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job1, new Path(args[0]));
-    job1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", (N_SPLIT/3));
+    job1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", (N_SPLIT*3));
     job1.getConfiguration().setDouble("mapreduce.input.p_rate", Double.parseDouble(args[3]));
     job1.setJarByClass(Main.class);
     job1.setMapperClass(RatingMapper.class);
@@ -181,7 +181,7 @@ public class Main {
     job2.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job2, new Path(args[0]));
     
-    job2.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", (N_SPLIT/3));
+    job2.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", (N_SPLIT*3));
     job2.getConfiguration().setDouble("mapreduce.input.p_rate", Double.parseDouble(args[3]));
     job2.setJarByClass(Main.class);
     job2.setMapperClass(BloomFiltersMapper.class);
