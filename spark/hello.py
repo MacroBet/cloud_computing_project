@@ -61,11 +61,11 @@ def calculate_false_positive_rate(lines, bloomFilters, HASH_COUNTS, SIZES ):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: wordcount <input file> [<output file>]", file=sys.stderr)
+        print("Usage: BloomFilter <input file> [<output file>]", file=sys.stderr)
         sys.exit(-1)
 
     master = "local"
-    sc = SparkContext(master, "WordCount")
+    sc = SparkContext(master, "BloomFilter")
     lines = sc.textFile(sys.argv[1])
     if (sys.argv[2]!=None): p = float(sys.argv[2])
 

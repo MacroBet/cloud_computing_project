@@ -49,6 +49,13 @@ public class BloomFilter implements Writable, WritableComparable<BloomFilter> {
 
   }
 
+  public BloomFilter(int size, int hashCount) {
+    this.size = new VIntWritable(size);
+    this.hashCount = new VIntWritable(hashCount);
+    this.bitset = new BitSet(size);
+    this.bytes = new BytesWritable(bitset.toByteArray());
+  }
+
   @Override
   public void write(DataOutput dataOutput) throws IOException {
 
@@ -65,13 +72,7 @@ public class BloomFilter implements Writable, WritableComparable<BloomFilter> {
     this.bitset = BitSet.valueOf(bytes.getBytes());
   }
 
-  public BloomFilter(int size, int hashCount) {
-    this.size = new VIntWritable(size);
-    this.hashCount = new VIntWritable(hashCount);
-    this.bitset = new BitSet(size);
-    this.bytes = new BytesWritable(bitset.toByteArray());
-  }
-
+ 
   public void or(BloomFilter bloomFilter) {
     this.bitset.or(bloomFilter.get_bitset());
     this.bytes = new BytesWritable(bitset.toByteArray());

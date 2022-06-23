@@ -2,7 +2,7 @@ package it.unipi.hadoop;
 
 public class BloomFilterUtility {
 
-  public static int get_size(int n, float p) {
+  public static int get_size(int n, Double p) {
     return (int) (-(n * Math.log(p)) / Math.pow((Math.log(2)), 2));
   }
     

@@ -8,7 +8,6 @@ import it.unipi.hadoop.*;
 
 public class CreateParametersReducer extends Reducer<Text, IntWritable, Text, Text> {
     
-    private static final float p_rate = (float) 0.2;
     private Text result = new Text();
     private String res = new String();
 
@@ -19,7 +18,7 @@ public class CreateParametersReducer extends Reducer<Text, IntWritable, Text, Te
         sum += val.get();
        
       }
-      int m = BloomFilterUtility.get_size(sum, p_rate);
+      int m = BloomFilterUtility.get_size(sum, context.getConfiguration().getDouble("mapreduce.input.p_rate", 0.1));
       int k = BloomFilterUtility.get_hash_count(m, sum);
 
       res = (Integer.toString(m) + "\t" + Integer.toString(k) + "\t" + Integer.toString(sum));

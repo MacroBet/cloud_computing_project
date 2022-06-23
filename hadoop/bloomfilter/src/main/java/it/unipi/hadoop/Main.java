@@ -25,6 +25,8 @@ import it.unipi.hadoop.Job3.TestReducer2;
 public class Main {
 
   public static HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, BloomFilter>();
+  //public static final float p_rate = (float) 0.2;
+
   public static void main(String[] args) throws Exception {
     
     Configuration conf1 = new Configuration();
@@ -37,8 +39,8 @@ public class Main {
     Job job1 = Job.getInstance(conf1, "tokenizer of data");
     job1.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job1, new Path(args[0]));
-    job1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 100000);
-
+    job1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", Integer.parseInt(otherArgs[2]));
+    job1.getConfiguration().setDouble("mapreduce.input.p_rate", Double.parseDouble(otherArgs[3]));
     job1.setJarByClass(Main.class);
     job1.setMapperClass(RatingMapper.class);
     job1.setCombinerClass(Job1Combiner.class);
@@ -63,8 +65,8 @@ public class Main {
     job2.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job2, new Path(args[0]));
     
-    job2.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 100000);
-    
+    job2.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", Integer.parseInt(otherArgs[2]));
+    job2.getConfiguration().setDouble("mapreduce.input.p_rate", Double.parseDouble(otherArgs[3]));
     job2.setJarByClass(Main.class);
     job2.setMapperClass(BloomFiltersMapper.class);
     job2.setCombinerClass(BloomFiltersReducer.class);
@@ -88,7 +90,7 @@ public class Main {
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job3, new Path(args[0]));
-    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 5000);
+    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", Integer.parseInt(otherArgs[2])/20);
     job3.setJarByClass(Main.class);
     job3.setMapperClass(TestMapper1.class);
     job3.setReducerClass(TestReducer1.class);
@@ -107,8 +109,7 @@ public class Main {
       job3_1.setMapperClass(TestMapper2.class);
       job3_1.setReducerClass(TestReducer2.class);
       job3_1.setInputFormatClass(NLineInputFormat.class);
-      //job3_1.setCombinerClass(TestCombiner2.class);
-      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 100000);
+      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformalinespermapt.", Integer.parseInt(otherArgs[2])/10);
       job3_1.setMapOutputKeyClass(Text.class);
       job3_1.setMapOutputValueClass(Text.class); 
       job3_1.setOutputKeyClass(Text.class);
