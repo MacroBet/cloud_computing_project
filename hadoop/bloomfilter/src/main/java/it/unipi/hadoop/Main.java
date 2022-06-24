@@ -96,7 +96,7 @@ public class Main {
       job3_1.setOutputKeyClass(Text.class);
       job3_1.setOutputValueClass(Text.class);
       job3_1.setNumReduceTasks(3);
-      NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir+ "/part-r-00000"));
+      NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
       FileOutputFormat.setOutputPath(job3_1, new Path(args[1] + "_3.1"));
       Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
       if(countSuccess3_1) {
