@@ -50,8 +50,6 @@ public class TestMapper21  extends Mapper<Object, Text, Text,Text>{
             context.write(new Text(String.valueOf(rating)), new Text("1"));
           else
             context.write(new Text(String.valueOf(rating)), new Text("0"));
-
-          
         
         }
       }
