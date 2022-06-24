@@ -85,7 +85,7 @@ public class Main {
       job3_1.setMapperClass(TestMapper3.class);
       job3_1.setReducerClass(TestReducer3.class);
       job3_1.setInputFormatClass(NLineInputFormat.class);
-      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformalinespermapt.", (10));
+      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformalinespermapt.", (1000000));
       job3_1.setMapOutputKeyClass(Text.class);
       job3_1.setMapOutputValueClass(Text.class); 
       job3_1.setOutputKeyClass(Text.class);
@@ -100,7 +100,7 @@ public class Main {
       job3_2.setMapperClass(TestMapper3.class);
       job3_2.setReducerClass(TestReducer3.class);
       job3_2.setInputFormatClass(NLineInputFormat.class);
-      job3_2.getConfiguration().setInt("mapreduce.input.lineinputformalinespermapt.", (N_SPLIT));
+      job3_2.getConfiguration().setInt("mapreduce.input.lineinputformalinespermapt.", (1000000));
       job3_2.setMapOutputKeyClass(Text.class);
       job3_2.setMapOutputValueClass(Text.class); 
       job3_2.setOutputKeyClass(Text.class);
