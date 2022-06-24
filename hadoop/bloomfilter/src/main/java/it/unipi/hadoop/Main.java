@@ -80,10 +80,10 @@ public class Main {
     if(countSuccess3) {
       Job job3_1 = Job.getInstance(conf3, "JOB_3.1");
       job3_1.setJarByClass(Main.class);
-      job3_1.setMapperClass(TestMapper21.class);
+      job3_1.setMapperClass(TestMapper2.class);
       job3_1.setReducerClass(TestReducer2.class);
       job3_1.setInputFormatClass(NLineInputFormat.class);
-      job3_1.setCombinerClass(TestCombiner2.class);
+      job3_1.setCombinerClass(TestReducer2.class);
       job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 900000);
       job3_1.setMapOutputKeyClass(Text.class);
       job3_1.setMapOutputValueClass(Text.class); 
