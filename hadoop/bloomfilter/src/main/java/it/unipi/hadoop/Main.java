@@ -80,9 +80,10 @@ public class Main {
     job3.setNumReduceTasks(2);
     FileOutputFormat.setOutputPath(job3, new Path(outputTempDir));
     Boolean countSuccess3 = job3.waitForCompletion(true);
- 
-     if(countSuccess3) {
-      String outputTempDir2 = args[1] + "_3.1/part-r-00000";
+    System.exit(0);
+
+    if(countSuccess3) {
+      
       Job job3_1 = Job.getInstance(conf3, "JOB_3.1");
       job3_1.setJarByClass(Main.class);
       job3_1.setMapperClass(TestMapper3.class);
@@ -95,10 +96,10 @@ public class Main {
       job3_1.setOutputKeyClass(Text.class);
       job3_1.setOutputValueClass(Text.class);
       job3_1.setNumReduceTasks(3);
-      NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
-      FileOutputFormat.setOutputPath(job3_1, new Path(outputTempDir2));
+      NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir+ "/part-r-00000"));
+      FileOutputFormat.setOutputPath(job3_1, new Path(outputTempDir+ ".1"));
       Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
-      if(!countSuccess3_1) {
+      if(countSuccess3_1) {
           System.exit(0);
       }
         
