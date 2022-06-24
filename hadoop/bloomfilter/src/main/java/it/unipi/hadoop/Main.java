@@ -102,8 +102,8 @@ public class Main {
       }
         
         
-      }
     }
+    
     stopTime = System.currentTimeMillis();
     System.out.println("TEMPO DI ESECUZIONE JOB3:" + TimeUnit.MILLISECONDS.toSeconds(stopTime - startTime)+ "sec");
     
