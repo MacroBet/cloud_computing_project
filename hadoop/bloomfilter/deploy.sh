@@ -9,3 +9,4 @@ cd target
 hadoop jar bloomfilter-1.0-SNAPSHOT.jar it.unipi.hadoop.Main mini_ratings.txt output 100000 0.1 
 hadoop fs -cat output/part-r-00000
 hadoop fs -cat output_3.1/part-r-00000
+hadoop fs -cat output_3.2/part-r-00000
