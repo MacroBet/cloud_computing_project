@@ -84,8 +84,8 @@ public class Main {
       String outputTempDir2 = args[1] + "_3.1";
       Job job3_1 = Job.getInstance(conf3, "JOB_3.1");
       job3_1.setJarByClass(Main.class);
-      job3_1.setMapperClass(TestMapper2.class);
-      job3_1.setReducerClass(TestReducer2.class);
+      job3_1.setMapperClass(TestMapper3.class);
+      job3_1.setReducerClass(TestCombiner2.class);
       job3_1.setInputFormatClass(NLineInputFormat.class);
       //job3_1.setCombinerClass(TestCombiner3.class);
       job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 90000);
