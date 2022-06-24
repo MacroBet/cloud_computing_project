@@ -76,7 +76,7 @@ public class Main {
     
     job3.setOutputKeyClass(Text.class);
     job3.setOutputValueClass(Text.class);
-    job3.setNumReduceTasks(2);
+    job3.setNumReduceTasks(3);
     FileOutputFormat.setOutputPath(job3, new Path(outputTempDir));
     Boolean countSuccess3 = job3.waitForCompletion(true);
     if(countSuccess3) {
@@ -87,7 +87,7 @@ public class Main {
       job3_1.setReducerClass(TestReducer2.class);
       job3_1.setInputFormatClass(NLineInputFormat.class);
       //job3_1.setCombinerClass(TestCombiner2.class);
-      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 100000);
+      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 90000);
       job3_1.setMapOutputKeyClass(Text.class);
       job3_1.setMapOutputValueClass(Text.class); 
       job3_1.setOutputKeyClass(Text.class);
