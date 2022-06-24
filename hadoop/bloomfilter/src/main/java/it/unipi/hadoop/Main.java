@@ -97,13 +97,30 @@ public class Main {
       job3_1.setOutputValueClass(Text.class);
       job3_1.setNumReduceTasks(3);
       NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir+ "/part-r-00000"));
-      FileOutputFormat.setOutputPath(job3_1, new Path(outputTempDir+ ".1"));
+      FileOutputFormat.setOutputPath(job3_1, new Path(args[1] + "_3.1"));
       Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
       if(countSuccess3_1) {
+        Job job3_2 = Job.getInstance(conf3, "JOB_3.2");
+        job3_2.setJarByClass(Main.class);
+        job3_2.setMapperClass(TestMapper3.class);
+        job3_2.setReducerClass(TestReducer3.class);
+        job3_2.setInputFormatClass(NLineInputFormat.class);
+        //job3_2.setCombinerClass(TestCombiner3.class);
+        job3_2.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 1000000);
+        job3_2.setMapOutputKeyClass(Text.class);
+        job3_2.setMapOutputValueClass(Text.class); 
+        job3_2.setOutputKeyClass(Text.class);
+        job3_2.setOutputValueClass(Text.class);
+        job3_2.setNumReduceTasks(3);
+        NLineInputFormat.addInputPath(job3_2, new Path(outputTempDir+ "/part-r-00001"));
+        FileOutputFormat.setOutputPath(job3_2, new Path(args[1] + "_3.2"));
+        Boolean countSuccess3_2 = job3_2.waitForCompletion(true);
+        if(countSuccess3_2) {
           System.exit(0);
-      }
+ 
+        }
         
-        
+      }       
     }
     
     stopTime = System.currentTimeMillis();
