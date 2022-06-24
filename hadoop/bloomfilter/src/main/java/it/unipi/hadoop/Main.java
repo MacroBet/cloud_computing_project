@@ -87,13 +87,13 @@ public class Main {
       job3_1.setReducerClass(TestReducer2.class);
       job3_1.setInputFormatClass(NLineInputFormat.class);
       //job3_1.setCombinerClass(TestCombiner2.class);
-      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 1000000);
+      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 200000);
       job3_1.setMapOutputKeyClass(Text.class);
       job3_1.setMapOutputValueClass(Text.class); 
       job3_1.setOutputKeyClass(Text.class);
       job3_1.setOutputValueClass(DoubleWritable.class);
   
-      NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir+ "/part-r-00000"));
+      NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
       FileOutputFormat.setOutputPath(job3_1, new Path(args[1] + "_3.1"));
       Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
       if(!countSuccess3_1) {
