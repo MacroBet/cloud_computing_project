@@ -100,7 +100,7 @@ public class Main {
       FileOutputFormat.setOutputPath(job3_1, new Path(args[1] + "_3.1"));
       Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
       if(countSuccess3_1) {
-        Job job3_2 = Job.getInstance(conf3, "JOB_3.2");
+       /*  Job job3_2 = Job.getInstance(conf3, "JOB_3.2");
         job3_2.setJarByClass(Main.class);
         job3_2.setMapperClass(TestMapper3.class);
         job3_2.setReducerClass(TestReducer3.class);
@@ -115,13 +115,13 @@ public class Main {
         NLineInputFormat.addInputPath(job3_2, new Path(outputTempDir+ "/part-r-00001"));
         FileOutputFormat.setOutputPath(job3_2, new Path(args[1] + "_3.2"));
         Boolean countSuccess3_2 = job3_2.waitForCompletion(true);
-        if(countSuccess3_2) {
+        if(countSuccess3_2) {*/
           System.exit(0);
  
         }
         
       }       
-    }
+    //}
     
     stopTime = System.currentTimeMillis();
     System.out.println("TEMPO DI ESECUZIONE JOB3:" + TimeUnit.MILLISECONDS.toSeconds(stopTime - startTime)+ "sec");
