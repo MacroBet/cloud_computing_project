@@ -85,10 +85,10 @@ public class Main {
       Job job3_1 = Job.getInstance(conf3, "JOB_3.1");
       job3_1.setJarByClass(Main.class);
       job3_1.setMapperClass(TestMapper3.class);
-      job3_1.setReducerClass(TestReducer3.class);
+      job3_1.setReducerClass(TestReducer2.class);
       job3_1.setInputFormatClass(NLineInputFormat.class);
-      //job3_1.setCombinerClass(TestCombiner3.class);
-      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 100000);
+      job3_1.setCombinerClass(TestCombiner3.class);
+      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 1000000);
       job3_1.setMapOutputKeyClass(Text.class);
       job3_1.setMapOutputValueClass(Text.class); 
       job3_1.setOutputKeyClass(Text.class);
