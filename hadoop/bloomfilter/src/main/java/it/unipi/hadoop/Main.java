@@ -81,10 +81,11 @@ public class Main {
     FileOutputFormat.setOutputPath(job3, new Path(outputTempDir));
     Boolean countSuccess3 = job3.waitForCompletion(true);
     if(countSuccess3) {
+      String outputTempDir2 = args[1] + "_3.1";
       Job job3_1 = Job.getInstance(conf3, "JOB_3.1");
       job3_1.setJarByClass(Main.class);
-      job3_1.setMapperClass(TestMapper3.class);
-      job3_1.setReducerClass(TestReducer3.class);
+      job3_1.setMapperClass(TestMapper21.class);
+      job3_1.setReducerClass(TestCombiner2.class);
       job3_1.setInputFormatClass(NLineInputFormat.class);
       //job3_1.setCombinerClass(TestCombiner3.class);
       job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 1000000);
@@ -94,10 +95,30 @@ public class Main {
       job3_1.setOutputValueClass(Text.class);
   
       NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
-      FileOutputFormat.setOutputPath(job3_1, new Path(args[1] + "_3.1"));
+      FileOutputFormat.setOutputPath(job3_1, new Path(outputTempDir2));
       Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
-      if(!countSuccess3_1) {
-        System.exit(0);
+      if(countSuccess3_1) {
+
+        Job job3_12 = Job.getInstance(conf3, "JOB_3.2");
+        job3_12.setJarByClass(Main.class);
+        job3_12.setMapperClass(TestMapper2.class);
+        job3_12.setReducerClass(TestReducer2.class);
+        job3_12.setInputFormatClass(NLineInputFormat.class);
+        //job3_12.setCombinerClass(TestCombiner3.class);
+        job3_12.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 100000);
+        job3_12.setMapOutputKeyClass(Text.class);
+        job3_12.setMapOutputValueClass(Text.class); 
+        job3_12.setOutputKeyClass(Text.class);
+        job3_12.setOutputValueClass(Text.class);
+    
+        NLineInputFormat.addInputPath(job3_12, new Path(outputTempDir2));
+        FileOutputFormat.setOutputPath(job3_12, new Path(args[1] + "_3.2"));
+        Boolean countSuccess3_12 = job3_12.waitForCompletion(true);
+        if(!countSuccess3_12) {
+          System.exit(0);
+        }
+        
+        
       }
     }
     stopTime = System.currentTimeMillis();
