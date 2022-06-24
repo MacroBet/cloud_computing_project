@@ -77,9 +77,11 @@ public class Main {
     
     job3.setOutputKeyClass(Text.class);
     job3.setOutputValueClass(Text.class);
-
+    job3.setNumReduceTasks(2);
     FileOutputFormat.setOutputPath(job3, new Path(outputTempDir));
     Boolean countSuccess3 = job3.waitForCompletion(true);
+    System.exit(0);
+
     if(countSuccess3) {
       String outputTempDir2 = args[1] + "_3.1";
       Job job3_1 = Job.getInstance(conf3, "JOB_3.1");
