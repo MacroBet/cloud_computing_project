@@ -96,7 +96,7 @@ public class Main {
       NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir+ "/part-r-00000"));
       FileOutputFormat.setOutputPath(job3_1, new Path(args[1] + "_3.1"));
       Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
-      if(countSuccess3_1) {
+      if(!countSuccess3_1) {
       /*Job job3_2 = Job.getInstance(conf3, "JOB_3.1");
       job3_2.setJarByClass(Main.class);
       job3_2.setMapperClass(TestMapper3.class);
