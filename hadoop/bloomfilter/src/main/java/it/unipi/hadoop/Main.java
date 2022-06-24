@@ -93,7 +93,7 @@ public class Main {
       job3_1.setMapOutputValueClass(Text.class); 
       job3_1.setOutputKeyClass(Text.class);
       job3_1.setOutputValueClass(Text.class);
-      job3_1.setNumReduceTasks(2);
+      job3_1.setNumReduceTasks(3);
       NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
       FileOutputFormat.setOutputPath(job3_1, new Path(outputTempDir2));
       Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
