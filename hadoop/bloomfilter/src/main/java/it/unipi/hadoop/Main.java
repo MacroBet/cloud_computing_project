@@ -86,7 +86,7 @@ public class Main {
       job3_1.setReducerClass(TestReducer3.class);
       job3_1.setInputFormatClass(NLineInputFormat.class);
       //job3_1.setCombinerClass(TestReducer2.class);
-      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 900000);
+      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 300000);
       job3_1.setMapOutputKeyClass(Text.class);
       job3_1.setMapOutputValueClass(Text.class); 
       job3_1.setOutputKeyClass(Text.class);
