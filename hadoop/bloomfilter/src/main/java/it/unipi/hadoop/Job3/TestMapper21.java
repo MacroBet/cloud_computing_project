@@ -12,12 +12,14 @@ import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.SequenceFile.Reader;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.yarn.webapp.hamlet.Hamlet.B;
 
 import it.unipi.hadoop.BloomFilter;
 
 public class TestMapper21  extends Mapper<Object, Text, Text,Text>{
 
   private HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, BloomFilter>();
+  private int n = 0;
   public void setup(Context context) throws IOException, InterruptedException {
     
     try {
@@ -40,8 +42,10 @@ public class TestMapper21  extends Mapper<Object, Text, Text,Text>{
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
  
         StringTokenizer itr = new StringTokenizer(value.toString(), "\n");
+        int line = value.toString().split("\n").length;
+        
         while (itr.hasMoreTokens()) {
-         
+          n++;
           String ratingRaw = itr.nextToken().toString();
           int rating = Integer.parseInt(ratingRaw.split("\t")[0]);
           String id = ratingRaw.split("\t")[1];
@@ -50,6 +54,8 @@ public class TestMapper21  extends Mapper<Object, Text, Text,Text>{
             context.write(new Text(String.valueOf(rating)), new Text("1"));
           else
             context.write(new Text(String.valueOf(rating)), new Text("0"));
+          if(n == line/2)
+            break;
         
         }
       }
