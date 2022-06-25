@@ -56,23 +56,14 @@ public class Main {
     Job2(otherArgs, args);
     stopTime = System.currentTimeMillis();
     System.out.println("TEMPO DI ESECUZIONE JOB2:" + TimeUnit.MILLISECONDS.toSeconds(stopTime - startTime)+ "sec");
-    /* 
-    startTime= System.currentTimeMillis();
-    boolean succes = true;
-    String outputTempDir = args[1] + "_3";
-    for(int i = 1; i < 11; i++ ) {
-      System.out.println("TEST su BLOOM FILTER" + i);
-      succes = Job3(args, i, outputTempDir);
-      if(!succes)
-        System.exit(0);
-    }
-
     
+    startTime= System.currentTimeMillis();
+    String outputTempDir = args[1] + "_3";
     Configuration conf3 = new Configuration();
-    Job job3 = Job.getInstance(conf3, "bloom filter creator");
+    Job job3 = Job.getInstance(conf3, "test file crator");
     job3.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job3, new Path(args[0]));
-    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", (N_SPLIT*3));
+    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", N_SPLIT*3);
     job3.setJarByClass(Main.class);
     job3.setMapperClass(TestMapper1.class);
     job3.setReducerClass(TestReducer1.class);
@@ -82,40 +73,35 @@ public class Main {
     
     job3.setOutputKeyClass(Text.class);
     job3.setOutputValueClass(Text.class);
-    FileOutputFormat.setOutputPath(job3, new Path(outputTempDir+".1"));
+
+    FileOutputFormat.setOutputPath(job3, new Path(outputTempDir));
     Boolean countSuccess3 = job3.waitForCompletion(true);
-    if(!countSuccess3) {
-      System.exit(0);
+    if(countSuccess3) {
+      System.out.println("++++++++++++++");
+      Job job3_1 = Job.getInstance(conf3, "JOB_3.1");
+      job3_1.setJarByClass(Main.class);
+      job3_1.setMapperClass(TestMapper2.class);
+      job3_1.setReducerClass(TestReducer2.class);
+      job3_1.setInputFormatClass(NLineInputFormat.class);
+      //job3_1.setCombinerClass(TestCombiner2.class);
+      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 100000);
+      job3_1.setMapOutputKeyClass(Text.class);
+      job3_1.setMapOutputValueClass(Text.class); 
+      job3_1.setOutputKeyClass(Text.class);
+      job3_1.setOutputValueClass(DoubleWritable.class);
+  
+      NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
+      FileOutputFormat.setOutputPath(job3_1, new Path(otherArgs[otherArgs.length - 1] + "_3.1"));
+      Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
+      if(!countSuccess3_1) {
+        System.exit(0);
+      }
     }
-      
-    System.out.println("++++++++++++++");
-    Job job3_1 = Job.getInstance(new Configuration(), "JOB_3.1");
-    
-    job3_1.setInputFormatClass(NLineInputFormat.class);
-    //job3_1.setCombinerClass(TestCombiner2.class);
-    NLineInputFormat.addInputPath(job3_1, new Path(args[0]));
-    job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", N_SPLIT*3);
-    job3_1.setJarByClass(Main.class);
-    job3_1.setMapperClass(TestMapper21.class);
-    job3_1.setReducerClass(TestReducer1.class);
-
-    job3_1.setMapOutputKeyClass(Text.class);
-    job3_1.setMapOutputValueClass(Text.class); 
-
-    job3_1.setOutputKeyClass(Text.class);
-    job3_1.setOutputValueClass(Text.class);
-    FileOutputFormat.setOutputPath(job3_1, new Path(outputTempDir+".2"));
-    Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
-    if(!countSuccess3_1) {
-       System.exit(0);
-    }
-    
-    
     stopTime = System.currentTimeMillis();
     System.out.println("TEMPO DI ESECUZIONE JOB3:" + TimeUnit.MILLISECONDS.toSeconds(stopTime - startTime)+ "sec");
     
     System.out.println("FALSE POSITIVE RATE:" + (BloomFilterUtility.countFalsePositiveRate()/10));
-     */
+     
     System.exit(0);
 
  
