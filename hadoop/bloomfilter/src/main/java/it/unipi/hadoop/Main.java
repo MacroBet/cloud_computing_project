@@ -93,11 +93,11 @@ public class Main {
       job3_1.setOutputKeyClass(Text.class);
       job3_1.setOutputValueClass(DoubleWritable.class);
   
-      NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir+ "/part-r-00000"));
+      NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
       FileOutputFormat.setOutputPath(job3_1, new Path(args[1] + "_3.1"));
       Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
-      if(countSuccess3_1) {
-      Job job3_2 = Job.getInstance(conf3, "JOB_3.1");
+      if(!countSuccess3_1) {
+      /*Job job3_2 = Job.getInstance(conf3, "JOB_3.1");
       job3_2.setJarByClass(Main.class);
       job3_2.setMapperClass(TestMapper3.class);
       job3_2.setReducerClass(TestReducer3.class);
@@ -108,14 +108,14 @@ public class Main {
       job3_2.setOutputKeyClass(Text.class);
       job3_2.setOutputValueClass(DoubleWritable.class);
   
-      NLineInputFormat.addInputPath(job3_2, new Path(outputTempDir+ "/part-r-00001"));
+      NLineInputFormat.addInputPath(job3_2, new Path(outputTempDir+"));
       FileOutputFormat.setOutputPath(job3_2, new Path(args[1] + "_3.2"));
       Boolean countSuccess3_32 = job3_2.waitForCompletion(true);
-      if(!countSuccess3_32) {
+      if(!countSuccess3_32) {*/
         System.exit(0);
       }
       }
-    }
+    //}
     
     
     stopTime = System.currentTimeMillis();
