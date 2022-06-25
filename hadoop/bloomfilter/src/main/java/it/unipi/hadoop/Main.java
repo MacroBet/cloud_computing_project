@@ -61,9 +61,14 @@ public class Main {
     
 
     startTime= System.currentTimeMillis();
+    boolean succes = true;
     String outputTempDir = args[1] + "_3";
-    for(int i = 1; i < 11; i++ )
-    Job3(args, i, outputTempDir);
+    for(int i = 1; i < 11; i++ ) {
+      succes = Job3(args, i, outputTempDir);
+      if(!succes)
+        System.exit(0);
+    }
+
     /* 
     Configuration conf3 = new Configuration();
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
@@ -118,7 +123,7 @@ public class Main {
  
   }
 
-  private static void Job3(String[] args, int i, String dir) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException{
+  private static boolean Job3(String[] args, int i, String dir) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException{
 
     Configuration conf3 = new Configuration();
     Job job3 = Job.getInstance(conf3, "bloom test");
@@ -138,9 +143,8 @@ public class Main {
 
     FileOutputFormat.setOutputPath(job3, new Path(dir+ "."+i));
     Boolean countSuccess3 = job3.waitForCompletion(true);
-    if(countSuccess3) {
-        System.exit(0);
-    }
+    return countSuccess3;
+    
     
     
   }
@@ -165,10 +169,10 @@ public class Main {
    
     FileOutputFormat.setOutputPath(job1, new Path(args[1]));
     Boolean countSuccess = job1.waitForCompletion(true);
-    if(!countSuccess) { 
+    if(countSuccess) {
       System.exit(0);
-    }
-   
+  }
+    
 
   }
 
