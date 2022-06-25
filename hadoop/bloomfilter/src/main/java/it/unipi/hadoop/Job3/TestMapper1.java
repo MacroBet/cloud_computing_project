@@ -16,7 +16,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import it.unipi.hadoop.BloomFilter;
 
 public class TestMapper1  extends Mapper<Object, Text, Text,Text> {
-  private HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, BloomFilter>();
+  private BloomFilter BMtest;
   private Map<String, ArrayList<Integer>> combiner = new HashMap<String, ArrayList<Integer>>(); 
   private int ratingTotest;
   public void setup(Context context) throws IOException, InterruptedException {
@@ -28,10 +28,13 @@ public class TestMapper1  extends Mapper<Object, Text, Text,Text> {
           boolean hasNext;
           do {
 
-            Text key = new Text();
-            BloomFilter bf = new BloomFilter();
-            hasNext = reader.next(key, bf);
-            bloomFilter_param.put(key, bf);
+              Text key = new Text();
+              BloomFilter bf = new BloomFilter();
+              hasNext = reader.next(key, bf);
+              if(key.toString().equals(String.valueOf(ratingTotest))) {
+
+                BMtest = new BloomFilter(bf);
+            }
 
           } while(hasNext);
 
@@ -48,8 +51,8 @@ public class TestMapper1  extends Mapper<Object, Text, Text,Text> {
           String movieId = ratingRaw.split("\t")[0];
           rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
         
-          if(rating != ratingTotest)
-              if(bloomFilter_param.get(new Text(String.valueOf(ratingTotest))).check(movieId)) 
+          if(rating != ratingTotest )
+              if(BMtest.check(movieId)) 
                 context.write(new Text(String.valueOf(ratingTotest)), new Text("1"));  
               else
                  context.write(new Text(String.valueOf(ratingTotest)), new Text("0"));  
