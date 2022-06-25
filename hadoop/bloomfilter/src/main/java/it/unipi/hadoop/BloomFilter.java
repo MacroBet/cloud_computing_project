@@ -103,10 +103,10 @@ public class BloomFilter implements Writable, WritableComparable<BloomFilter> {
       String id = s.replace("t", "0");
       int digest = (int) (getUnsignedInt(MurmurHash.getInstance().hash(id.getBytes(), i)) % size);
       // System.out.println("DIGEST PRESENTE: " + digest);
-      if (!bitset.get(digest)) {
+      //if (!bitset.get(digest)) {
         // System.out.println("DIGEST ASSENTE: " + digest);
-        return false;
-      }
+        //return false;
+      //}
     }
     return true;
   }
