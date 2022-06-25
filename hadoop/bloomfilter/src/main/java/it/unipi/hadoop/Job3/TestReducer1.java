@@ -17,7 +17,7 @@ public class TestReducer1 extends Reducer<Text, Text, Text, Text> {
       else
         context.write(key, new Text(val));
     }
-    if(n == 0)
+    if(n != 0)
       context.write(key, new Text(String.valueOf(fp/n)));
 
   }
