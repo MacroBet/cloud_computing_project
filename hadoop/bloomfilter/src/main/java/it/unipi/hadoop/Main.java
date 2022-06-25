@@ -169,7 +169,7 @@ public class Main {
    
     FileOutputFormat.setOutputPath(job1, new Path(args[1]));
     Boolean countSuccess = job1.waitForCompletion(true);
-    if(countSuccess) {
+    if(!countSuccess) {
       System.exit(0);
   }
     
