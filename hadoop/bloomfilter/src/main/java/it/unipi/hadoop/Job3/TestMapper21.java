@@ -49,7 +49,7 @@ public class TestMapper21  extends Mapper<Object, Text, Text,Text>{
           String ratingRaw = itr.nextToken().toString();
           int rating = Integer.parseInt(ratingRaw.split("\t")[0]);
           String id = ratingRaw.split("\t")[1];
-          if(id.equals("0") || id.equals("1"))
+          if(id.substring(0,1).equals("0"))
             context.write(new Text(String.valueOf(rating)), new Text(id));
 
           else if(bloomFilter_param.get(new Text(String.valueOf(rating))).check(id)) 
