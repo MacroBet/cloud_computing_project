@@ -52,7 +52,7 @@ public class TestMapper21  extends Mapper<Object, Text, Text,Text> {
                 context.write(new Text(String.valueOf(i)), new Text("1"));  
               else
                  context.write(new Text(String.valueOf(i)), new Text("0"));  
-            else if(i != rating && i > 6)
+            else if(i != rating && (i < 6 || i > 7) )
               continue;
             
         }
