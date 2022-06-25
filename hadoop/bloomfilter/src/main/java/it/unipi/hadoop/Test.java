@@ -50,7 +50,7 @@ public static HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, B
     String outputTempDir = args[1] + "_3";
    // for(int i = 1; i < 11; i++ ) {
     //  System.out.println("TEST su BLOOM FILTER" + i);
-    succes = Job3(args, 1, outputTempDir);
+    succes = Job3(args, 6, outputTempDir);
     if(!succes)
         System.exit(0);
     //}
