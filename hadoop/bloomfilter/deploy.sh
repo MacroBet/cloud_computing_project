@@ -1,4 +1,8 @@
 git pull
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
 hadoop fs -rm -r output_3.1
 hadoop fs -rm -r output_3.2
 hadoop fs -rm -r output_3.3
