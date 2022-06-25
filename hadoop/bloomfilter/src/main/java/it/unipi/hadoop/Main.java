@@ -77,7 +77,7 @@ public class Main {
     job3.setOutputKeyClass(Text.class);
     job3.setOutputValueClass(Text.class);
     job3.setNumReduceTasks(2);
-    FileOutputFormat.setOutputPath(job3, new Path(outputTempDir));
+    FileOutputFormat.setOutputPath(job3, new Path(outputTempDir+".1"));
     Boolean countSuccess3 = job3.waitForCompletion(true);
     if(!countSuccess3) {
       System.exit(0);
@@ -87,17 +87,17 @@ public class Main {
     Job job3_1 = Job.getInstance(new Configuration(), "JOB_3.1");
     job3_1.setJarByClass(Main.class);
     job3_1.setMapperClass(TestMapper21.class);
-    job3_1.setReducerClass(TestCombiner2.class);
+    job3_1.setReducerClass(TestReducer1.class);
     job3_1.setInputFormatClass(NLineInputFormat.class);
     //job3_1.setCombinerClass(TestCombiner2.class);
-    job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 500000);
+    job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", N_SPLIT*3);
     job3_1.setMapOutputKeyClass(Text.class);
     job3_1.setMapOutputValueClass(Text.class); 
+    
     job3_1.setOutputKeyClass(Text.class);
-    job3_1.setOutputValueClass(DoubleWritable.class);
-  
-    NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
-    FileOutputFormat.setOutputPath(job3_1, new Path(args[1] + "_3.1"));
+    job3_1.setOutputValueClass(Text.class);
+    NLineInputFormat.addInputPath(job3, new Path(args[0]));
+    FileOutputFormat.setOutputPath(job3_1, new Path(outputTempDir+".2"));
     Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
     if(!countSuccess3_1) {
        System.exit(0);

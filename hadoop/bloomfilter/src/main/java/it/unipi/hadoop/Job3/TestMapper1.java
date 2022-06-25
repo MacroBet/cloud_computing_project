@@ -53,7 +53,7 @@ public class TestMapper1  extends Mapper<Object, Text, Text,Text> {
               else
                  context.write(new Text(String.valueOf(i)), new Text("0"));  
             else if(i != rating && i > 6)
-             context.write(new Text(String.valueOf(i)), new Text(movieId));  
+             context.write(new Text(String.valueOf(i)), new Text("Not now"));  
             
         }
         
