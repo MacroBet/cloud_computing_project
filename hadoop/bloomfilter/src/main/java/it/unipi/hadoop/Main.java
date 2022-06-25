@@ -19,15 +19,10 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import it.unipi.hadoop.Job1.*;
 import it.unipi.hadoop.Job2.BloomFiltersMapper;
 import it.unipi.hadoop.Job2.BloomFiltersReducer;
-import it.unipi.hadoop.Job3.TestCombiner2;
-import it.unipi.hadoop.Job3.TestCombiner3;
 import it.unipi.hadoop.Job3.TestMapper1;
 import it.unipi.hadoop.Job3.TestMapper2;
-import it.unipi.hadoop.Job3.TestMapper21;
-import it.unipi.hadoop.Job3.TestMapper3;
 import it.unipi.hadoop.Job3.TestReducer1;
 import it.unipi.hadoop.Job3.TestReducer2;
-import it.unipi.hadoop.Job3.TestReducer3;
 
 
 public class Main {
@@ -56,7 +51,19 @@ public class Main {
     Job2(otherArgs, args);
     stopTime = System.currentTimeMillis();
     System.out.println("TEMPO DI ESECUZIONE JOB2:" + TimeUnit.MILLISECONDS.toSeconds(stopTime - startTime)+ "sec");
+    Job3(args);
+    stopTime = System.currentTimeMillis();
+    System.out.println("TEMPO DI ESECUZIONE JOB3:" + TimeUnit.MILLISECONDS.toSeconds(stopTime - startTime)+ "sec");
     
+    System.out.println("FALSE POSITIVE RATE:" + (BloomFilterUtility.countFalsePositiveRate()/10));
+     
+    System.exit(0);
+
+ 
+  }
+
+  private static void Job3(String[] args) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException{
+
     startTime= System.currentTimeMillis();
     String outputTempDir = args[1] + "_3";
     Configuration conf3 = new Configuration();
@@ -77,7 +84,6 @@ public class Main {
     FileOutputFormat.setOutputPath(job3, new Path(outputTempDir));
     Boolean countSuccess3 = job3.waitForCompletion(true);
     if(countSuccess3) {
-      System.out.println("++++++++++++++");
       Job job3_1 = Job.getInstance(conf3, "JOB_3.1");
       job3_1.setJarByClass(Main.class);
       job3_1.setMapperClass(TestMapper2.class);
@@ -91,43 +97,12 @@ public class Main {
       job3_1.setOutputValueClass(DoubleWritable.class);
   
       NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
-      FileOutputFormat.setOutputPath(job3_1, new Path(otherArgs[otherArgs.length - 1] + "_3.1"));
+      FileOutputFormat.setOutputPath(job3_1, new Path(args[1] + "_3.1"));
       Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
       if(!countSuccess3_1) {
         System.exit(0);
       }
     }
-    stopTime = System.currentTimeMillis();
-    System.out.println("TEMPO DI ESECUZIONE JOB3:" + TimeUnit.MILLISECONDS.toSeconds(stopTime - startTime)+ "sec");
-    
-    System.out.println("FALSE POSITIVE RATE:" + (BloomFilterUtility.countFalsePositiveRate()/10));
-     
-    System.exit(0);
-
- 
-  }
-
-  private static boolean Job3(String[] args, int i, String dir) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException{
-
-    Configuration conf3 = new Configuration();
-    Job job3 = Job.getInstance(conf3, "bloom test");
-    job3.setInputFormatClass(NLineInputFormat.class);
-    NLineInputFormat.addInputPath(job3, new Path(args[0]));
-    job3.getConfiguration().setInt("mapreduce.input.rating.totest", i);
-    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", (N_SPLIT*3));
-    job3.setJarByClass(Main.class);
-    job3.setMapperClass(TestMapper1.class);
-    job3.setReducerClass(TestReducer1.class);
-
-    job3.setMapOutputKeyClass(Text.class);
-    job3.setMapOutputValueClass(Text.class); 
-    
-    job3.setOutputKeyClass(Text.class);
-    job3.setOutputValueClass(Text.class);
-
-    FileOutputFormat.setOutputPath(job3, new Path(dir+ "."+i));
-    Boolean countSuccess3 = job3.waitForCompletion(true);
-    return countSuccess3;
     
     
     
