@@ -76,7 +76,6 @@ public class Main {
     
     job3.setOutputKeyClass(Text.class);
     job3.setOutputValueClass(Text.class);
-    job3.setNumReduceTasks(2);
     FileOutputFormat.setOutputPath(job3, new Path(outputTempDir+".1"));
     Boolean countSuccess3 = job3.waitForCompletion(true);
     if(!countSuccess3) {
@@ -99,7 +98,6 @@ public class Main {
 
     job3_1.setOutputKeyClass(Text.class);
     job3_1.setOutputValueClass(Text.class);
-    job3_1.setNumReduceTasks(2);
     FileOutputFormat.setOutputPath(job3_1, new Path(outputTempDir+".2"));
     Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
     if(!countSuccess3_1) {
@@ -114,19 +112,20 @@ public class Main {
      
     System.exit(0);
 
-    
+   // for(int i = 1; i < 4; i++ )
+     // Job3(args, i, outputTempDir);
   }
 
-  private static void Job3(String[] otherArgs, String[] args) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException{
+  private static void Job3(String[] args, int i, String dir) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException{
 
-    String outputTempDir = args[1] + "_3";
     Configuration conf3 = new Configuration();
-    Job job3 = Job.getInstance(conf3, "bloom filter creator");
+    Job job3 = Job.getInstance(conf3, "bloom test");
     job3.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job3, new Path(args[0]));
     job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", (N_SPLIT*3));
     job3.setJarByClass(Main.class);
-    job3.setMapperClass(TestMapper1.class);
+    String mapClass = "TestMapper" + i + ".class";
+   // job3.setMapperClass();
     job3.setReducerClass(TestReducer1.class);
 
     job3.setMapOutputKeyClass(Text.class);
@@ -135,27 +134,12 @@ public class Main {
     job3.setOutputKeyClass(Text.class);
     job3.setOutputValueClass(Text.class);
 
-    FileOutputFormat.setOutputPath(job3, new Path(outputTempDir));
+    FileOutputFormat.setOutputPath(job3, new Path(dir));
     Boolean countSuccess3 = job3.waitForCompletion(true);
     if(countSuccess3) {
-      Job job3_1 = Job.getInstance(conf3, "JOB_3.1");
-      job3_1.setJarByClass(Main.class);
-      job3_1.setMapperClass(TestMapper2.class);
-      job3_1.setReducerClass(TestReducer2.class);
-      job3_1.setInputFormatClass(NLineInputFormat.class);
-      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformalinespermapt.", (N_SPLIT*50));
-      job3_1.setMapOutputKeyClass(Text.class);
-      job3_1.setMapOutputValueClass(Text.class); 
-      job3_1.setOutputKeyClass(Text.class);
-      job3_1.setOutputValueClass(DoubleWritable.class);
-  
-      NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
-      FileOutputFormat.setOutputPath(job3_1, new Path(args[1] + "_3.1"));
-      Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
-      if(!countSuccess3_1) {
         System.exit(0);
-      }
     }
+    
     
   }
 

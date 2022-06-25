@@ -38,41 +38,23 @@ public class TestMapper3 extends Mapper<Object, Text, Text,Text> {
     }
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
  
-        StringTokenizer itr = new StringTokenizer(value.toString(), "\n");
-        while (itr.hasMoreTokens()) {
-         
-          String ratingRaw = itr.nextToken().toString();
-          int rating = Integer.parseInt(ratingRaw.split("\t")[0]);
-          String id = ratingRaw.split("\t")[1];
-          //combiner.put(String.valueOf(rating), id);      
-
-          context.write(new Text(String.valueOf(rating)), new Text(id));
-
-          /*if( rating >1 || rating < 4)
-            
-            context.write(new Text("group1"), new Text(param));
-
-          else if(rating > 3  || rating < 8)
-            context.write(new Text("group2"), new Text(param));
-
-          else if(rating > 7  || rating < 11)
-            context.write(new Text("group3"), new Text(param));*/
+      StringTokenizer itr = new StringTokenizer(value.toString(), "\n");
+      Integer rating;
+      while (itr.hasMoreTokens()) {
+       
+        String ratingRaw = itr.nextToken().toString();
+        String movieId = ratingRaw.split("\t")[0];
+        rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
+        for(int i = 1; i < 11; i++)
+          if(i != rating && i > 7)
+            if(bloomFilter_param.get(new Text(String.valueOf(i))).check(movieId)) 
+              context.write(new Text(String.valueOf(i)), new Text("1"));  
+            else
+               context.write(new Text(String.valueOf(i)), new Text("0"));  
+          else if(i != rating && (i < 7) )
+            continue;
+          
         }
     }
-    /* 
-    public void cleanup(Context context) throws IOException, InterruptedException {
-       
-        Iterator<Map.Entry<String, ArrayList<Integer>>> temp = combiner.entrySet().iterator();
-      
-        while(temp.hasNext()) {
-            Map.Entry<String, ArrayList<Integer>> entry = temp.next();
-            String keyVal = entry.getKey();
-            Double falsePositive = (double) entry.getValue().get(0);
-            Double NonFalsePositive = (double) entry.getValue().get(1);
-            Double FPrate = falsePositive/(falsePositive+NonFalsePositive);
-      
-            context.write(new Text(keyVal), new Text(String.valueOf(FPrate)));
-        }
-          
-      }*/
+  
 }
