@@ -97,16 +97,13 @@ public class BloomFilter implements Writable, WritableComparable<BloomFilter> {
 
   public boolean check(String s) {
     int hashCount = this.hashCount.get();
-    //BitSet bitset = BitSet.valueOf(this.bytes.getBytes());
     int size = this.size.get();
     for (int i = 0; i < hashCount; i++) {
       String id = s.replace("t", "0");
       int digest = (int) (getUnsignedInt(MurmurHash.getInstance().hash(id.getBytes(), i)) % size);
-      // System.out.println("DIGEST PRESENTE: " + digest);
-    //  if (!bitset.get(digest)) {
-        // System.out.println("DIGEST ASSENTE: " + digest);
-      //  return false;
-    //  }
+      if (!this.bitset.get(digest)) {
+        return false;
+     }
     }
     return true;
   }
