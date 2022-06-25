@@ -76,7 +76,7 @@ public class Main {
     
     job3.setOutputKeyClass(Text.class);
     job3.setOutputValueClass(Text.class);
-    job3.setNumReduceTasks(4);
+    job3.setNumReduceTasks(2);
     FileOutputFormat.setOutputPath(job3, new Path(outputTempDir));
     Boolean countSuccess3 = job3.waitForCompletion(true);
     System.exit(0);
