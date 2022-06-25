@@ -48,32 +48,14 @@ public class TestMapper1  extends Mapper<Object, Text, Text,Text> {
           rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
           for(int i = 1; i < 11; i++)
             if(i != rating && rating < 4)
-               
-             context.write(new Text(String.valueOf(i)), new Text(movieId));  
+              if(bloomFilter_param.get(new Text(String.valueOf(rating))).check(movieId)) 
+                context.write(new Text(String.valueOf(i)), new Text("1"));  
+              else
+                 context.write(new Text(String.valueOf(i)), new Text("0"));  
             else
-            context.write(new Text(String.valueOf(i)), new Text(movieId));  
-
-         
-        
+             context.write(new Text(String.valueOf(i)), new Text(movieId));  
+            
         }
         
       }
-      /* 
-      public void cleanup(Context context) throws IOException, InterruptedException {
-        Iterator<Map.Entry<String, ArrayList<String>>> temp = bloomFP.entrySet().iterator();
-        int falsePositive;
-        while(temp.hasNext()) {
-            Map.Entry<String, ArrayList<String>> entry = temp.next();
-            String keyVal = entry.getKey();
-            ArrayList<String> id = entry.getValue();
-            for(int i = 0; i < id.size(); i++)
-
-          
-            
-        }
-       
-    }*/
-
-
-    
 }
