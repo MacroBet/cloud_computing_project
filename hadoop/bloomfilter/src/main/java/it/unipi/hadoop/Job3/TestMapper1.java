@@ -47,12 +47,12 @@ public class TestMapper1  extends Mapper<Object, Text, Text,Text> {
           String movieId = ratingRaw.split("\t")[0];
           rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
           for(int i = 1; i < 11; i++)
-            if(i != rating && rating < 4)
+            if(i != rating && i < 4)
               if(bloomFilter_param.get(new Text(String.valueOf(i))).check(movieId)) 
                 context.write(new Text(String.valueOf(i)), new Text("1"));  
               else
                  context.write(new Text(String.valueOf(i)), new Text("0"));  
-            else if(i != rating && rating > 4)
+            else if(i != rating && i > 4)
              context.write(new Text(String.valueOf(i)), new Text(movieId));  
             
         }
