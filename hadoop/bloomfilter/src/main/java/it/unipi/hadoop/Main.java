@@ -79,43 +79,29 @@ public class Main {
     job3.setNumReduceTasks(2);
     FileOutputFormat.setOutputPath(job3, new Path(outputTempDir));
     Boolean countSuccess3 = job3.waitForCompletion(true);
-    if(countSuccess3) {
-      System.out.println("++++++++++++++");
-      Job job3_1 = Job.getInstance(conf3, "JOB_3.1");
-      job3_1.setJarByClass(Main.class);
-      job3_1.setMapperClass(TestMapper21.class);
-      job3_1.setReducerClass(TestCombiner2.class);
-      job3_1.setInputFormatClass(NLineInputFormat.class);
-      //job3_1.setCombinerClass(TestCombiner2.class);
-      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 100000);
-      job3_1.setMapOutputKeyClass(Text.class);
-      job3_1.setMapOutputValueClass(Text.class); 
-      job3_1.setOutputKeyClass(Text.class);
-      job3_1.setOutputValueClass(DoubleWritable.class);
-  
-      NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
-      FileOutputFormat.setOutputPath(job3_1, new Path(args[1] + "_3.1"));
-      Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
-      if(!countSuccess3_1) {
-      /*Job job3_2 = Job.getInstance(conf3, "JOB_3.1");
-      job3_2.setJarByClass(Main.class);
-      job3_2.setMapperClass(TestMapper3.class);
-      job3_2.setReducerClass(TestReducer3.class);
-      job3_2.setInputFormatClass(NLineInputFormat.class);
-      job3_2.getConfiguration().setInt("mapreduce.input.lineinputformalinespermapt.", (150000));
-      job3_2.setMapOutputKeyClass(Text.class);
-      job3_2.setMapOutputValueClass(Text.class); 
-      job3_2.setOutputKeyClass(Text.class);
-      job3_2.setOutputValueClass(DoubleWritable.class);
-  
-      NLineInputFormat.addInputPath(job3_2, new Path(outputTempDir+"));
-      FileOutputFormat.setOutputPath(job3_2, new Path(args[1] + "_3.2"));
-      Boolean countSuccess3_32 = job3_2.waitForCompletion(true);
-      if(!countSuccess3_32) {*/
-        System.exit(0);
+    if(!countSuccess3) {
+      System.exit(0);
       }
-      }
-    //}
+      
+    System.out.println("++++++++++++++");
+    Job job3_1 = Job.getInstance(new Configuration(), "JOB_3.1");
+    job3_1.setJarByClass(Main.class);
+    job3_1.setMapperClass(TestMapper21.class);
+    job3_1.setReducerClass(TestCombiner2.class);
+    job3_1.setInputFormatClass(NLineInputFormat.class);
+    //job3_1.setCombinerClass(TestCombiner2.class);
+    job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 500000);
+    job3_1.setMapOutputKeyClass(Text.class);
+    job3_1.setMapOutputValueClass(Text.class); 
+    job3_1.setOutputKeyClass(Text.class);
+    job3_1.setOutputValueClass(DoubleWritable.class);
+  
+    NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
+    FileOutputFormat.setOutputPath(job3_1, new Path(args[1] + "_3.1"));
+    Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
+    if(!countSuccess3_1) {
+       System.exit(0);
+    }
     
     
     stopTime = System.currentTimeMillis();
