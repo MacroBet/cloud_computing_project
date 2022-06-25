@@ -47,7 +47,7 @@ public class TestMapper2  extends Mapper<Object, Text, Text,Text> {
           String ratingRaw = itr.nextToken().toString();
           int rating = Integer.parseInt(ratingRaw.split("\t")[0]);
           String id = ratingRaw.split("\t")[1];
-          
+            
           if(bloomFilter_param.get(new Text(String.valueOf(rating))).check(id)) {
          
             if(combiner.containsKey(String.valueOf(rating))) { 
