@@ -56,20 +56,18 @@ public class Main {
     Job2(otherArgs, args);
     stopTime = System.currentTimeMillis();
     System.out.println("TEMPO DI ESECUZIONE JOB2:" + TimeUnit.MILLISECONDS.toSeconds(stopTime - startTime)+ "sec");
-
-
-    
-
+    /* 
     startTime= System.currentTimeMillis();
     boolean succes = true;
     String outputTempDir = args[1] + "_3";
     for(int i = 1; i < 11; i++ ) {
+      System.out.println("TEST su BLOOM FILTER" + i);
       succes = Job3(args, i, outputTempDir);
       if(!succes)
         System.exit(0);
     }
 
-    /* 
+    
     Configuration conf3 = new Configuration();
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
@@ -112,12 +110,12 @@ public class Main {
        System.exit(0);
     }
     
-    */
+    
     stopTime = System.currentTimeMillis();
     System.out.println("TEMPO DI ESECUZIONE JOB3:" + TimeUnit.MILLISECONDS.toSeconds(stopTime - startTime)+ "sec");
     
     System.out.println("FALSE POSITIVE RATE:" + (BloomFilterUtility.countFalsePositiveRate()/10));
-     
+     */
     System.exit(0);
 
  
