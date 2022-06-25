@@ -18,7 +18,7 @@ public class CreateParametersReducer extends Reducer<Text, IntWritable, Text, Te
        
       }
       int m = 2000000;//BloomFilterUtility.get_size(sum, context.getConfiguration().getDouble("mapreduce.input.p_rate", 0.1));
-      int k = BloomFilterUtility.get_hash_count(m, sum);
+      int k = 6;//BloomFilterUtility.get_hash_count(m, sum);
 
       res = (Integer.toString(m) + "\t" + Integer.toString(k) + "\t" + Integer.toString(sum));
       result.set(res);
