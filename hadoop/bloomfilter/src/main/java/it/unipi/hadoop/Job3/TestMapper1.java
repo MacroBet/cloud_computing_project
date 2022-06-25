@@ -48,29 +48,12 @@ public class TestMapper1  extends Mapper<Object, Text, Text,Text> {
           rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
           for(int i = 1; i < 11; i++)
             if(i != rating && rating < 4)
-              /*if(!bloomFilter_param.get(new Text(String.valueOf(rating))).check(movieId)) 
-                  context.write(new Text(String.valueOf(rating)), new Text("0"));
-              else
-                  context.write(new Text(String.valueOf(rating)), new Text("1"));
-              
-            }
-          }
-            }else  */    
+               
              context.write(new Text(String.valueOf(i)), new Text(movieId));  
-          /* 
-          for (Map.Entry<String, BloomFilter> entry : bloomFilter_param.entrySet()) {
-            if((entry.getKey() != rating.toString()))
+            else
+            context.write(new Text(String.valueOf(i)), new Text(movieId));  
 
-              if(bloomFP.containsKey(rating.toString()))
-             
-                bloomFP.get(rating.toString()).add(movieId);      
-           
-              else 
-
-                bloomFP.put(rating.toString(), null);
-                bloomFP.get(rating.toString()).add(movieId);
-            
-          }*/
+         
         
         }
         
