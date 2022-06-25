@@ -7,11 +7,17 @@ import org.apache.hadoop.mapreduce.Reducer;
 public class TestReducer1 extends Reducer<Text, Text, Text, Text> {
 
   public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-
+    double fp = 0.0;
+    int n = 0;
     for (Text val : values) {
-         
-      context.write(key, new Text(val));
+      if(val.toString().equals("1"))
+        fp++;
+      if(val.toString().equals("0"))
+        n++;
+      else
+        context.write(key, new Text(val));
     }
+    context.write(key, new Text(String.valueOf(fp/n)));
 
   }
 }
