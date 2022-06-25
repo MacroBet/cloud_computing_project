@@ -18,9 +18,10 @@ import it.unipi.hadoop.BloomFilter;
 public class TestMapper1  extends Mapper<Object, Text, Text,Text> {
   private HashMap<Text, BloomFilter> bloomFilter_param = new HashMap<Text, BloomFilter>();
   private Map<String, ArrayList<Integer>> combiner = new HashMap<String, ArrayList<Integer>>(); 
-
+  private int ratingTotest;
   public void setup(Context context) throws IOException, InterruptedException {
     
+    ratingTotest = context.getConfiguration().getInt("mapreduce.input.rating.totest", 1);
     try {
           Path pt = new Path("hdfs://hadoop-namenode:9820/user/hadoop/output_2/part-r-00000");// Location of file in HDFS
           SequenceFile.Reader reader = new SequenceFile.Reader(new Configuration(), Reader.file(pt));
@@ -47,7 +48,7 @@ public class TestMapper1  extends Mapper<Object, Text, Text,Text> {
           String movieId = ratingRaw.split("\t")[0];
           rating = Math.round(Float.parseFloat(ratingRaw.split("\t")[1]));
         
-          if(rating != 1)
+          if(rating != ratingTotest)
               if(bloomFilter_param.get(new Text(String.valueOf("1"))).check(movieId)) 
                 context.write(new Text(String.valueOf("1")), new Text("1"));  
               else

@@ -62,6 +62,9 @@ public class Main {
 
     startTime= System.currentTimeMillis();
     String outputTempDir = args[1] + "_3";
+    for(int i = 1; i < 11; i++ )
+    Job3(args, i, outputTempDir);
+    /* 
     Configuration conf3 = new Configuration();
     Job job3 = Job.getInstance(conf3, "bloom filter creator");
     job3.setInputFormatClass(NLineInputFormat.class);
@@ -104,7 +107,7 @@ public class Main {
        System.exit(0);
     }
     
-    
+    */
     stopTime = System.currentTimeMillis();
     System.out.println("TEMPO DI ESECUZIONE JOB3:" + TimeUnit.MILLISECONDS.toSeconds(stopTime - startTime)+ "sec");
     
@@ -112,8 +115,7 @@ public class Main {
      
     System.exit(0);
 
-   // for(int i = 1; i < 4; i++ )
-     // Job3(args, i, outputTempDir);
+ 
   }
 
   private static void Job3(String[] args, int i, String dir) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException{
@@ -122,10 +124,10 @@ public class Main {
     Job job3 = Job.getInstance(conf3, "bloom test");
     job3.setInputFormatClass(NLineInputFormat.class);
     NLineInputFormat.addInputPath(job3, new Path(args[0]));
+    job3.getConfiguration().setInt("mapreduce.input.rating.totest", i);
     job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", (N_SPLIT*3));
     job3.setJarByClass(Main.class);
-    String mapClass = "TestMapper" + i + ".class";
-   // job3.setMapperClass();
+    job3.setMapperClass(TestMapper1.class);
     job3.setReducerClass(TestReducer1.class);
 
     job3.setMapOutputKeyClass(Text.class);
@@ -134,7 +136,7 @@ public class Main {
     job3.setOutputKeyClass(Text.class);
     job3.setOutputValueClass(Text.class);
 
-    FileOutputFormat.setOutputPath(job3, new Path(dir));
+    FileOutputFormat.setOutputPath(job3, new Path(dir+ "."+i));
     Boolean countSuccess3 = job3.waitForCompletion(true);
     if(countSuccess3) {
         System.exit(0);
