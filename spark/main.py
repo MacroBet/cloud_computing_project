@@ -110,7 +110,6 @@ if __name__ == "__main__":
     print("False positive probability: ",p)
     conf = (SparkConf().setAppName("Bloom Filter").setMaster("yarn"))
     sc = SparkContext(conf=conf)
-    spark = SparkSession(sc)
     N = [1,1,1,1,1,1,1,1,1,1,1]
     
     # 1. read file creating the RDD
