@@ -3,7 +3,7 @@ from operator import add
 import math
 import mmh3
 from bitarray import bitarray
-from pyspark import SparkContext
+from pyspark import SparkConf, SparkContext
 import time
 
 
@@ -108,8 +108,9 @@ if __name__ == "__main__":
         sys.exit(-1)
     if (sys.argv[2]!=None): p = float(sys.argv[2])
     print("False positive probability: ",p)
-    master = "local"
-    sc = SparkContext("yarn", "BloomFilter")
+    conf = (SparkConf().setAppName("Bloom Filter").setMaster("yarn"))
+    sc = SparkContext(conf=conf)
+    spark = SparkSession(sc)
     N = [1,1,1,1,1,1,1,1,1,1,1]
     
     # 1. read file creating the RDD
