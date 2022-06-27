@@ -109,7 +109,7 @@ if __name__ == "__main__":
     if (sys.argv[2]!=None): p = float(sys.argv[2])
     print("False positive probability: ",p)
     master = "local"
-    sc = SparkContext(master, "BloomFilter")
+    sc = SparkContext("yarn", "BloomFilter")
     N = [1,1,1,1,1,1,1,1,1,1,1]
     
     # 1. read file creating the RDD
