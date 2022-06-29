@@ -1,5 +1,5 @@
 import sys
-from operator import add
+from operator import add,or_
 import math
 import mmh3
 from bitarray import bitarray
@@ -123,7 +123,7 @@ if __name__ == "__main__":
     # 3. insert elements in bloom filter
     start_time = time.time()
     bloomFilters = ratings.map(lambda rating: (rating[1],add_item_to_bloom_filter(B_HASH_COUNTS.value[rating[1]],B_SIZES.value[rating[1]],rating[0])))\
-                   .cache().reduceByKey(lambda bit_arr, acc: bit_arr | acc).collect()
+                   .reduceByKey(or_).collect()
     print("--- Created bloom filters in %s seconds ---" % (time.time() - start_time))
      
 
