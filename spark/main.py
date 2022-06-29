@@ -175,5 +175,5 @@ if __name__ == "__main__":
         false_positive_rates.append({'rating':rating,'false_positive_rate':fpr, 'total_elements':n, 'false_positives':fpc})
     
     print(false_positive_rates)
-    print("TOTAL FALSE POSITIVE RATE: %f" % (tot_fpr/10))
+    print("TOTAL FALSE POSITIVE RATE: " + str(tot_fpr/10))
 
