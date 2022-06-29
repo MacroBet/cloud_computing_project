@@ -122,11 +122,21 @@ if __name__ == "__main__":
 
     # 3. insert elements in bloom filter
     start_time = time.time()
-    bloomFilters = ratings.map(lambda rating: (rating[0],add_item_to_bloom_filter(B_HASH_COUNTS.value[rating[0]],B_SIZES.value[rating[0]],rating[1])))\
-                   .reduceByKey(or_).collect()
+
+    def createBloomFilter(hash,size,items): 
+        bit_array = bitarray(size)
+        bit_array.setall(0)
+        for item in items:
+            for i in range(hash):
+                digest = mmh3.hash(item, i) % size
+                bit_array[digest] = True
+        return bit_array
+
+    bloomFilters = ratings.groupByKey().map(lambda ratings: (ratings[0],createBloomFilter(B_HASH_COUNTS.value[ratings[0]],B_SIZES.value[ratings[0]],ratings[1])))\
+                   .collect()
     print("--- Created bloom filters in %s seconds ---" % (time.time() - start_time))
      
-
+    print(bloomFilters)
     # 4. compute false positive count
     start_time = time.time()
     """Example:
