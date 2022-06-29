@@ -119,7 +119,7 @@ if __name__ == "__main__":
     
     # 1. read file creating the RDD
     #    ratings is a tuple array => [(id, rating),...]
-    ratings = sc.textFile(sys.argv[1]).map(rating_extractor).filter(lambda x: x[0]!=0).sortByKey().cache()
+    ratings = sc.textFile(sys.argv[1]).map(rating_extractor).filter(lambda x: x[0]!=0).sortByKey()#.cache()
 
     # 2. count occurences of each rating
     start_time = time.time()
