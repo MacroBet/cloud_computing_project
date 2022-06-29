@@ -105,7 +105,7 @@ if __name__ == "__main__":
 
     # 2. count occurences of each rating
     start_time = time.time()
-    rating_count= ratings.reduceByKey(add).collect()
+    rating_count= ratings.map(lambda rating: (rating[1],1)).reduceByKey(add).collect()
     print("--- Counted ratings in %s seconds ---" % (time.time() - start_time))
 
     print(rating_count)
