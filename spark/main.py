@@ -88,14 +88,16 @@ rating_extractor = lambda x: ( x.split('\t')[0],round(0.0001+float(x.split('\t')
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: BloomFilter <input file> [<output file>]", file=sys.stderr)
+        print("Usage: BloomFilter <input file> <fp> <local?>", file=sys.stderr)
         sys.exit(-1)
     p = 0.01 
-    conf = (SparkConf().setAppName("Bloom Filter").setMaster("yarn"))
-    sc = SparkContext(conf=conf)
     N = [1,1,1,1,1,1,1,1,1,1,1]
+    local = False
     if (sys.argv[2]!=None): p = float(sys.argv[2])
+    if (sys.argv[3]!=None): local = bool(sys.argv[3])
     print("False positive probability: ",p)
+    conf = (SparkConf().setAppName("Bloom Filter").setMaster("local" if local else "yarn"))
+    sc = SparkContext(conf=conf)
     
     # 1. read file creating the RDD
     #    ratings is a tuple array => [(id, rating),...]
@@ -106,6 +108,7 @@ if __name__ == "__main__":
     rating_count= ratings.reduceByKey(add).collect()
     print("--- Counted ratings in %s seconds ---" % (time.time() - start_time))
 
+    print(rating_count)
     # 2.1. assign result of parallel counts
     for (rating, count) in rating_count:
         N[int(rating)]= count
