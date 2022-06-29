@@ -145,7 +145,7 @@ if __name__ == "__main__":
     # bloomFilters = ratings.map(lambda rating: (rating[0],add_item_to_bloom_filter(B_HASH_COUNTS.value[rating[0]],B_SIZES.value[rating[0]],rating[1])))\
     #                .reduceByKey(or_).collect()
 
-    bloomFilters = ratings.groupByKey().map(lambda ratings: (ratings[0],createBloomFilter(B_HASH_COUNTS.value[ratings[0]],B_SIZES.value[ratings[0]],ratings[1])))\
+    bloomFilters = ratings.groupByKey().map(lambda ratings: (ratings[0],createBloomFilter(HASH_COUNTS[ratings[0]],SIZES[ratings[0]],ratings[1])))\
                    .collect()
 
     print("--- Created bloom filters in %s seconds ---" % (time.time() - start_time))
@@ -157,7 +157,7 @@ if __name__ == "__main__":
         n = 2 [("3",1),("7",1)], [("2",1),("3",1)]
         false_positives = [("3",1),("7",1),("2",1),("3",1)]
     """
-    false_positive_count = ratings.flatMap(lambda rating: check_item_in_bloom_filters(rating, bloomFilters, B_HASH_COUNTS.value, B_SIZES.value))\
+    false_positive_count = ratings.flatMap(lambda rating: check_item_in_bloom_filters(rating, bloomFilters, HASH_COUNTS, SIZES))\
                             .reduceByKey(add).collect()
     print("--- Tested bloom filters in %s seconds ---" % (time.time() - start_time))
 
