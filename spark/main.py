@@ -77,14 +77,14 @@ def check_item_in_bloom_filters(item, bloomFilters, HASH_COUNTS, SIZES):
     for bloom_filter in bloomFilters:
         rating = bloom_filter[0]
         bit_array = bloom_filter[1]
-        if(rating!=item[1] and check_item_in_bloom_filter(HASH_COUNTS[rating], SIZES[rating], bit_array, item[0])):
+        if(rating!=item[0] and check_item_in_bloom_filter(HASH_COUNTS[rating], SIZES[rating], bit_array, item[1])):
             false_positive.append((rating,1))
     return false_positive
 
 ###### END OF PURE FUNCTIONS ######
 
 #  return tuple like (id, rating)
-rating_extractor = lambda x: ( x.split('\t')[0],round(0.0001+float(x.split('\t')[1])))
+rating_extractor = lambda x: ( round(0.0001+float(x.split('\t')[1])),x.split('\t')[0])
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -101,11 +101,11 @@ if __name__ == "__main__":
     
     # 1. read file creating the RDD
     #    ratings is a tuple array => [(id, rating),...]
-    ratings = sc.textFile(sys.argv[1]).map(rating_extractor).filter(lambda x: x[0]!=0).cache()
+    ratings = sc.textFile(sys.argv[1]).map(rating_extractor).filter(lambda x: x[0]!=0).sortByKey().cache()
 
     # 2. count occurences of each rating
     start_time = time.time()
-    rating_count= ratings.map(lambda rating: (rating[1],1)).reduceByKey(add).collect()
+    rating_count= ratings.map(lambda rating: (rating[0],1)).reduceByKey(add).collect()
     print("--- Counted ratings in %s seconds ---" % (time.time() - start_time))
 
     print(rating_count)
@@ -122,7 +122,7 @@ if __name__ == "__main__":
 
     # 3. insert elements in bloom filter
     start_time = time.time()
-    bloomFilters = ratings.map(lambda rating: (rating[1],add_item_to_bloom_filter(B_HASH_COUNTS.value[rating[1]],B_SIZES.value[rating[1]],rating[0])))\
+    bloomFilters = ratings.map(lambda rating: (rating[0],add_item_to_bloom_filter(B_HASH_COUNTS.value[rating[0]],B_SIZES.value[rating[0]],rating[1])))\
                    .reduceByKey(or_).collect()
     print("--- Created bloom filters in %s seconds ---" % (time.time() - start_time))
      
