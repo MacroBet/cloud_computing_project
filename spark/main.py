@@ -136,7 +136,6 @@ if __name__ == "__main__":
                    .collect()
     print("--- Created bloom filters in %s seconds ---" % (time.time() - start_time))
      
-    print(bloomFilters)
     # 4. compute false positive count
     start_time = time.time()
     """Example:
