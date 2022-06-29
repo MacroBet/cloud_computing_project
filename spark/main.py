@@ -28,6 +28,24 @@ def add_item_to_bloom_filter(hash_count,size,item):
         bit_array[digest] = True
     return bit_array
 
+def createBloomFilter(hash,size,items): 
+    """"
+    Create the bitarray containing all the hashed items
+    Args:
+        hash_count: number of hash functions to use
+        size: bit array size
+        items: string keys to be inserted
+    Returns:
+        The bitarray containing all the hashed items
+    """
+    bit_array = bitarray(size)
+    bit_array.setall(0)
+    for item in items:
+        for i in range(hash):
+            digest = mmh3.hash(item, i) % size
+            bit_array[digest] = True
+    return bit_array
+
 def check_item_in_bloom_filter(hash_count, size, bit_array, item):
     """
     Verify that each one of the bit generated from the mmh3.hash() is contained in the bit_array
@@ -123,17 +141,12 @@ if __name__ == "__main__":
     # 3. insert elements in bloom filter
     start_time = time.time()
 
-    def createBloomFilter(hash,size,items): 
-        bit_array = bitarray(size)
-        bit_array.setall(0)
-        for item in items:
-            for i in range(hash):
-                digest = mmh3.hash(item, i) % size
-                bit_array[digest] = True
-        return bit_array
+    # old slow approach 
+    bloomFilters = ratings.map(lambda rating: (rating[0],add_item_to_bloom_filter(B_HASH_COUNTS.value[rating[0]],B_SIZES.value[rating[0]],rating[1])))\
+                   .reduceByKey(or_).collect()
 
-    bloomFilters = ratings.groupByKey().map(lambda ratings: (ratings[0],createBloomFilter(B_HASH_COUNTS.value[ratings[0]],B_SIZES.value[ratings[0]],ratings[1])))\
-                   .collect()
+    # bloomFilters = ratings.groupByKey().map(lambda ratings: (ratings[0],createBloomFilter(B_HASH_COUNTS.value[ratings[0]],B_SIZES.value[ratings[0]],ratings[1])))\
+    #                .collect()
     print("--- Created bloom filters in %s seconds ---" % (time.time() - start_time))
      
     # 4. compute false positive count

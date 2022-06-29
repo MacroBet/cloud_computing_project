@@ -1,1 +1,1 @@
-spark-submit --master yarn main.py title.ratings.txt 0.001
+spark-submit --executor-cores 4 --driver-memory 4g --executor-memory 2g --num-executors 4 --master yarn main.py title.ratings.txt 0.00001
