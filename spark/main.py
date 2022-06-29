@@ -94,7 +94,7 @@ if __name__ == "__main__":
     N = [1,1,1,1,1,1,1,1,1,1,1]
     local = False
     if (sys.argv[2]!=None): p = float(sys.argv[2])
-    if (len(sys.argv)==3 and sys.argv[3]!=None): local = bool(sys.argv[3])
+    if (len(sys.argv)==4 and sys.argv[3]!=None): local = bool(sys.argv[3])
     print("False positive probability: ",p)
     conf = (SparkConf().setAppName("Bloom Filter").setMaster("local" if local else "yarn"))
     sc = SparkContext(conf=conf)
