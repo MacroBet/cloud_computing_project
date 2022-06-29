@@ -142,11 +142,12 @@ if __name__ == "__main__":
     start_time = time.time()
 
     # old slow approach 
-    bloomFilters = ratings.map(lambda rating: (rating[0],add_item_to_bloom_filter(B_HASH_COUNTS.value[rating[0]],B_SIZES.value[rating[0]],rating[1])))\
-                   .reduceByKey(or_).collect()
+    # bloomFilters = ratings.map(lambda rating: (rating[0],add_item_to_bloom_filter(B_HASH_COUNTS.value[rating[0]],B_SIZES.value[rating[0]],rating[1])))\
+    #                .reduceByKey(or_).collect()
 
-    # bloomFilters = ratings.groupByKey().map(lambda ratings: (ratings[0],createBloomFilter(B_HASH_COUNTS.value[ratings[0]],B_SIZES.value[ratings[0]],ratings[1])))\
-    #                .collect()
+    bloomFilters = ratings.groupByKey().map(lambda ratings: (ratings[0],createBloomFilter(B_HASH_COUNTS.value[ratings[0]],B_SIZES.value[ratings[0]],ratings[1])))\
+                   .collect()
+
     print("--- Created bloom filters in %s seconds ---" % (time.time() - start_time))
      
     # 4. compute false positive count
