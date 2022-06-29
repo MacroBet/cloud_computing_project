@@ -117,11 +117,13 @@ if __name__ == "__main__":
     total_elements= sum(N)
     SIZES = [get_size(n, p) for n in N]
     HASH_COUNTS = [get_hash_count(size, n) for size, n in zip(SIZES, N)]
+    B_SIZES = sc.broadcast(SIZES)
+    B_HASH_COUNTS = sc.broadcast(HASH_COUNTS)
 
     # 3. insert elements in bloom filter
     start_time = time.time()
-    bloomFilters = ratings.map(lambda rating: (rating[1],add_item_to_bloom_filter(HASH_COUNTS[rating[1]],SIZES[rating[1]],rating[0])))\
-                   .reduceByKey(lambda bit_arr, acc: bit_arr | acc).collect()
+    bloomFilters = ratings.map(lambda rating: (rating[1],add_item_to_bloom_filter(B_HASH_COUNTS[rating[1]],B_SIZES[rating[1]],rating[0])))\
+                   .reduceByKey(lambda bit_arr, acc: bit_arr | acc).cache().collect()
     print("--- Created bloom filters in %s seconds ---" % (time.time() - start_time))
      
 
@@ -132,7 +134,7 @@ if __name__ == "__main__":
         n = 2 [("3",1),("7",1)], [("2",1),("3",1)]
         false_positives = [("3",1),("7",1),("2",1),("3",1)]
     """
-    false_positive_count = ratings.flatMap(lambda rating: check_item_in_bloom_filters(rating, bloomFilters, HASH_COUNTS, SIZES))\
+    false_positive_count = ratings.flatMap(lambda rating: check_item_in_bloom_filters(rating, bloomFilters, B_HASH_COUNTS, B_SIZES))\
                             .reduceByKey(add).collect()
     print("--- Tested bloom filters in %s seconds ---" % (time.time() - start_time))
 
