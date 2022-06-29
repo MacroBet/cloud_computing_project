@@ -135,14 +135,12 @@ if __name__ == "__main__":
     total_elements= sum(N)
     SIZES = [get_size(n, p) for n in N]
     HASH_COUNTS = [get_hash_count(size, n) for size, n in zip(SIZES, N)]
-    B_SIZES = sc.broadcast(SIZES)
-    B_HASH_COUNTS = sc.broadcast(HASH_COUNTS)
 
     # 3. insert elements in bloom filter
     start_time = time.time()
 
     # old slow approach 
-    # bloomFilters = ratings.map(lambda rating: (rating[0],add_item_to_bloom_filter(B_HASH_COUNTS.value[rating[0]],B_SIZES.value[rating[0]],rating[1])))\
+    # bloomFilters = ratings.map(lambda rating: (rating[0],add_item_to_bloom_filter(HASH_COUNTS[rating[0]],SIZES[rating[0]],rating[1])))\
     #                .reduceByKey(or_).collect()
 
     bloomFilters = ratings.groupByKey().map(lambda ratings: (ratings[0],createBloomFilter(HASH_COUNTS[ratings[0]],SIZES[ratings[0]],ratings[1])))\
