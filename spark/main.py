@@ -10,7 +10,15 @@ import time
 ###### BLOOM FILTERS PURE FUNCTIONS ######
 
 def add_item_to_bloom_filter(hash_count,size,item):
-    """"create digest for given item. I work as seed to mmh3.hash() function with different seed, digest created is different"""
+    """"
+    Create a bit array of the requested size and insert the item parsed using mmh3.hash() with different seeds
+    Args:
+        hash_count: number of hash functions to use
+        size: bit array size
+        item: string key to be inserted
+    Returns:
+        The bitarray containing the item hashed
+    """
     digests = []
     bit_array = bitarray(size)
     bit_array.setall(0)
@@ -20,19 +28,26 @@ def add_item_to_bloom_filter(hash_count,size,item):
         bit_array[digest] = True
     return bit_array
 
-
-
 def check_item_in_bloom_filter(hash_count, size, bit_array, item):
-    """if any of bit is False then,its not present in filter else there is probability that it exist"""
+    """
+    Verify that each one of the bit generated from the mmh3.hash() is contained in the bit_array
+    Args:
+        hash_count: number of hash functions to use
+        size: bit array size
+        bit_array: bit array rapresenting the bloom filter
+        item: string key to be verified
+    Returns:
+        True or False
+    """
     for i in range(hash_count):
         digest = mmh3.hash(item, i) % size
         if bit_array[digest] == False:
             return False
     return True
 
-
 def get_size(n, p):
-    """Get the size of the bitarray used in bloom filter
+    """
+    Get the size of the bitarray used in bloom filter
     Args:
         n: number of elements that bloom filter is expected to contain
         p: desired false positive rate
@@ -50,29 +65,7 @@ def get_hash_count(size, n):
         The size of bitarray
     """
     return int((size/n) * math.log(2))
-
-
-#false positive probability
-p = 0.01 
-
-def _rating(rating_raw):
-    return round(0.0001+float(rating_raw))
-
-def _rating_str(rating_raw):
-    return str(round(0.0001+float(rating_raw)))
-
-def count_ratings_occurences(lines):
-    return lines.map(lambda x: (_rating_str(x.split('\t')[1]),1)).filter(lambda x: x[0]!="0").reduceByKey(add)
-
-#  return tuple like (id, rating)
-rating_extractor = lambda x: ( x.split('\t')[0],_rating(x.split('\t')[1]))
     
-
-def insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS):
-    return lines.map(rating_extractor).\
-    map(lambda rating: (rating[1],add_item_to_bloom_filter(HASH_COUNTS[rating[1]],SIZES[rating[1]],rating[0]))).\
-    reduceByKey(lambda bit_arr, acc: bit_arr | acc)
- 
 def check_item_in_bloom_filters(item, bloomFilters, HASH_COUNTS, SIZES):
     """check_item_in_bloom_filters 
     Args:
@@ -88,36 +81,29 @@ def check_item_in_bloom_filters(item, bloomFilters, HASH_COUNTS, SIZES):
             false_positive.append((rating,1))
     return false_positive
 
-def calculate_false_positive_count(lines, bloomFilters, HASH_COUNTS, SIZES ):
-    """calculate_false_positive_count 
-    Args:
-        
-    Example:
-        n di => [("3",1),("7",1)]
-        n = 2 [("3",1),("7",1)], [("2",1),("3",1)]
-        false_positives = [("3",1),("7",1),("2",1),("3",1)]
-    """
-    return lines.map(rating_extractor)\
-    .flatMap(lambda rating: check_item_in_bloom_filters(rating, bloomFilters, HASH_COUNTS, SIZES))\
-    .reduceByKey(add)
-    
+###### END OF PURE FUNCTIONS ######
+
+#  return tuple like (id, rating)
+rating_extractor = lambda x: ( x.split('\t')[0],round(0.0001+float(x.split('\t')[1])))
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: BloomFilter <input file> [<output file>]", file=sys.stderr)
         sys.exit(-1)
-    if (sys.argv[2]!=None): p = float(sys.argv[2])
-    print("False positive probability: ",p)
+    p = 0.01 
     conf = (SparkConf().setAppName("Bloom Filter").setMaster("yarn"))
     sc = SparkContext(conf=conf)
     N = [1,1,1,1,1,1,1,1,1,1,1]
+    if (sys.argv[2]!=None): p = float(sys.argv[2])
+    print("False positive probability: ",p)
     
     # 1. read file creating the RDD
-    lines = sc.textFile(sys.argv[1])
+    #    ratings is a tuple array => [(id, rating),...]
+    ratings = sc.textFile(sys.argv[1]).map(rating_extractor).filter(lambda x: x[0]!=0)
 
-    # 2. count occurences of each ratings (rounded)
+    # 2. count occurences of each rating
     start_time = time.time()
-    rating_count= count_ratings_occurences(lines).collect()
+    rating_count= ratings.reduceByKey(add).collect()
     print("--- Counted ratings in %s seconds ---" % (time.time() - start_time))
 
     # 2.1. assign result of parallel counts
@@ -131,12 +117,20 @@ if __name__ == "__main__":
 
     # 3. insert elements in bloom filter
     start_time = time.time()
-    bloomFilters = insert_ratings_in_bloom_filters(lines, SIZES, HASH_COUNTS).collect()
+    bloomFilters = ratings.map(lambda rating: (rating[1],add_item_to_bloom_filter(HASH_COUNTS[rating[1]],SIZES[rating[1]],rating[0])))\
+                   .reduceByKey(lambda bit_arr, acc: bit_arr | acc).collect()
     print("--- Created bloom filters in %s seconds ---" % (time.time() - start_time))
+     
 
     # 4. compute false positive count
     start_time = time.time()
-    false_positive_count = calculate_false_positive_count(lines, bloomFilters, HASH_COUNTS, SIZES).collect()
+    """Example:
+        n di => [("3",1),("7",1)]
+        n = 2 [("3",1),("7",1)], [("2",1),("3",1)]
+        false_positives = [("3",1),("7",1),("2",1),("3",1)]
+    """
+    false_positive_count = ratings.flatMap(lambda rating: check_item_in_bloom_filters(rating, bloomFilters, HASH_COUNTS, SIZES))\
+                            .reduceByKey(add).collect()
     print("--- Tested bloom filters in %s seconds ---" % (time.time() - start_time))
 
    
