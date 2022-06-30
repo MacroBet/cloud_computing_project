@@ -58,7 +58,7 @@ public class TestMapper  extends Mapper<Object, Text, Text,Text> {
 
     public void cleanup(Context context) throws IOException, InterruptedException {
       for(int i =0;i<false_positives.length;i++){
-          Double FPrate = false_positives[i]/(false_positives[i]+non_false_positives[i]);
+          double FPrate = (double) false_positives[i] / (double)(false_positives[i]+non_false_positives[i]);
           // INCREMENT INDEX TO GET RATING
           context.write(new Text(String.valueOf(i+1)), new Text(String.valueOf(FPrate)));
       } 
