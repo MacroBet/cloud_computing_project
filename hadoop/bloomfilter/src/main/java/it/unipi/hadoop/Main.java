@@ -19,10 +19,8 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import it.unipi.hadoop.Job1.*;
 import it.unipi.hadoop.Job2.BloomFiltersMapper;
 import it.unipi.hadoop.Job2.BloomFiltersReducer;
-import it.unipi.hadoop.Job3.TestMapper1;
-import it.unipi.hadoop.Job3.TestMapper2;
-import it.unipi.hadoop.Job3.TestReducer1;
-import it.unipi.hadoop.Job3.TestReducer2;
+import it.unipi.hadoop.Job3.TestMapper;
+import it.unipi.hadoop.Job3.TestReducer;
 
 
 public class Main {
@@ -65,46 +63,25 @@ public class Main {
   private static void Job3(String[] args) throws IllegalArgumentException, IOException, ClassNotFoundException, InterruptedException{
 
     startTime= System.currentTimeMillis();
-    String outputTempDir = args[1] + "_3";
     Configuration conf3 = new Configuration();
-    Job job3 = Job.getInstance(conf3, "test file crator");
-    job3.setInputFormatClass(NLineInputFormat.class);
-    NLineInputFormat.addInputPath(job3, new Path(args[0]));
-    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", N_SPLIT*3);
+    Job job3 = Job.getInstance(conf3, "JOB_3.1");
     job3.setJarByClass(Main.class);
-    job3.setMapperClass(TestMapper1.class);
-    job3.setReducerClass(TestReducer1.class);
-
+    job3.setMapperClass(TestMapper.class);
+    job3.setReducerClass(TestReducer2.class);
+    job3.setInputFormatClass(NLineInputFormat.class);
+    //job3.setCombinerClass(TestCombiner2.class);
+    job3.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 100000);
     job3.setMapOutputKeyClass(Text.class);
     job3.setMapOutputValueClass(Text.class); 
-    
     job3.setOutputKeyClass(Text.class);
     job3.setOutputValueClass(Text.class);
-
-    FileOutputFormat.setOutputPath(job3, new Path(outputTempDir));
-    Boolean countSuccess3 = job3.waitForCompletion(true);
-    if(countSuccess3) {
-      Job job3_1 = Job.getInstance(conf3, "JOB_3.1");
-      job3_1.setJarByClass(Main.class);
-      job3_1.setMapperClass(TestMapper2.class);
-      job3_1.setReducerClass(TestReducer2.class);
-      job3_1.setInputFormatClass(NLineInputFormat.class);
-      //job3_1.setCombinerClass(TestCombiner2.class);
-      job3_1.getConfiguration().setInt("mapreduce.input.lineinputformat.linespermap", 100000);
-      job3_1.setMapOutputKeyClass(Text.class);
-      job3_1.setMapOutputValueClass(Text.class); 
-      job3_1.setOutputKeyClass(Text.class);
-      job3_1.setOutputValueClass(DoubleWritable.class);
   
-      NLineInputFormat.addInputPath(job3_1, new Path(outputTempDir));
-      FileOutputFormat.setOutputPath(job3_1, new Path(args[1] + "_3.1"));
-      Boolean countSuccess3_1 = job3_1.waitForCompletion(true);
-      if(!countSuccess3_1) {
-        System.exit(0);
-      }
+    NLineInputFormat.addInputPath(job3, new Path(args[0]));
+    FileOutputFormat.setOutputPath(job3, new Path(args[1] + "_3.1"));
+    Boolean countSuccess3 = job3.waitForCompletion(true);
+    if(!countSuccess3) {
+      System.exit(0);
     }
-    
-    
     
   }
 
