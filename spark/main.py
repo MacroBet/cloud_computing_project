@@ -156,7 +156,7 @@ if __name__ == "__main__":
         false_positives = [("3",1),("7",1),("2",1),("3",1)]
     """
     false_positive_count = ratings.flatMap(lambda rating: check_item_in_bloom_filters(rating, bloomFilters, HASH_COUNTS, SIZES))\
-                            .reduceByKey(add).collect()
+                            .reduceByKey(add).sortByKey().collect()
     print("--- Tested bloom filters in %s seconds ---" % (time.time() - start_time))
 
    
@@ -176,4 +176,14 @@ if __name__ == "__main__":
     
     print(false_positive_rates)
     print("TOTAL FALSE POSITIVE RATE: " + str(tot_fpr/10))
+
+
+
+# java
+# fp/(fp + nfp)
+
+# py
+# fp/(tot-n)
+
+# fp + nfp = tot -n? Sì!
 
