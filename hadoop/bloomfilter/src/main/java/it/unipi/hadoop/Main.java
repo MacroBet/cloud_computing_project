@@ -64,7 +64,7 @@ public class Main {
 
     startTime= System.currentTimeMillis();
     Configuration conf3 = new Configuration();
-    Job job3 = Job.getInstance(conf3, "JOB_3.1");
+    Job job3 = Job.getInstance(conf3, "JOB_3");
     job3.setJarByClass(Main.class);
     job3.setMapperClass(TestMapper.class);
     job3.setReducerClass(TestReducer.class);
@@ -77,7 +77,7 @@ public class Main {
     job3.setOutputValueClass(Text.class);
   
     NLineInputFormat.addInputPath(job3, new Path(args[0]));
-    FileOutputFormat.setOutputPath(job3, new Path(args[1] + "_3.1"));
+    FileOutputFormat.setOutputPath(job3, new Path(args[1] + "_3"));
     Boolean countSuccess3 = job3.waitForCompletion(true);
     if(!countSuccess3) {
       System.exit(0);
