@@ -27,7 +27,7 @@ def add_item_to_bloom_filter(hash_count,size,item):
         digests.append(digest)
         bit_array[digest] = True
     return bit_array
-
+    "0,2";"0,1";"0,01";"0,001";"0,0001";"0,00001";"0,000001";"0,0000001";"0,00000001";"0,000000001"
 def createBloomFilter(hash,size,items): 
     """"
     Create the bitarray containing all the hashed items
